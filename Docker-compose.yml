@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+    # PostgreSQL сервис
+    postgres:
+        image: postgres:latest
+        container_name: project_postgres
+        env_file:
+            - .env
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    # Redis сервис
+    redis:
+        image: redis:latest
+        container_name: project_redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+
+    # ASP.NET бэкенд сервис
+    # backend:
+    #   build:
+    #     context: ./Backend
+    #     dockerfile: Dockerfile
+    #   container_name: project_backend
+    #   ports:
+    #     - "5000:80"
+    #     - "5001:443"
+    #   environment:
+    #     - ASPNETCORE_ENVIRONMENT=Development
+    #     - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME:-appdb};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres}
+    #     - Redis__ConnectionString=redis
+    #   depends_on:
+    #     postgres:
+    #       condition: service_healthy
+    #     redis:
+    #       condition: service_healthy
+
+    # React фронтенд сервис
+    frontend:
+        build:
+            context: ./Frontend
+            dockerfile: Dockerfile
+        container_name: project_frontend
+        ports:
+            - "3000:80"
+        environment:
+            - REACT_APP_API_URL=http://localhost:5000
+        # depends_on:
+        #   - backend
+
+# Объявляем тома и сети
+volumes:
+    postgres_data:
+    redis_data:
