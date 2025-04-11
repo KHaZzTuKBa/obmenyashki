@@ -20,6 +20,8 @@ services:
             interval: 5s
             timeout: 5s
             retries: 5
+        networks:
+            - app-network
 
     # Redis сервис
     redis:
@@ -31,25 +33,27 @@ services:
             - redis_data:/data
         healthcheck:
             test: ["CMD", "redis-cli", "ping"]
+        networks:
+            - app-network
 
     # ASP.NET бэкенд сервис
-    # backend:
-    #   build:
-    #     context: ./Backend
-    #     dockerfile: Dockerfile
-    #   container_name: project_backend
-    #   ports:
-    #     - "5000:80"
-    #     - "5001:443"
-    #   environment:
-    #     - ASPNETCORE_ENVIRONMENT=Development
-    #     - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME:-appdb};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres}
-    #     - Redis__ConnectionString=redis
-    #   depends_on:
-    #     postgres:
-    #       condition: service_healthy
-    #     redis:
-    #       condition: service_healthy
+    backend:
+        build:
+            context: ./Backend
+            dockerfile: Dockerfile
+        container_name: project_backend
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=http://+:80
+            - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME:-appdb};Username=${DB_USER:-postgres};Password=${DB_PASSWORD:-postgres}
+            - Redis__ConnectionString=redis
+        networks:
+            - app-network
+        depends_on:
+            postgres:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
 
     # React фронтенд сервис
     frontend:
@@ -58,11 +62,17 @@ services:
             dockerfile: Dockerfile
         container_name: project_frontend
         ports:
-            - "3000:80"
+            - "80:80"
         environment:
-            - REACT_APP_API_URL=http://localhost:5000
-        # depends_on:
-        #   - backend
+            - REACT_APP_API_URL=/api
+        networks:
+            - app-network
+        depends_on:
+            - backend
+
+networks:
+    app-network:
+        driver: bridge
 
 # Объявляем тома и сети
 volumes:

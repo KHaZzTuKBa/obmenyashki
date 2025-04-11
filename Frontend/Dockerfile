@@ -18,7 +18,7 @@ ENV NODE_ENV=production
 RUN rm -rf dist
 
 # Собираем приложение для production
-RUN npm run build && ls -la /app/dist
+RUN npm run build
 
 # Этап production
 FROM nginx:1.25-alpine
