@@ -1,0 +1,1 @@
+export { ProfileUserCard } from './ui';

@@ -6,9 +6,11 @@ import { useUserStore } from '@/entities/user/model';
 import style from './style.module.scss';
 
 export const ProfileUserCard = () => {
-    const { name, birthday, town, phone, email } = useUserStore(
-        (state) => state.user
-    );
+    const user = useUserStore((state) => state?.user);
+
+    if (!user) {
+        return null;
+    }
     return (
         <div className={style.profile__info}>
             <div className={style.profile__image}>
@@ -16,11 +18,11 @@ export const ProfileUserCard = () => {
             </div>
 
             <div className={style.profile__data}>
-                {name ? <h2>{name}</h2> : null}
-                {birthday ? <p>{birthday}</p> : null}
-                {town ? <p>{town}</p> : null}
-                {phone ? <p>{phone}</p> : null}
-                {email ? <p>{email}</p> : null}
+                {user.name ? <h2>{user.name}</h2> : null}
+                {user.birthday ? <p>{user.birthday}</p> : null}
+                {user.town ? <p>{user.town}</p> : null}
+                {user.phone ? <p>{user.phone}</p> : null}
+                {user.email ? <p>{user.email}</p> : null}
                 <Link to={Path.EDIT_PROFILE}>Редактировать профиль</Link>
             </div>
         </div>

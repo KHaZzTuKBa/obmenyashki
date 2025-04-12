@@ -1,28 +1,22 @@
-import { useUserStore } from '@/entities/user/model';
-import { useQuery } from '@tanstack/react-query';
-import { getProductListByUserId } from '@/entities/product/model/api';
 import { ProfileProductCard } from '@/entities/product/ui';
 import { isAxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { getViewItemPath } from '@/shared/config/routes';
+import { getViewItemPath, Path } from '@/shared/config/routes';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Virtual } from 'swiper/modules';
-import 'swiper/swiper-bundle.css';
+import { Product } from '@/entities/product/model/types';
 
+import 'swiper/swiper-bundle.css';
 import style from './style.module.scss';
+import { useUserProducts } from '../hooks/useUserProducts';
 
 export const ProfileProductSlider = () => {
-    const { id } = useUserStore((state) => state.user);
-    const { data, error, isPending } = useQuery({
-        queryFn: async () => await getProductListByUserId(id),
-        queryKey: ['userProductList', id],
-        select: (data) => data.data,
-    });
+    const { data, error, isPending } = useUserProducts();
 
     if (isPending) {
         return (
             <div className={`${style.profile__products} ${style.products}`}>
-                Загрузка...
+                <p>Загрузка...</p>
             </div>
         );
     }
@@ -31,19 +25,26 @@ export const ProfileProductSlider = () => {
         if (isAxiosError(error)) {
             return (
                 <div className={`${style.profile__products} ${style.products}`}>
-                    Ошибка соединения с сервером. Код ошибки:
-                    {` ${error.response?.status} ${error.message}`}
+                    <p>
+                        Ошибка соединения с сервером. Код ошибки:
+                        {` ${error.response?.status} ${error.message}`}
+                    </p>
                 </div>
             );
         }
-        return <div>{error.message}</div>;
+        return (
+            <div className={`${style.profile__products} ${style.products}`}>
+                <p>{error.message}</p>
+            </div>
+        );
     }
 
     return (
         <div className={`${style.profile__products} ${style.products}`}>
             <h2 className={style.products__header}>Активные лоты</h2>
-            <ul className={style.products__list}>
-                {data?.length > 0 ? (
+
+            {data?.length > 0 ? (
+                <ul className={style.products__list}>
                     <Swiper
                         grabCursor
                         centeredSlides
@@ -71,7 +72,7 @@ export const ProfileProductSlider = () => {
                             },
                         }}
                     >
-                        {data.map((item) => (
+                        {data.map((item: Product) => (
                             <SwiperSlide>
                                 <Link
                                     to={getViewItemPath(item.id)}
@@ -83,10 +84,18 @@ export const ProfileProductSlider = () => {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-                ) : (
-                    <div>Вы еще не выставили товары.</div>
-                )}
-            </ul>
+                </ul>
+            ) : (
+                <p>
+                    У вас нет товаров.{' '}
+                    <Link
+                        className={style.products__addProductLink}
+                        to={Path.MY_ITEM_ADD}
+                    >
+                        Хотите создать?
+                    </Link>
+                </p>
+            )}
         </div>
     );
 };

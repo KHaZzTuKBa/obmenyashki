@@ -2,29 +2,18 @@ import { create } from 'zustand';
 import { User } from './types';
 
 type UserStore = {
-    user: User;
-    accessToken: string | undefined;
-    setUser: (userData: User) => void;
-    setAccessToken: (token: string) => void;
+    user: User | null;
+    accessToken: string | null;
+    setUser: (user: User | null) => void;
+    setAccessToken: (accessToken: string | null) => void;
     logout: () => void;
 };
 
-// TODO: Реализовать хранение ссесии через accessToken
-
 export const userStore = create<UserStore>((set) => ({
-    user: {
-        id: 0,
-        email: '',
-        phone: '',
-        name: '',
-        avatarURL: undefined,
-    },
-    accessToken: undefined,
+    user: null,
+    accessToken: null,
 
-    setUser: (userData: User) =>
-        set(() => ({
-            user: userData,
-        })),
-    setAccessToken: (token) => set({ accessToken: token }),
-    logout: () => set({ accessToken: undefined }),
+    setUser: (user: User | null) => set({ user }),
+    setAccessToken: (accessToken: string | null) => set({ accessToken }),
+    logout: () => set({ user: null, accessToken: null }),
 }));

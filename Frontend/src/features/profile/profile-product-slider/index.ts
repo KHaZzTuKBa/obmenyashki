@@ -1,0 +1,1 @@
+export { ProfileProductSlider } from './ui'
