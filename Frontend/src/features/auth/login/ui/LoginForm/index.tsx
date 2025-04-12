@@ -24,7 +24,7 @@ export const LoginForm = () => {
         handleSubmit,
         formState: { errors },
         setError,
-    } = useForm<ILoginForm>();
+    } = useForm<ILoginForm>({ mode: 'all' });
 
     const submit: SubmitHandler<ILoginForm> = async (data) => {
         try {
@@ -35,13 +35,13 @@ export const LoginForm = () => {
                 navigate(fromPath, { replace: true });
             }
         } catch (e) {
+            console.log(e);
+
             if (isAxiosError(e)) {
                 setError('root', {
                     type: 'serverError',
                     message: e.message,
                 });
-            } else {
-                console.log(e);
             }
         }
     };
@@ -80,16 +80,6 @@ export const LoginForm = () => {
                             minLength: {
                                 value: 8,
                                 message: 'Минимальная длина пароля 8 символов',
-                            },
-                            maxLength: {
-                                value: 16,
-                                message:
-                                    'Максимальная длина пароля 16 символов',
-                            },
-                            pattern: {
-                                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,16}$/,
-                                message:
-                                    'Пароль должен содержать буквы латиницы в верхнем и нижинем регистре и цифры',
                             },
                             setValueAs: (val) => val.trim(),
                         })}

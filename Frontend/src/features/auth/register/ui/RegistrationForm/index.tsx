@@ -28,7 +28,7 @@ export const RegistrationForm = () => {
         formState: { errors },
         setError,
         control,
-    } = useForm<IRegisterForm>();
+    } = useForm<IRegisterForm>({ mode: 'all' });
 
     const submit: SubmitHandler<IRegisterForm> = async (data) => {
         data.phone = `+7${data.phone.replace(/\D/g, '').slice(1, 11)}`;
@@ -46,13 +46,12 @@ export const RegistrationForm = () => {
                 navigate(fromPath, { replace: true });
             }
         } catch (e) {
+            console.log(e);
             if (isAxiosError(e)) {
                 setError('root', {
                     type: 'serverError',
                     message: e.message,
                 });
-            } else {
-                console.log(e);
             }
         }
     };
@@ -156,13 +155,8 @@ export const RegistrationForm = () => {
                                 value: 8,
                                 message: 'Минимальная длина пароля 8 символов',
                             },
-                            maxLength: {
-                                value: 16,
-                                message:
-                                    'Максимальная длина пароля 16 символов',
-                            },
                             pattern: {
-                                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,16}$/,
+                                value: /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9!@#$%^&*]{8,}$/,
                                 message:
                                     'Пароль должен содержать буквы латиницы в верхнем и нижинем регистре и цифры',
                             },
