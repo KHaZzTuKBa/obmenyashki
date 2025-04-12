@@ -14,7 +14,7 @@ import style from './style.module.scss';
 export const ProfileProductSlider = () => {
     const { id } = useUserStore((state) => state.user);
     const { data, error, isPending } = useQuery({
-        queryFn: () => getProductListByUserId(id),
+        queryFn: async () => await getProductListByUserId(id),
         queryKey: ['userProductList', id],
         select: (data) => data.data,
     });

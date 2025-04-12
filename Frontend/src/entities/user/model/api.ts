@@ -6,7 +6,7 @@ import { IAuthResponse } from '@/shared/api/http/auth-response';
 
 const BASE_URL = `${API_URL}/User`;
 
-export const registerUser = async (
+export const registerUser = (
     name: string,
     phone: string,
     email: string,
@@ -19,7 +19,7 @@ export const registerUser = async (
     );
 };
 
-export const loginUser = async (email: string, password: string) => {
+export const loginUser = (email: string, password: string) => {
     return axios.post<IAuthResponse>(
         `${BASE_URL}/login`,
         { email, password },
@@ -27,7 +27,7 @@ export const loginUser = async (email: string, password: string) => {
     );
 };
 
-export const logoutUser = async (user: User) => {
+export const logoutUser = (user: User) => {
     return axios.post(
         `${BASE_URL}/logout`,
         { user },
@@ -35,10 +35,10 @@ export const logoutUser = async (user: User) => {
     );
 };
 
-export const getUser = async (id: number) => {
-    return await $api.get<User>(`/getUser/${id}`);
+export const getUser = (user: User) => {
+    return $api.get<User>(`/getUser/${user.id}`);
 };
 
-export const updateUser = async (user: User) => {
-    return await $api.patch<User>(`/updateUser/${user.id}`, user);
+export const updateUser = (user: User) => {
+    return $api.patch<User>(`/updateUser/${user.id}`, user);
 };
