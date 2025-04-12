@@ -5,8 +5,8 @@ import {
 } from 'react-router-dom';
 import { Path } from '@/shared/config/routes';
 import { MainLayout } from '@/app/layouts/main-layout';
-import { ProtectedRoute } from '@/shared/ui/Routes/protected-route';
-import { NoAuthRoute } from '@/shared/ui/Routes/no-auth-route';
+import { ProtectedRoute } from '@/features/auth/routes/protected-route';
+import { NoAuthRoute } from '@/features/auth/routes/no-auth-route';
 import { LoginPage } from '@/pages/login-page';
 import { RegisterPage } from '@/pages/register-page';
 import { NotFoundPage } from '@/pages/not-found-page/ui/NotFound';

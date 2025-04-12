@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
+import { useUserStore } from '@/entities/user/model';
 
 export const NoAuthRoute = ({
     children,
@@ -8,7 +9,7 @@ export const NoAuthRoute = ({
     children: ReactNode;
     redirectTo: string;
 }) => {
-    const token = localStorage.getItem('token');
+    const token = useUserStore((state) => state.accessToken);
 
     if (token) {
         return <Navigate to={redirectTo} replace />;
