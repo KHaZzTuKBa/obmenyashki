@@ -1,0 +1,14 @@
+.form__input {
+    background-color: #fff;
+    border: 3px #000 solid;
+    border-radius: 25px;
+    padding: 10px 20px;
+
+    &:global(-blue) {
+        border: 3px #395492 solid;
+    }
+
+    &:global(-green) {
+        border: 3px #298e92 solid;
+    }
+}

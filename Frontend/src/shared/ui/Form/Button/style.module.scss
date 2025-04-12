@@ -1,0 +1,28 @@
+.form__button {
+    border-radius: 50px;
+    max-width: 420px;
+    font-size: min(32px, 2rem);
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+
+    background: #777;
+    &:global(-red) {
+        background: linear-gradient(#ff7979, #b56be0);
+    }
+    &:global(-green) {
+        background: linear-gradient(#4dc5a5, #3f9f86);
+    }
+    &:global(-dark-green) {
+        background: linear-gradient(#4dc5a5, #4780c1);
+    }
+    &:global(-blue) {
+        background: linear-gradient(#4dc5a5, #4753c1);
+    }
+    &:global(-purple) {
+        background: linear-gradient(#8da1d0, #4753c1);
+    }
+    &:global(-grey) {
+        background: linear-gradient(#d5d5d5, #656565);
+    }
+}

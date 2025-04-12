@@ -1,0 +1,129 @@
+.sidebar {
+    border-bottom-right-radius: min(66px, 4.125em);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+@media only screen and (max-width: 767px) {
+    .sidebar {
+        overflow-y: visible;
+        overflow-x: visible;
+    }
+}
+
+.sidebar__menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--sidebar-gap);
+
+    position: relative;
+    padding: var(--sidebar-padding);
+}
+
+@media only screen and (max-width: 767px) {
+    .sidebar__menu {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+.sidebar__item {
+    width: var(--sidebar-item-wh);
+    height: var(--sidebar-item-wh);
+    padding: var(--sidebar-item-padding);
+    z-index: 2;
+    position: relative;
+}
+
+.sidebar__item:nth-child(5)::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: calc(var(--sidebar-item-wh) + var(--sidebar-padding) * 2);
+    height: 2px;
+    background-color: #fff;
+    left: calc(var(--sidebar-padding) * -1);
+    top: calc(var(--sidebar-gap) / 2 * -1);
+    transform: translateY(25%);
+}
+
+@media only screen and (max-width: 767px) {
+    .sidebar__item:nth-child(5)::before {
+        display: none;
+    }
+}
+
+.sidebar__indicator {
+    position: absolute;
+    width: var(--sidebar-item-wh);
+    height: var(--sidebar-item-wh);
+    background-color: #d9d9d966;
+    opacity: var(--indicator-opacity, 0);
+
+    border-radius: 50%;
+
+    transition:
+        transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+        opacity 0.3s;
+    pointer-events: none;
+
+    transform: translateY(var(--indicator-offset-y, 0px));
+}
+
+@media only screen and (max-width: 767px) {
+    .sidebar__indicator {
+        transform: translateX(var(--indicator-offset-x-relative, 0px));
+    }
+}
+
+// .sidebar__item:has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     opacity: 1;
+// }
+
+// .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 0));
+// }
+
+// .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 0));
+// }
+
+// .sidebar__item:nth-child(2):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 1));
+// }
+
+// .sidebar__item:nth-child(3):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 2));
+// }
+
+// .sidebar__item:nth-child(4):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 3));
+// }
+
+// .sidebar__item:nth-child(5):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 4));
+// }
+
+// @media only screen and (max-width: 767px) {
+//     .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * -2));
+//     }
+
+//     .sidebar__item:nth-child(2):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * -1));
+//     }
+
+//     .sidebar__item:nth-child(3):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//         transform: translateX(calc((var(--sidebar-item-wh) - var(--sidebar-gap)) * 0));
+//     }
+
+//     .sidebar__item:nth-child(4):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * 1));
+//     }
+
+//     .sidebar__item:nth-child(5):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
+//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * 2));
+//     }
+// }

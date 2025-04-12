@@ -1,0 +1,57 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    padding: 45px 25px;
+    padding-bottom: 75px;
+    border-radius: 20px;
+    background-color: #fff;
+    max-width: 630px;
+    width: 100%;
+}
+.header {
+    text-align: center;
+    font-size: min(32px, 2rem);
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.label {
+    font-size: min(16px, 1rem);
+    font-weight: 500;
+    color: #22846b;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+
+    & .error {
+        font-size: min(12px, 0.75rem);
+    }
+}
+.input {
+    font-size: min(1rem, 16px);
+    border-width: 2px;
+
+    flex: 1 0 0;
+}
+.button {
+    font-size: min(24px, 1.5rem);
+    padding: 10px 20px;
+    min-width: 300px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+}
+.error {
+    color: red;
+    font-weight: 400;
+    font-size: min(16px, 1rem);
+}
+
+.form__register {
+    font-size: min(16px, 1rem);
+    text-align: center;
+    color: #4994b9;
+    a {
+        color: inherit;
+        text-decoration: underline;
+    }
+}

@@ -1,0 +1,18 @@
+.header__logo {
+    display: block;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    overflow: hidden;
+
+    width: min(100px, 6.25em);
+
+    & img {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .header__logo {
+        width: min(60px, 3.75em);
+    }
+}

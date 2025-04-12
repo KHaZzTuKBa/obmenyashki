@@ -1,0 +1,15 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: min(20px, 1.25em);
+    padding-right: min(80px, 5em);
+    gap: min(60px, 3.75em);
+}
+
+@media only screen and (max-width: 767px) {
+    .header {
+        padding-right: min(20px, 1.25em);
+        gap: 20px;
+    }
+}
