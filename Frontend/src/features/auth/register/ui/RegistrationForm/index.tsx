@@ -7,6 +7,7 @@ import { Input, Button } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
+import { useUserStore } from '@/entities/user/model';
 
 interface IRegisterForm {
     name: string;
@@ -19,6 +20,7 @@ export const RegistrationForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const fromPath = location.state?.from?.pathname || '/';
+    const { setUser, setAccessToken } = useUserStore((store) => store);
 
     const {
         register,
@@ -39,11 +41,11 @@ export const RegistrationForm = () => {
                 data.password
             );
             if (response.status === 200) {
-                localStorage.setItem('token', response.data.token);
+                setAccessToken(response.data.accessToken);
+                setUser(response.data.user);
                 navigate(fromPath, { replace: true });
             }
         } catch (e) {
-            console.log(e);
             if (isAxiosError(e)) {
                 setError('root', {
                     type: 'serverError',
