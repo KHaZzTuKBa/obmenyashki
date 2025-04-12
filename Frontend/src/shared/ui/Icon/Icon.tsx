@@ -5,6 +5,8 @@ import HomeIconSvg from './assets/home.svg?react';
 import SearchIconSvg from './assets/search.svg?react';
 import UserIconSvg from './assets/user.svg?react';
 
+import style from './style.module.scss';
+
 // TODO: Подключить базовые стили
 
 export type IconName =
@@ -32,10 +34,10 @@ interface IconProps extends React.SVGProps<SVGSVGElement> {
     className?: string;
 }
 
-export const Icon = ({ name, className, ...rest }: IconProps) => {
+export const Icon = ({ name, className = '', ...rest }: IconProps) => {
     const SvgComponent = iconsMap[name];
     if (!SvgComponent) {
         return null;
     }
-    return <SvgComponent className={className} {...rest} />;
+    return <SvgComponent className={`${style.icon} ${className}`} {...rest} />;
 };
