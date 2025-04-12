@@ -10,6 +10,7 @@ import { NoAuthRoute } from '@/shared/ui/Routes/no-auth-route';
 import { LoginPage } from '@/pages/login-page';
 import { RegisterPage } from '@/pages/register-page';
 import { NotFoundPage } from '@/pages/not-found-page/ui/NotFound';
+import { ProfilePage } from '@/pages/profile-page';
 
 const routes = [
     {
@@ -27,7 +28,7 @@ const routes = [
             },
             {
                 path: Path.PROFILE,
-                element: <div>ProfilePage</div>,
+                element: <ProfilePage />,
             },
             {
                 path: Path.MY_ITEM_ADD,

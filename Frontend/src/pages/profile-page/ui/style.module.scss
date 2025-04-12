@@ -1,0 +1,16 @@
+.profile {
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, min-content);
+    grid-column-gap: 30px;
+    grid-row-gap: 30px;
+}
+
+@media only screen and (max-width: 1300px) {
+    .profile {
+        grid-template-columns: repeat(1, 100%);
+        grid-template-rows: repeat(3, min-content);
+        justify-content: center;
+    }
+}
