@@ -19,17 +19,17 @@ namespace WebAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<LoginResponse>> LoginUser(LoginDTO loginDTO)
         {
-            var resulr = await user.LoginUser(loginDTO);
+            var result = await user.LoginUser(loginDTO);
 
-            return Ok(resulr);
+            return Ok(result);
         }
 
         [HttpPost("registration")]
         public async Task<ActionResult<LoginResponse>> RegisterUser(RegisterDTO registerDTO)
         {
-            var resulr = await user.RegisterUser(registerDTO);
+            var result = await user.RegisterUser(registerDTO);
 
-            return Ok(resulr);
+            return Ok(result);
         }
     }
 }

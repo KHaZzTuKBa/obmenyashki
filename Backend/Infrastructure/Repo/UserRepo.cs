@@ -26,20 +26,20 @@ namespace Infrastructure.Repo
         {
             var getUser = await FindUserByEmail(loginDTO.Email);
 
-            if (getUser == null) return new LoginResponse(1, "1");
+            if (getUser == null) return new LoginResponse(getUser, "1");
 
             bool checkPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.Password);
             if (checkPassword)
-                return new LoginResponse(1, GenerateJWTToken(getUser));
+                return new LoginResponse(getUser, GenerateJWTToken(getUser));
             else
-                return new LoginResponse(1, "1");
+                return new LoginResponse(getUser, "1");
         }
 
         public async Task<RegisterResponse> RegisterUser(RegisterDTO registerDTO)
         {
             var getUser = await FindUserByEmail(registerDTO.Email);
 
-            if(getUser != null) return new RegisterResponse(1, "1");
+            if(getUser != null) return new RegisterResponse(getUser, "1");
 
             var newUser = new User()
             {
@@ -53,7 +53,7 @@ namespace Infrastructure.Repo
 
             await appDbContext.SaveChangesAsync();
 
-            return new RegisterResponse(1, GenerateJWTToken(newUser));
+            return new RegisterResponse(getUser, GenerateJWTToken(newUser));
         }
 
         private async Task<User> FindUserByEmail(string email) =>

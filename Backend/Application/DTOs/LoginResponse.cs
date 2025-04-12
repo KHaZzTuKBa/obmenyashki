@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs
+﻿using Domain.Entities;
+
+namespace Application.DTOs
 {
-    public record LoginResponse(int code, string token);
+    public record LoginResponse(User user, string token);
 }
