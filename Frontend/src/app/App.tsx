@@ -1,5 +1,5 @@
 import { QueryProvider } from './providers/query';
-import { AppRouter } from './providers/routing/routes';
+import { AppRouter } from './providers/routing';
 
 import './styles/global.scss';
 

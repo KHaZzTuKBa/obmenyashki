@@ -3,12 +3,26 @@
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
+    --sidebar-gap: min(60px, 3.75em);
+    --sidebar-item-wh: min(100px, 6.25em);
+    --sidebar-item-padding: min(20px, 1.25em);
+    --sidebar-padding: min(20px, 1.25em);
 }
 
 @media only screen and (max-width: 767px) {
     .sidebar {
         overflow-y: visible;
         overflow-x: visible;
+        --sidebar-gap: 30px;
+        --sidebar-item-wh: min(60px, 3.75em);
+        --sidebar-item-padding: min(10px, 0.625em);
+        --sidebar-padding: min(10px, 1.25em);
+    }
+}
+
+@media only screen and (width >= 576px) {
+    .sidebar {
+        --sidebar-gap: 10px;
     }
 }
 
@@ -38,7 +52,7 @@
 }
 
 .sidebar__item:nth-child(5)::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     width: calc(var(--sidebar-item-wh) + var(--sidebar-padding) * 2);

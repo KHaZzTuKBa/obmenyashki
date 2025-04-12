@@ -1,11 +1,9 @@
 // TODO: сделать хук
-import { Path } from '@/shared/config/routes';
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-// TODO: импорт констант путей для большей надежности
-// import { Path } from '@/shared/config/routes';
+import { Path } from '@/shared/config/routes';
 
-export function useSearchForm() {
+export const useSearchForm = () => {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
 
@@ -30,4 +28,4 @@ export function useSearchForm() {
         handleQueryChange,
         handleSubmit,
     };
-}
+};

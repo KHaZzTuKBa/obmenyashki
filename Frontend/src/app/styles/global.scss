@@ -1,4 +1,5 @@
-@use 'nullstyle';
+@use "nullstyle";
+@import url(https://fonts.googleapis.com/css?family=Montserrat:regular,500,600,700,800,900);
 
 #root {
     display: flex;
@@ -6,36 +7,8 @@
     height: 100%;
 }
 
-@import url(https://fonts.googleapis.com/css?family=Montserrat:100,200,300,regular,500,600,700,800,900,100italic,200italic,300italic,italic,500italic,600italic,700italic,800italic,900italic);
-
 body {
     background: linear-gradient(#6076a8, #4dc5a5);
-    font-family: 'Montserrat';
+    font-family: "Montserrat";
     position: relative;
-}
-
-:root {
-    --sidebar-gap: min(60px, 3.75em);
-    --sidebar-item-wh: min(100px, 6.25em);
-    --sidebar-item-padding: min(20px, 1.25em);
-    --sidebar-padding: min(20px, 1.25em);
-}
-
-@media only screen and (max-width: 767px) {
-    :root {
-        --sidebar-gap: calc(30px);
-        --sidebar-item-wh: min(60px, 3.75em);
-        --sidebar-item-padding: min(10px, 0.625em);
-        --sidebar-padding: min(10px, 1.25em);
-    }
-}
-
-@media only screen and (max-width: 576px) {
-    :root {
-        --sidebar-gap: calc(10px);
-    }
-}
-
-svg path {
-    stroke: #e8ecf3;
 }

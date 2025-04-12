@@ -7,8 +7,6 @@ import UserIconSvg from './assets/user.svg?react';
 
 import style from './style.module.scss';
 
-// TODO: Подключить базовые стили
-
 export type IconName =
     | 'search'
     | 'user'
@@ -17,10 +15,7 @@ export type IconName =
     | 'chat'
     | 'settings';
 
-const iconsMap: Record<
-    IconName,
-    React.FunctionComponent<React.SVGProps<SVGSVGElement>>
-> = {
+const iconsMap: Record<IconName, React.FC<React.SVGProps<SVGSVGElement>>> = {
     search: SearchIconSvg,
     user: UserIconSvg,
     home: HomeIconSvg,

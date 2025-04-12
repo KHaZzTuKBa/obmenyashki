@@ -115,7 +115,7 @@ export const LoginForm = () => {
                 </Button>
                 <p className={styles.form__register}>
                     Еще нет аккаунта?{' '}
-                    <Link to={Path.REGISTER}>Зарегистрироваться</Link>
+                    <Link to={Path.REGISTRATION}>Зарегистрироваться</Link>
                 </p>
             </form>
         </>
