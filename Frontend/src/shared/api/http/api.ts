@@ -29,8 +29,7 @@ $api.interceptors.response.use(
                         withCredentials: true,
                     }
                 );
-                //Установить токен
-                localStorage.setItem('token', response.data.user.name);
+                localStorage.setItem('token', response.data.token);
                 $api.request(originalRequest);
             } catch (e) {
                 console.log(e);

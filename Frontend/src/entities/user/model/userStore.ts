@@ -1,16 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { create } from 'zustand';
+import { User } from './types';
 
-export const userSlice = createSlice({
-    name: 'user',
-    initialState: {
-        name: '',
-    },
-    reducers: {
-        setName: (state, action) => {
-            state.name = action.payload;
-        },
-    },
-});
+type State = {
+    user: User;
+};
 
-export const { setName } = userSlice.actions;
-export default userSlice.reducer;
+type Actions = {
+    setUser: (userData: User) => void;
+};
+
+export const useUserStore = create<State & Actions>((set) => ({
+    user: { id: 0, email: '', phone: '', name: '', avatarURL: undefined },
+    setUser: (userData: User) =>
+        set(() => ({
+            user: userData,
+        })),
+}));
