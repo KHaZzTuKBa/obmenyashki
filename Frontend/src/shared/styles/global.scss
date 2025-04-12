@@ -1,4 +1,4 @@
-@use "nullstyle";
+@use 'nullstyle';
 @import url(https://fonts.googleapis.com/css?family=Montserrat:regular,500,600,700,800,900);
 
 #root {
@@ -9,6 +9,6 @@
 
 body {
     background: linear-gradient(#6076a8, #4dc5a5);
-    font-family: "Montserrat";
+    font-family: 'Montserrat';
     position: relative;
 }

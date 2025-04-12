@@ -1,0 +1,48 @@
+.profile__products {
+    grid-area: 2 / 1 / 3 / 3;
+}
+
+@media only screen and (width <= 1300px) {
+    .profile__products {
+        grid-area: 3 / 1 / 3 / 1;
+    }
+}
+.products {
+    background-color: #fff;
+    border-radius: 42px;
+    padding: 35px 35px 30px;
+}
+
+@media only screen and (width <= 768px) {
+    .products {
+        border-radius: 20px;
+    }
+}
+
+.products__header {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+@media only screen and (width <= 768px) {
+    .products__header {
+        font-size: 1.5rem;
+    }
+}
+
+.products__list {
+    padding: 0 55px;
+    overflow: hidden;
+    display: flex;
+    gap: 40px;
+    overflow-x: auto;
+}
+
+@media only screen and (width <= 1300px) {
+    .products__list {
+        padding: 0;
+        gap: 20px;
+    }
+}

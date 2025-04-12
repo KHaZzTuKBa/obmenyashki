@@ -1,0 +1,78 @@
+.profile__features {
+    background-color: #fff;
+    border-radius: 42px;
+    padding: 20px 20px 30px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+@media only screen and (width <= 1300px) {
+    .profile__features {
+        grid-area: 2 / 1 / 2 / 1;
+        border-radius: 20px;
+    }
+}
+
+.features {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media only screen and (width <= 768px) {
+    .features {
+        justify-content: center;
+    }
+}
+
+.features__item {
+    position: relative;
+    padding-left: 40px;
+}
+
+@media only screen and (width <= 768px) {
+    .features__item {
+        padding-left: 20px;
+    }
+}
+
+.features__item::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #4dc5a5;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+}
+
+@media only screen and (width <= 768px) {
+    .features__item::before {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+.features__item,
+.features__item a {
+    font-size: 2.25rem;
+    font-weight: 500;
+    color: #000;
+}
+
+.features__item a:hover {
+    text-decoration: underline;
+}
+
+@media only screen and (width <= 768px) {
+    .features__item,
+    .features__item a {
+        font-size: 1.25rem;
+    }
+}

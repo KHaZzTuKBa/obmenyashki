@@ -14,6 +14,6 @@ export const Path = {
 } as const;
 
 // Функции для генерации динамических путей
-export const getEditMyItemPath = (id: string) => `/myItem/edit/${id}`;
-export const getViewItemPath = (id: string) => `/feed/item/${id}`;
-export const getChatPath = (id: string) => `/chats/${id}`;
+export const getEditMyItemPath = (id: number) => `/myItem/edit/${id}`;
+export const getViewItemPath = (id: number) => `/feed/item/${id}`;
+export const getChatPath = (id: number) => `/chats/${id}`;

@@ -1,4 +1,4 @@
-@use "../../../shared/styles/vars.scss" as *;
+@use '../../../shared/styles/vars.scss' as *;
 
 .sidebar {
     border-bottom-right-radius: min(66px, 4.125em);
@@ -57,7 +57,7 @@
 }
 
 .sidebar__item:nth-child(5)::before {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     width: calc(var(--sidebar-item-wh) + var(--sidebar-padding) * 2);
