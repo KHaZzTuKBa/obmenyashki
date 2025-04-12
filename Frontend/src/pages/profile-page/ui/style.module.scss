@@ -5,6 +5,8 @@
     grid-template-rows: repeat(2, min-content);
     grid-column-gap: 30px;
     grid-row-gap: 30px;
+    max-width: 1780px;
+    margin: 0 auto;
 }
 
 @media only screen and (width <= 1300px) {
