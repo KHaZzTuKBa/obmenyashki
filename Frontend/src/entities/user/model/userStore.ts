@@ -17,3 +17,6 @@ export const userStore = create<UserStore>((set) => ({
     setAccessToken: (accessToken: string | null) => set({ accessToken }),
     logout: () => set({ user: null, accessToken: null }),
 }));
+
+// TODO: глупость, надо избавиться
+export const useUserStore = userStore;

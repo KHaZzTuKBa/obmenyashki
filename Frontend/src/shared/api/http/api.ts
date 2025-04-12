@@ -2,6 +2,9 @@ import axios from 'axios';
 import { IAuthResponse } from './auth-response';
 import { API_URL } from '@/shared/config/api';
 
+// TODO: userStore здесь не по FSD
+import { userStore } from '@/entities/user/model/userStore';
+
 const $api = axios.create({
     baseURL: API_URL,
     withCredentials: true,
@@ -9,7 +12,8 @@ const $api = axios.create({
 });
 
 $api.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    const token = userStore.getState().accessToken;
+    config.headers.Authorization = `Bearer ${token}`;
     return config;
 });
 
@@ -22,16 +26,16 @@ $api.interceptors.response.use(
 
         if (error.response?.status === 401 && !error.config._isRetry) {
             originalRequest._isRetry = true;
-            try {
-                const response = await axios.get<IAuthResponse>(
-                    `${API_URL}/refresh`,
-                    {
-                        withCredentials: true,
-                    }
-                );
-                localStorage.setItem('token', response.data.token);
-                $api.request(originalRequest);
-            } catch (e) {
+                try {
+                    const response = await axios.get<IAuthResponse>(
+                        `${API_URL}/refresh`,
+                        {
+                            withCredentials: true,
+                        }
+                    );
+                    userStore.getState().setAccessToken(response.data.token);
+                    $api.request(originalRequest);
+                } catch (e) {
                 console.log(e);
             }
         }
