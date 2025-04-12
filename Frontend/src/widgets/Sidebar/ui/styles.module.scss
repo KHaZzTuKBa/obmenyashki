@@ -1,26 +1,31 @@
+@use "../../../shared/styles/vars.scss" as *;
+
 .sidebar {
     border-bottom-right-radius: min(66px, 4.125em);
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
-    --sidebar-gap: min(60px, 3.75em);
-    --sidebar-item-wh: min(100px, 6.25em);
-    --sidebar-item-padding: min(20px, 1.25em);
-    --sidebar-padding: min(20px, 1.25em);
+    flex-shrink: 0;
+
+    --sidebar-gap: #{$sidebar-gap};
+    --sidebar-item-wh: #{$sidebar-item-wh};
+    --sidebar-item-padding: #{$sidebar-item-padding};
+    --sidebar-padding: #{$sidebar-padding};
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .sidebar {
         overflow-y: visible;
         overflow-x: visible;
+        border-bottom-right-radius: 0;
+
         --sidebar-gap: 30px;
         --sidebar-item-wh: min(60px, 3.75em);
         --sidebar-item-padding: min(10px, 0.625em);
-        --sidebar-padding: min(10px, 1.25em);
     }
 }
 
-@media only screen and (width >= 576px) {
+@media only screen and (width <= 576px) {
     .sidebar {
         --sidebar-gap: 10px;
     }
@@ -36,7 +41,7 @@
     padding: var(--sidebar-padding);
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .sidebar__menu {
         flex-direction: row;
         justify-content: center;
@@ -63,7 +68,7 @@
     transform: translateY(25%);
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .sidebar__item:nth-child(5)::before {
         display: none;
     }
@@ -86,58 +91,8 @@
     transform: translateY(var(--indicator-offset-y, 0px));
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .sidebar__indicator {
         transform: translateX(var(--indicator-offset-x-relative, 0px));
     }
 }
-
-// .sidebar__item:has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     opacity: 1;
-// }
-
-// .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 0));
-// }
-
-// .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 0));
-// }
-
-// .sidebar__item:nth-child(2):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 1));
-// }
-
-// .sidebar__item:nth-child(3):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 2));
-// }
-
-// .sidebar__item:nth-child(4):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 3));
-// }
-
-// .sidebar__item:nth-child(5):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//     transform: translateY(calc((var(--sidebar-gap) + var(--sidebar-item-wh)) * 4));
-// }
-
-// @media only screen and (max-width: 767px) {
-//     .sidebar__item:nth-child(1):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * -2));
-//     }
-
-//     .sidebar__item:nth-child(2):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * -1));
-//     }
-
-//     .sidebar__item:nth-child(3):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//         transform: translateX(calc((var(--sidebar-item-wh) - var(--sidebar-gap)) * 0));
-//     }
-
-//     .sidebar__item:nth-child(4):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * 1));
-//     }
-
-//     .sidebar__item:nth-child(5):has(.sidebar__link:global(.active)) ~ .sidebar__indicator {
-//         transform: translateX(calc((var(--sidebar-item-wh) + var(--sidebar-gap)) * 2));
-//     }
-// }

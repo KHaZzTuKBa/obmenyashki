@@ -55,7 +55,7 @@
     }
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .search__input {
         font-size: 1rem;
         padding: min(16px, 1em);
@@ -71,7 +71,7 @@
     width: min(42px, 2.625rem);
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .search__glass {
         left: min(16px, 1em);
         width: min(16px, 1em);

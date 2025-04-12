@@ -1,7 +1,7 @@
 import { QueryProvider } from './providers/query';
 import { AppRouter } from './providers/routing';
 
-import './styles/global.scss';
+import '@/shared/styles/global.scss';
 
 export const App = () => {
     return (

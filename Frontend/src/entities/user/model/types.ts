@@ -5,5 +5,5 @@ export interface User {
     town?: string;
     phone: string;
     email: string;
-    avatarURL?: string | null;
+    avatarURL?: string;
 }

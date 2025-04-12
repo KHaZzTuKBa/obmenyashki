@@ -11,7 +11,7 @@
     }
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .header__logo {
         width: min(60px, 3.75em);
     }

@@ -1,23 +1,28 @@
+@use "../../../../shared/styles/vars.scss" as *;
+
 .main {
     display: flex;
     flex: 1 0 0;
     overflow: hidden;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .main {
         flex-direction: column;
     }
 }
 
 .content {
+    --sidebar-item-wh: #{$sidebar-item-wh};
+    --sidebar-padding: #{$sidebar-padding};
     background-color: #e4e8f1;
     border-top-left-radius: min(28px, 1.75em);
     flex: 1 0 auto;
+    width: calc(100% - var(--sidebar-item-wh) - var(--sidebar-padding) * 2);
     height: 100%;
 }
 
-@media only screen and (max-width: 767px) {
+@media only screen and (width <= 768px) {
     .content {
         width: 100%;
     }
