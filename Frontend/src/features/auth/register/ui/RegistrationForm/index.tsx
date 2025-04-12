@@ -41,7 +41,7 @@ export const RegistrationForm = () => {
                 data.password
             );
             if (response.status === 200) {
-                setAccessToken(response.data.accessToken);
+                setAccessToken(response.data.token);
                 setUser(response.data.user);
                 navigate(fromPath, { replace: true });
             }

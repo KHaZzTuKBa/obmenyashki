@@ -30,7 +30,7 @@ export const LoginForm = () => {
         try {
             const response = await loginUser(data.email, data.password);
             if (response.status === 200) {
-                setAccessToken(response.data.accessToken);
+                setAccessToken(response.data.token);
                 setUser(response.data.user);
                 navigate(fromPath, { replace: true });
             }
