@@ -53,7 +53,7 @@ namespace Infrastructure.Repo
 
             await appDbContext.SaveChangesAsync();
 
-            return new RegisterResponse(getUser, GenerateJWTToken(newUser));
+            return new RegisterResponse(newUser, GenerateJWTToken(newUser));
         }
 
         private async Task<User> FindUserByEmail(string email) =>
