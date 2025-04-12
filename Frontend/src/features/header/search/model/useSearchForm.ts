@@ -1,4 +1,5 @@
 // TODO: сделать хук
+import { Path } from '@/shared/config/routes';
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 // TODO: импорт констант путей для большей надежности
@@ -21,7 +22,7 @@ export function useSearchForm() {
         }
         // Переходим на страницу /feed с параметром поиска q
         // Используйте константу пути, если она есть: navigate(`${Path.FEED}?q=${trimmedQuery}`);
-        navigate(`/feed?q=${encodeURIComponent(trimmedQuery)}`);
+        navigate(`${Path.FEED}?q=${encodeURIComponent(trimmedQuery)}`);
     };
 
     return {

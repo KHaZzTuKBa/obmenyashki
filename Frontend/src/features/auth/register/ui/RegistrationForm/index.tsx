@@ -4,6 +4,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 import { isAxiosError } from 'axios';
 import { Input, Button } from '@/shared/ui/Form';
+import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
 
@@ -189,7 +190,7 @@ export const RegistrationForm = () => {
                 </Button>
 
                 <p className={styles.form__login}>
-                    Уже есть аккаунт? <Link to='/login'>Войти</Link>
+                    Уже есть аккаунт? <Link to={Path.LOGIN}>Войти</Link>
                 </p>
             </form>
         </>

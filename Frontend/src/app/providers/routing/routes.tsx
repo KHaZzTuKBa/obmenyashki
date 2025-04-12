@@ -3,6 +3,7 @@ import {
     Navigate,
     RouterProvider,
 } from 'react-router-dom';
+import { Path } from '@/shared/config/routes';
 import { MainLayout } from '../../layouts/main-layout';
 import { ProtectedRoute } from './protected-route';
 import { LoginPage } from '@/pages/login-page';
@@ -12,7 +13,7 @@ import { NotFoundPage } from '@/pages/not-found-page/ui/NotFound';
 
 const routes = [
     {
-        path: '/',
+        path: Path.HOME,
         element: (
             <ProtectedRoute>
                 <MainLayout />
@@ -22,56 +23,56 @@ const routes = [
         children: [
             {
                 index: true,
-                element: <Navigate to='/feed' replace />,
+                element: <Navigate to={Path.FEED} replace />,
             },
             {
-                path: 'profile',
+                path: Path.PROFILE,
                 element: <div>ProfilePage</div>,
             },
             {
-                path: 'myItem/add',
+                path: Path.MY_ITEM_ADD,
                 element: <div>addMyItemPage</div>,
             },
             {
-                path: 'myItem/edit/:id',
+                path: Path.MY_ITEM_EDIT,
                 element: <div>editMyItemPage</div>,
             },
             {
-                path: 'feed',
+                path: Path.FEED,
                 element: <div>feedPage</div>,
             },
             {
-                path: 'feed/item/:id',
+                path: Path.VIEW_ITEM,
                 element: <div>viewItemPage</div>,
             },
             {
-                path: 'chats',
+                path: Path.CHATS,
                 element: <div>chatsPage</div>,
             },
             {
-                path: 'chats/:id',
+                path: Path.CHAT,
                 element: <div>individualChatPage</div>,
             },
         ],
     },
     {
-        path: '/login',
+        path: Path.LOGIN,
         element: (
-            <NoAuthRoute redirectTo='/feed'>
+            <NoAuthRoute redirectTo={Path.FEED}>
                 <LoginPage />
             </NoAuthRoute>
         ),
     },
     {
-        path: '/register',
+        path: Path.REGISTER,
         element: (
-            <NoAuthRoute redirectTo='/feed'>
+            <NoAuthRoute redirectTo={Path.FEED}>
                 <RegisterPage />
             </NoAuthRoute>
         ),
     },
     {
-        path: '*',
+        path: Path.NOT_FOUND,
         element: <NotFoundPage />,
     },
 ];

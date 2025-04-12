@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { loginUser } from '@/entities/user/model/api';
 import { isAxiosError } from 'axios';
 import { Button, Input } from '@/shared/ui/Form';
+import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
 
@@ -114,7 +115,7 @@ export const LoginForm = () => {
                 </Button>
                 <p className={styles.form__register}>
                     Еще нет аккаунта?{' '}
-                    <Link to='/register'>Зарегистрироваться</Link>
+                    <Link to={Path.REGISTER}>Зарегистрироваться</Link>
                 </p>
             </form>
         </>

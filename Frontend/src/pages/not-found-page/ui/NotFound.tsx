@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './style.module.scss';
+import { Path } from '@/shared/config/routes';
 
 export const NotFoundPage = () => {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ export const NotFoundPage = () => {
         if (window.history.length > 1) {
             navigate(-1);
         } else {
-            navigate('/feed', { replace: true });
+            navigate(Path.FEED, { replace: true });
         }
     };
 
