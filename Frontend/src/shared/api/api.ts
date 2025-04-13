@@ -1,9 +1,12 @@
 import axios from 'axios';
-import { IAuthResponse } from './auth-response';
-import { API_URL } from '@/shared/config/api';
+
+// TODO: AuthResponse здесь тоже не по FSD
+import type { AuthResponse } from '@/entities/user/model';
 
 // TODO: userStore здесь не по FSD
 import { userStore } from '@/entities/user/model/userStore';
+
+import { API_URL } from '@/shared/config/api';
 
 const $api = axios.create({
     baseURL: API_URL,
@@ -26,16 +29,16 @@ $api.interceptors.response.use(
 
         if (error.response?.status === 401 && !error.config._isRetry) {
             originalRequest._isRetry = true;
-                try {
-                    const response = await axios.get<IAuthResponse>(
-                        `${API_URL}/refresh`,
-                        {
-                            withCredentials: true,
-                        }
-                    );
-                    userStore.getState().setAccessToken(response.data.token);
-                    $api.request(originalRequest);
-                } catch (e) {
+            try {
+                const response = await axios.get<AuthResponse>(
+                    `${API_URL}/refresh`,
+                    {
+                        withCredentials: true,
+                    }
+                );
+                userStore.getState().setAccessToken(response.data.token);
+                $api.request(originalRequest);
+            } catch (e) {
                 console.log(e);
             }
         }

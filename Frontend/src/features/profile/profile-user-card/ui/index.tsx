@@ -7,10 +7,8 @@ import style from './style.module.scss';
 
 export const ProfileUserCard = () => {
     const user = useUserStore((state) => state?.user);
+    
 
-    if (!user) {
-        return null;
-    }
     return (
         <div className={style.profile__info}>
             <div className={style.profile__image}>

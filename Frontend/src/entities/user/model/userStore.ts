@@ -1,22 +1,35 @@
 import { create } from 'zustand';
-import { User } from './types';
+import { persist } from 'zustand/middleware';
+import type { User } from './types';
 
 type UserStore = {
-    user: User | null;
-    accessToken: string | null;
-    setUser: (user: User | null) => void;
-    setAccessToken: (accessToken: string | null) => void;
+    user: User;
+    accessToken: string;
+    setUser: (user: User) => void;
+    setAccessToken: (accessToken: string) => void;
     logout: () => void;
 };
 
-export const userStore = create<UserStore>((set) => ({
-    user: null,
-    accessToken: null,
+export const userStore = create<UserStore>()(
+    persist(
+        (set) => ({
+            user: {} as User,
+            accessToken: '',
 
-    setUser: (user: User | null) => set({ user }),
-    setAccessToken: (accessToken: string | null) => set({ accessToken }),
-    logout: () => set({ user: null, accessToken: null }),
-}));
+            setUser: (user) => set({ user }),
+            setAccessToken: (accessToken: string) => set({ accessToken }),
+            logout: () =>
+                set({
+                    user: {} as User,
+                    accessToken: '',
+                }),
+        }),
+        {
+            name: 'currentUser',
+            partialize: (state) => ({ user: state.user }),
+        }
+    )
+);
 
 // TODO: глупость, надо избавиться
 export const useUserStore = userStore;

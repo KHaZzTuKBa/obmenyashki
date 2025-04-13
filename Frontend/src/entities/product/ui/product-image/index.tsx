@@ -2,10 +2,10 @@ import { Icon } from '@/shared/ui/Icon';
 
 export const ProductImage = ({
     className = '',
-    produtcImgURL,
+    produtcImgURL = null,
 }: {
     className?: string;
-    produtcImgURL?: string;
+    produtcImgURL?: string | null;
 }) => {
     return (
         <>

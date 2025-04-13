@@ -1,15 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { registerUser } from '@/entities/user/model/api';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 import { isAxiosError } from 'axios';
+import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
+import { registerUser, useUserStore } from '@/entities/user/model';
 import { Input, Button } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
-import { useUserStore } from '@/entities/user/model';
 
-interface IRegisterForm {
+interface RegisterFormData {
     name: string;
     phone: string;
     email: string;
@@ -28,9 +27,9 @@ export const RegistrationForm = () => {
         formState: { errors },
         setError,
         control,
-    } = useForm<IRegisterForm>({ mode: 'all' });
+    } = useForm<RegisterFormData>({ mode: 'all' });
 
-    const submit: SubmitHandler<IRegisterForm> = async (data) => {
+    const submit: SubmitHandler<RegisterFormData> = async (data) => {
         data.phone = `+7${data.phone.replace(/\D/g, '').slice(1, 11)}`;
 
         try {
@@ -40,7 +39,7 @@ export const RegistrationForm = () => {
                 data.email,
                 data.password
             );
-            if (response.status === 200) {
+            if (response.status === 200 && response.data.user !== null) {
                 setAccessToken(response.data.token);
                 setUser(response.data.user);
                 navigate(fromPath, { replace: true });

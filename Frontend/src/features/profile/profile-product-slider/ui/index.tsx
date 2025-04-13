@@ -1,14 +1,14 @@
-import { ProfileProductCard } from '@/entities/product/ui';
 import { isAxiosError } from 'axios';
 import { Link } from 'react-router-dom';
-import { getViewItemPath, Path } from '@/shared/config/routes';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Virtual } from 'swiper/modules';
-import { Product } from '@/entities/product/model/types';
+import { ProfileProductCard } from '@/entities/product';
+import type { Product } from '@/entities/product';
+import { getViewItemPath, Path } from '@/shared/config/routes';
+import { useUserProducts } from '../hooks/useUserProducts';
 
 import 'swiper/swiper-bundle.css';
 import style from './style.module.scss';
-import { useUserProducts } from '../hooks/useUserProducts';
 
 export const ProfileProductSlider = () => {
     const { data, error, isPending } = useUserProducts();

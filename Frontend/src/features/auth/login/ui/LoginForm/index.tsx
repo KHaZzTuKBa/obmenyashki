@@ -1,17 +1,16 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { loginUser } from '@/entities/user/model/api';
 import { isAxiosError } from 'axios';
+import { loginUser, useUserStore } from '@/entities/user/model';
 import { Button, Input } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
-import { useUserStore } from '@/entities/user/model';
 
-interface ILoginForm {
+type LoginFormData = {
     email: string;
     password: string;
-}
+};
 
 export const LoginForm = () => {
     const navigate = useNavigate();
@@ -24,12 +23,12 @@ export const LoginForm = () => {
         handleSubmit,
         formState: { errors },
         setError,
-    } = useForm<ILoginForm>({ mode: 'all' });
+    } = useForm<LoginFormData>({ mode: 'all' });
 
-    const submit: SubmitHandler<ILoginForm> = async (data) => {
+    const submit: SubmitHandler<LoginFormData> = async (data) => {
         try {
             const response = await loginUser(data.email, data.password);
-            if (response.status === 200) {
+            if (response.status === 200 && response.data.user !== null) {
                 setAccessToken(response.data.token);
                 setUser(response.data.user);
                 navigate(fromPath, { replace: true });
@@ -77,10 +76,6 @@ export const LoginForm = () => {
                     <Input
                         {...register('password', {
                             required: 'Это поле обязательно для заполнения',
-                            minLength: {
-                                value: 8,
-                                message: 'Минимальная длина пароля 8 символов',
-                            },
                             setValueAs: (val) => val.trim(),
                         })}
                         type='password'

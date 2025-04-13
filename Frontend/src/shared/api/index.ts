@@ -1,1 +1,1 @@
-export { $api } from './http/api';
+export { $api } from './api';
