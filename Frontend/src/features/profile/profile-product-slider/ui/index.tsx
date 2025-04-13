@@ -6,6 +6,7 @@ import { ProfileProductCard } from '@/entities/product';
 import type { Product } from '@/entities/product';
 import { getViewItemPath, Path } from '@/shared/config/routes';
 import { useUserProducts } from '../hooks/useUserProducts';
+import { ProfileProductCard } from '../../profile-product-card';
 
 import 'swiper/swiper-bundle.css';
 import style from './style.module.scss';
