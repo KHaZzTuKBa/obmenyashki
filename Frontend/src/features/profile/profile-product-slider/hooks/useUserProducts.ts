@@ -1,12 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getProductListByUserId } from '@/entities/product/model';
-import { useUserStore } from '@/entities/user/model';
+import { getOwnProductList } from '../api/api';
 
 export const useUserProducts = () => {
-    const id = useUserStore((s) => s.user.id);
     return useQuery({
-        queryKey: ['userProducts', id],
-        queryFn: () => getProductListByUserId(id),
+        queryKey: ['ownProducts'],
+        queryFn: () => getOwnProductList(),
         select: (data) => data.data,
     });
 };
