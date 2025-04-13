@@ -1,28 +1,31 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from './types';
+import { User } from './types';
+import { logoutUser } from '../api';
 
 type UserStore = {
     user: User;
-    accessToken: string;
+    accessToken: string | null;
     setUser: (user: User) => void;
-    setAccessToken: (accessToken: string) => void;
+    setAccessToken: (accessToken: string | null) => void;
     logout: () => void;
 };
 
-export const userStore = create<UserStore>()(
+export const useUserStore = create<UserStore>()(
     persist(
         (set) => ({
             user: {} as User,
-            accessToken: '',
+            accessToken: null,
 
             setUser: (user) => set({ user }),
-            setAccessToken: (accessToken: string) => set({ accessToken }),
-            logout: () =>
+            setAccessToken: (accessToken) => set({ accessToken }),
+            logout: () => {
                 set({
                     user: {} as User,
-                    accessToken: '',
-                }),
+                    accessToken: null,
+                });
+                logoutUser();
+            },
         }),
         {
             name: 'currentUser',
@@ -31,5 +34,10 @@ export const userStore = create<UserStore>()(
     )
 );
 
-// TODO: глупость, надо избавиться
-export const useUserStore = userStore;
+export const setUser = (user: User) => useUserStore.getState().setUser(user);
+
+export const getAccessToken = () => useUserStore.getState().accessToken;
+export const setAccessToken = (token: string | null) =>
+    useUserStore.getState().setAccessToken(token);
+
+export const logoutSession = () => useUserStore.getState().logout();

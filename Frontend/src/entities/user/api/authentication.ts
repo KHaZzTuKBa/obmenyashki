@@ -1,4 +1,4 @@
-import { AuthResponse } from './types';
+import { AuthResponse } from '../model/types';
 import axios, { AxiosResponse } from 'axios';
 import { API_URL } from '@/shared/config/api';
 
@@ -28,6 +28,4 @@ export const loginUser = async (
     );
 };
 
-export const logoutUser = async (): Promise<void> => {
-    return axios.post(`${BASE_URL}/logout`, { withCredentials: true });
-};
+

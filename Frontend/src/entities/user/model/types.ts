@@ -10,5 +10,9 @@ export type User = {
 
 export type AuthResponse = {
     user: User;
-    token: string;
+    token: string | null;
+};
+
+export type RefreshResponse = {
+    token: string | null;
 };
