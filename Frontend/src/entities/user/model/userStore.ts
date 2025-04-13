@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 import { User } from './types';
 import { logoutUser } from '../api';
 
-type UserStore = {
+interface UserStore {
     user: User;
     accessToken: string | null;
     setUser: (user: User) => void;

@@ -1,4 +1,4 @@
-export type User = {
+export interface User {
     id: string;
     name: string;
     birthday?: string;
@@ -6,13 +6,13 @@ export type User = {
     phone: string;
     email: string;
     avatarURL?: string;
-};
+}
 
-export type AuthResponse = {
+export interface AuthResponse {
     user: User;
     token: string | null;
-};
+}
 
-export type RefreshResponse = {
+export interface RefreshResponse {
     token: string | null;
-};
+}

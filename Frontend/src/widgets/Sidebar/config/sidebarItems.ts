@@ -1,5 +1,5 @@
 import { Path } from '@/shared/config/routes';
-import type { IconName } from '@/shared/ui/Icon';
+import { IconName } from '@/shared/ui/Icon';
 
 export interface SidebarItemConfig {
     id: number;

@@ -7,7 +7,7 @@ import { Path } from '@/shared/config/routes';
 
 import styles from './style.module.scss';
 
-type LoginFormData = {
+interface LoginFormData {
     email: string;
     password: string;
 };

@@ -1,5 +1,5 @@
-import { Product } from '../../../entities/product/model/types';
-import { ProductImage } from '../../../entities/product/ui/product-image';
+import { Product } from '@/entities/product/model/types';
+import { ProductImage } from '@/entities/product/ui/product-image';
 import styles from './style.module.scss';
 
 export const ProfileProductCard = ({ product }: { product: Product }) => {
