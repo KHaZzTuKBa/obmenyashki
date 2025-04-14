@@ -27,5 +27,3 @@ export const loginUser = async (
         { withCredentials: true }
     );
 };
-
-
