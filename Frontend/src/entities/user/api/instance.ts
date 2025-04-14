@@ -1,9 +1,9 @@
 import { $baseApi } from '@/shared/api';
 import { getAccessToken, setAccessToken, logoutSession } from '../model';
 import { refreshTokenApi } from './refresh';
+import axios from 'axios';
 
-// TODO: создать копию а не ссылку
-export const $api = $baseApi;
+const $api = axios.create($baseApi.defaults);
 
 $api.interceptors.request.use((config) => {
     const token = getAccessToken();
@@ -33,3 +33,5 @@ $api.interceptors.response.use(
         throw error;
     }
 );
+
+export { $api };
