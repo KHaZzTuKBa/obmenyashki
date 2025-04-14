@@ -1,4 +1,20 @@
-$sidebar-gap: min(60px, 3.75em);
-$sidebar-item-wh: min(100px, 6.25em);
-$sidebar-item-padding: min(20px, 1.25em);
-$sidebar-padding: min(20px, 1.25em);
+:root {
+    --sidebar-gap: min(60px, 3.75em);
+    --sidebar-item-wh: min(100px, 6.25em);
+    --sidebar-item-padding: min(20px, 1.25em);
+    --sidebar-padding: min(20px, 1.25em);
+}
+
+@media only screen and (width <= 768px) {
+    :root {
+        --sidebar-gap: 30px;
+        --sidebar-item-wh: min(60px, 3.75em);
+        --sidebar-item-padding: min(10px, 0.625em);
+    }
+}
+
+@media only screen and (width <= 576px) {
+    :root {
+        --sidebar-gap: 10px;
+    }
+}

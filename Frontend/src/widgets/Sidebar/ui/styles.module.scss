@@ -1,16 +1,9 @@
-@use '../../../shared/styles/vars.scss' as *;
-
 .sidebar {
     border-bottom-right-radius: min(66px, 4.125em);
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
     flex-shrink: 0;
-
-    --sidebar-gap: #{$sidebar-gap};
-    --sidebar-item-wh: #{$sidebar-item-wh};
-    --sidebar-item-padding: #{$sidebar-item-padding};
-    --sidebar-padding: #{$sidebar-padding};
 }
 
 @media only screen and (width <= 768px) {
@@ -18,16 +11,6 @@
         overflow-y: visible;
         overflow-x: visible;
         border-bottom-right-radius: 0;
-
-        --sidebar-gap: 30px;
-        --sidebar-item-wh: min(60px, 3.75em);
-        --sidebar-item-padding: min(10px, 0.625em);
-    }
-}
-
-@media only screen and (width <= 576px) {
-    .sidebar {
-        --sidebar-gap: 10px;
     }
 }
 
@@ -57,7 +40,7 @@
 }
 
 .sidebar__item:nth-child(5)::before {
-    content: '';
+    content: "";
     display: block;
     position: absolute;
     width: calc(var(--sidebar-item-wh) + var(--sidebar-padding) * 2);
