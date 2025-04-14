@@ -9,8 +9,8 @@ export {
 export {
     getAccessToken,
     setAccessToken,
-    setUser,
+    setCurentUser,
+    getCurentUser,
     logoutSession,
-    useUserStore,
 } from './userStore';
 export type { User, AuthResponse } from './types';

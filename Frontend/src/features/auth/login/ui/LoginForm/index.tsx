@@ -1,7 +1,11 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
-import { loginUser, useUserStore } from '@/entities/user/model';
+import {
+    loginUser,
+    setAccessToken,
+    setCurentUser,
+} from '@/entities/user/model';
 import { Button, Input } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 
@@ -10,13 +14,12 @@ import styles from './style.module.scss';
 interface LoginFormData {
     email: string;
     password: string;
-};
+}
 
 export const LoginForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const fromPath = location.state?.from?.pathname || '/';
-    const { setUser, setAccessToken } = useUserStore((state) => state);
 
     const {
         register,
@@ -30,7 +33,7 @@ export const LoginForm = () => {
             const response = await loginUser(data.email, data.password);
             if (response.status === 200 && response.data.user !== null) {
                 setAccessToken(response.data.token);
-                setUser(response.data.user);
+                setCurentUser(response.data.user);
                 navigate(fromPath, { replace: true });
             }
         } catch (e) {

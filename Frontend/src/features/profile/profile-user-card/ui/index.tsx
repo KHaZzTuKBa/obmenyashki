@@ -1,13 +1,12 @@
 import { UserAvatar } from '@/entities/user/ui/user-avatar';
 import { Path } from '@/shared/config/routes';
 import { Link } from 'react-router-dom';
-import { useUserStore } from '@/entities/user/model';
+import { getCurentUser } from '@/entities/user/model';
 
 import style from './style.module.scss';
 
 export const ProfileUserCard = () => {
-    const user = useUserStore((state) => state?.user);
-    
+    const user = getCurentUser();
 
     return (
         <div className={style.profile__info}>
@@ -16,11 +15,11 @@ export const ProfileUserCard = () => {
             </div>
 
             <div className={style.profile__data}>
-                {user.name ? <h2>{user.name}</h2> : null}
+                <h2>{user.name}</h2>
                 {user.birthday ? <p>{user.birthday}</p> : null}
                 {user.town ? <p>{user.town}</p> : null}
-                {user.phone ? <p>{user.phone}</p> : null}
-                {user.email ? <p>{user.email}</p> : null}
+                <p>{user.phone}</p>
+                <p>{user.email}</p>
                 <Link to={Path.EDIT_PROFILE}>Редактировать профиль</Link>
             </div>
         </div>

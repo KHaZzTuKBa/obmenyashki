@@ -2,7 +2,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAxiosError } from 'axios';
 import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
-import { registerUser, useUserStore } from '@/entities/user/model';
+import {
+    registerUser,
+    setAccessToken,
+    setCurentUser,
+} from '@/entities/user/model';
 import { Input, Button } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 
@@ -19,7 +23,6 @@ export const RegistrationForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const fromPath = location.state?.from?.pathname || '/';
-    const { setUser, setAccessToken } = useUserStore((store) => store);
 
     const {
         register,
@@ -41,7 +44,7 @@ export const RegistrationForm = () => {
             );
             if (response.status === 200 && response.data.user !== null) {
                 setAccessToken(response.data.token);
-                setUser(response.data.user);
+                setCurentUser(response.data.user);
                 navigate(fromPath, { replace: true });
             }
         } catch (e) {

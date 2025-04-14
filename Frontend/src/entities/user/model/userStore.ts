@@ -9,9 +9,9 @@ interface UserStore {
     setUser: (user: User) => void;
     setAccessToken: (accessToken: string | null) => void;
     logout: () => void;
-};
+}
 
-export const useUserStore = create<UserStore>()(
+const useCurentUserStore = create<UserStore>()(
     persist(
         (set) => ({
             user: {} as User,
@@ -28,16 +28,21 @@ export const useUserStore = create<UserStore>()(
             },
         }),
         {
-            name: 'currentUser',
-            partialize: (state) => ({ user: state.user }),
+            name: 'currentUserSession',
+            partialize: (state) => ({
+                user: state.user,
+                accessToken: state.accessToken,
+            }),
         }
     )
 );
 
-export const setUser = (user: User) => useUserStore.getState().setUser(user);
+export const setCurentUser = (user: User) =>
+    useCurentUserStore.getState().setUser(user);
+export const getCurentUser = () => useCurentUserStore.getState().user;
 
-export const getAccessToken = () => useUserStore.getState().accessToken;
+export const getAccessToken = () => useCurentUserStore.getState().accessToken;
 export const setAccessToken = (token: string | null) =>
-    useUserStore.getState().setAccessToken(token);
+    useCurentUserStore.getState().setAccessToken(token);
 
-export const logoutSession = () => useUserStore.getState().logout();
+export const logoutSession = () => useCurentUserStore.getState().logout();

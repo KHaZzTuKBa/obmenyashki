@@ -1,8 +1,8 @@
 import { Icon } from '@/shared/ui/Icon';
-import { useUserStore } from '@/entities/user/model';
+import { getCurentUser } from '@/entities/user/model';
 
 export const UserAvatar = ({ className = '' }: { className?: string }) => {
-    const userAvatarURL = useUserStore((state) => state.user.avatarURL);
+    const userAvatarURL = getCurentUser().avatarURL;
     return (
         <>
             {userAvatarURL ? (
