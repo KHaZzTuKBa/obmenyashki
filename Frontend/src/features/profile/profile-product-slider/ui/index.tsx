@@ -1,4 +1,3 @@
-import { isAxiosError } from 'axios';
 import { Link } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Virtual } from 'swiper/modules';
@@ -22,19 +21,12 @@ export const ProfileProductSlider = () => {
     }
 
     if (error) {
-        if (isAxiosError(error)) {
-            return (
-                <div className={`${style.profile__products} ${style.products}`}>
-                    <p>
-                        Ошибка соединения с сервером. Код ошибки:
-                        {` ${error.response?.status} ${error.message}`}
-                    </p>
-                </div>
-            );
-        }
         return (
             <div className={`${style.profile__products} ${style.products}`}>
-                <p>{error.message}</p>
+                <p>
+                    Ошибка соединения с сервером. Код ошибки:
+                    {` ${error.response?.status} ${error.message}`}
+                </p>
             </div>
         );
     }
