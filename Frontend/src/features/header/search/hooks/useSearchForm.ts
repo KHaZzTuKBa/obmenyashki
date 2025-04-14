@@ -19,7 +19,6 @@ export const useSearchForm = () => {
             return;
         }
         // Переходим на страницу /feed с параметром поиска q
-        // Используйте константу пути, если она есть: navigate(`${Path.FEED}?q=${trimmedQuery}`);
         navigate(`${Path.FEED}?q=${encodeURIComponent(trimmedQuery)}`);
     };
 
