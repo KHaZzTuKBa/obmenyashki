@@ -1,0 +1,1 @@
+export type { FeedApiResponse } from './types'

@@ -11,6 +11,7 @@ import { LoginPage } from '@/pages/login-page';
 import { RegisterPage } from '@/pages/register-page';
 import { NotFoundPage } from '@/pages/not-found-page/ui/NotFound';
 import { ProfilePage } from '@/pages/profile-page';
+import { FeedPage } from '@/pages/feed-page';
 
 const routes = [
     {
@@ -40,7 +41,8 @@ const routes = [
             },
             {
                 path: Path.FEED,
-                element: <div>feedPage</div>,
+                // TODO: FeedPage with SearchHook and react-query (если строка пустая искать все, если есть символы то по ентеру искать по запросу q)
+                element: <FeedPage />,
             },
             {
                 path: Path.VIEW_ITEM,
