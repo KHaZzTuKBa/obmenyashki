@@ -1,5 +1,8 @@
 ﻿using Application.Contracts;
-using Application.DTOs;
+using Application.DTOs.GetUser;
+using Application.DTOs.Login;
+using Application.DTOs.RefreshToken;
+using Application.DTOs.Registration;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Http;
@@ -124,6 +127,16 @@ namespace Infrastructure.Repo
             await appDbContext.SaveChangesAsync();
 
             return new RefreshTokenResponse(GenerateAccessToken(getUser), getUserToken.RefreshToken);
+        }
+
+        public async Task<GetUserResponse> GetUser(GetUserDTO getUserDTO)
+        {
+            var getUser = await FindUserById(getUserDTO.Id);
+
+            if (getUser == null)
+                return null;
+
+            return new GetUserResponse(getUser);
         }
 
         // Методы для поиска в БД по свойствам

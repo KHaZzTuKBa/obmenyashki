@@ -1,10 +1,14 @@
 ﻿using Application.Contracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Application.DTOs;
 using Infrastructure.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Application.DTOs.Login;
+using Application.DTOs.Registration;
+using Application.DTOs.RefreshToken;
+using Application.DTOs.GetUser;
 
 namespace WebAPI.Controllers
 {
@@ -71,6 +75,42 @@ namespace WebAPI.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [HttpGet("logout")]
+        public async Task<ActionResult> Logout()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (refreshToken == null)
+                return Unauthorized("У пользователя отсутвует Refresh Token");
+
+            Response.Cookies.Append(
+                "refreshToken",
+                "",
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddDays(-1),
+                        HttpOnly = true,
+                        Secure = true,
+                        Path = "/api/User/refreshToken",
+                        SameSite = SameSiteMode.Lax
+                    }
+);
+            return Ok("Refresh Token успешно удален");
+        }
+
+        [Authorize]
+        [HttpGet("getUser")]
+        public async Task<ActionResult<GetUserResponse>> GetUser([FromQuery] GetUserDTO getUserDTO)
+        {
+            var result = await user.GetUser(getUserDTO);
+
+            if(result == null) 
+                return BadRequest("Пользователь не найден");
+
+            return Ok(result);
+        }
+
         // Установка RefreshToken в HttpOnly
         private void SetRefreshTokenCookie(string refreshToken)
         {
@@ -80,7 +120,7 @@ namespace WebAPI.Controllers
                 Secure = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddDays(14),
-                Path = "api/User/refreshToken"
+                Path = "/api/User/refreshToken"
             };
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
