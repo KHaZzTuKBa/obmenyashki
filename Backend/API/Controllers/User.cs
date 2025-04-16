@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs;
+using Infrastructure.Data;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebAPI.Controllers
 {
@@ -10,10 +13,12 @@ namespace WebAPI.Controllers
     public class User : ControllerBase
     {
         private readonly IUser user;
+        private readonly AppDbContext appDbContext;
 
-        public User(IUser user) 
+        public User(IUser user, AppDbContext appDbContext) 
         {
             this.user = user;
+            this.appDbContext = appDbContext;
         }
 
         [HttpPost("login")]
@@ -21,15 +26,74 @@ namespace WebAPI.Controllers
         {
             var result = await user.LoginUser(loginDTO);
 
+            if (result.user == null)
+                return NotFound(result);
+
+            var userToken = await FindUserTokenById(result.user.Id);
+
+            SetRefreshTokenCookie(userToken.RefreshToken);
+
             return Ok(result);
         }
 
         [HttpPost("registration")]
-        public async Task<ActionResult<LoginResponse>> RegisterUser(RegisterDTO registerDTO)
+        public async Task<ActionResult<RegisterResponse>> RegisterUser(RegisterDTO registerDTO)
         {
             var result = await user.RegisterUser(registerDTO);
 
+            if (result == null)
+                 return Unauthorized();           
+
+            var userToken = await FindUserTokenById(result.user.Id);
+
+            SetRefreshTokenCookie(userToken.RefreshToken);
+
             return Ok(result);
         }
+
+        [HttpGet("refreshToken")]
+        public async Task<ActionResult<RefreshTokenResponse>> Refresh()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            var result = await user.RefreshToken(refreshToken);
+
+            if (result == null)
+                return Unauthorized();
+
+            SetRefreshTokenCookie(result.refreshToken);
+
+            var getUserToken = await FindUserTokenByToken(refreshToken);
+            var getUser = await FindUserById(Guid.Parse(getUserToken.UserId));
+
+            var response = new Tuple<string, Domain.Entities.User>(result.accessToken, getUser);
+
+            return Ok(response);
+        }
+
+        // Установка RefreshToken в HttpOnly
+        private void SetRefreshTokenCookie(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(14),
+                Path = "api/User/refreshToken"
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        }
+
+        // Методы для поиска в БД по свойствам
+        private async Task<UserToken> FindUserTokenById(Guid Id) =>
+            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.UserId == Id.ToString());
+
+        private async Task<UserToken> FindUserTokenByToken(string refreshToken) =>
+            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+        private async Task<Domain.Entities.User> FindUserById(Guid Id) =>
+            await appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
     }
 }

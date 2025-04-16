@@ -6,5 +6,6 @@ namespace Application.Contracts
     {
         Task<RegisterResponse> RegisterUser(RegisterDTO regosterDTO);
         Task<LoginResponse> LoginUser(LoginDTO loginDTO);
+        Task<RefreshTokenResponse> RefreshToken(string oldRefreshToken);
     }
 }

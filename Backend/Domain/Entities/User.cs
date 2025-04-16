@@ -8,5 +8,6 @@
         public string Phone { get; set; } = default!;
         public string Password { get; set; } = default!;
         public string? ProfileAvatarURL { get; set; } = default!;
+        public bool IsOnline { get; set; } = default!;
     }
 }
