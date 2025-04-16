@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Entities
 {
     public class User
     {
@@ -6,6 +8,8 @@
         public string Name { get; set; } = default!;
         public string Email { get; set; } = default!;
         public string Phone { get; set; } = default!;
+
+        [JsonIgnore]
         public string Password { get; set; } = default!;
         public string? ProfileAvatarURL { get; set; } = default!;
         public bool IsOnline { get; set; } = default!;
