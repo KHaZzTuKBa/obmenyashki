@@ -1,1 +1,0 @@
-export { fetchFeedData } from './api';

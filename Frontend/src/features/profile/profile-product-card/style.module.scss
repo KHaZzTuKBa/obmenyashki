@@ -52,6 +52,8 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     line-clamp: 2;
+
+    text-wrap: balance;
 }
 
 @media only screen and (width <= 768px) {
