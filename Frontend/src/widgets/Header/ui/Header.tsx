@@ -1,5 +1,4 @@
-import { SearchForm } from '@/features/header/search';
-import { ProfileLink } from '@/features/header/profile-link';
+import { SearchForm, ProfileLink } from '@/features/header';
 import { Logo } from '@/shared/ui/Logo';
 
 import style from './style.module.scss';

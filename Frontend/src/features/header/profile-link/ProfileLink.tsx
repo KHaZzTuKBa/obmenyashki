@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
+import { UserAvatar } from '@/entities/user/';
+import { Path } from '@/shared/config/routes';
 
 import styles from './styles.module.scss';
-import { UserAvatar } from '@/entities/user/ui/user-avatar';
-import { Path } from '@/shared/config/routes';
 
 export const ProfileLink = () => {
     return (

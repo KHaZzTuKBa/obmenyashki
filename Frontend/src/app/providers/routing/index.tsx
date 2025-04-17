@@ -9,7 +9,7 @@ import { ProtectedRoute } from '@/features/auth/routes/protected-route';
 import { NoAuthRoute } from '@/features/auth/routes/no-auth-route';
 import { LoginPage } from '@/pages/login-page';
 import { RegisterPage } from '@/pages/register-page';
-import { NotFoundPage } from '@/pages/not-found-page/ui/NotFound';
+import { NotFoundPage } from '@/pages/not-found-page';
 import { ProfilePage } from '@/pages/profile-page';
 import { FeedPage } from '@/pages/feed-page';
 
@@ -41,7 +41,6 @@ const routes = [
             },
             {
                 path: Path.FEED,
-                // TODO: FeedPage with SearchHook and react-query (если строка пустая искать все, если есть символы то по ентеру искать по запросу q)
                 element: <FeedPage />,
             },
             {

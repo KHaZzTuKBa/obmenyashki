@@ -6,6 +6,7 @@ import { getCurentUser } from '@/entities/user/model';
 import style from './style.module.scss';
 
 export const ProfileUserCard = () => {
+    // TODO: мб с какой то переодичностью запрашивать свежие данные с сервера? С другой стороны они будут прилетать каждые 15 минут с refresh-а
     const user = getCurentUser();
 
     return (
