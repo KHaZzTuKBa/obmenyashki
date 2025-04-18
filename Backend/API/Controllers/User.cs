@@ -5,10 +5,12 @@ using Infrastructure.Data;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
-using Application.DTOs.Login;
-using Application.DTOs.Registration;
-using Application.DTOs.RefreshToken;
 using Application.DTOs.GetUser;
+using Application.DTOs.Login;
+using Application.DTOs.RefreshToken;
+using Application.DTOs.Registration;
+using Microsoft.AspNetCore.Identity;
+using Application.DTOs.UpdateUser;
 
 namespace WebAPI.Controllers
 {
@@ -96,6 +98,18 @@ namespace WebAPI.Controllers
             var result = await user.GetUser(getUserDTO);
 
             if(result == null) 
+                return BadRequest("Пользователь не найден");
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("updateUser")]
+        public async Task<ActionResult<UpdateUserResponse>> UpdateUser(UpdateUserDTO updateUserDTO)
+        {
+            var result = await user.UpdateUser(updateUserDTO);
+
+            if (result == null)
                 return BadRequest("Пользователь не найден");
 
             return Ok(result);

@@ -1,8 +1,8 @@
 ﻿using Application.Contracts;
 using Application.DTOs.GetUser;
-using Application.DTOs.Login;
 using Application.DTOs.RefreshToken;
 using Application.DTOs.Registration;
+using Application.DTOs.Login;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.DTOs.UpdateUser;
 
 namespace Infrastructure.Repo
 {
@@ -136,6 +137,22 @@ namespace Infrastructure.Repo
                 return null;
 
             return new GetUserResponse(getUser);
+        }
+
+        public async Task<UpdateUserResponse> UpdateUser(UpdateUserDTO updateUserDTO)
+        {
+            var getUser = await FindUserById(updateUserDTO.Id);
+
+            if (getUser == null)
+                return null;
+
+            getUser.Email = updateUserDTO.Email;
+            getUser.Name = updateUserDTO.Name;
+            getUser.Phone = updateUserDTO.Phone;
+            
+            await appDbContext.SaveChangesAsync();
+
+            return new UpdateUserResponse(getUser);
         }
 
         // Методы для поиска в БД по свойствам
