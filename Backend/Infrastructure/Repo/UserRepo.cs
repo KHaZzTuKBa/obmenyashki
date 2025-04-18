@@ -5,7 +5,6 @@ using Application.DTOs.RefreshToken;
 using Application.DTOs.Registration;
 using Domain.Entities;
 using Infrastructure.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;

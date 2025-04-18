@@ -1,6 +1,5 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Infrastructure.Data
 {
@@ -10,5 +9,8 @@ namespace Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<UserToken> Tokens { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<UserProductRel> UserProductMap { get; set; }
     }
 }
