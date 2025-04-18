@@ -1,11 +1,4 @@
-export {
-    loginUser,
-    registerUser,
-    $api,
-    getUser,
-    updateUser,
-    logoutUser,
-} from '../api';
+export { $api, getUser, updateUser, logoutUser } from '../api';
 export {
     getAccessToken,
     setAccessToken,
