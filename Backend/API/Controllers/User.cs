@@ -1,7 +1,6 @@
 ﻿using Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Application.DTOs.GetUser;
 using Application.DTOs.Login;
@@ -47,7 +46,7 @@ namespace WebAPI.Controllers
 
             SetRefreshTokenCookie(result.RefreshToken);
 
-            return Ok(new RegisterResponse(result.User, result.AccessToken, "Вход успешен!"));
+            return Ok(new RegisterResponse(result.User, result.AccessToken, "Успешная регистрация"));
         }
 
         [HttpGet("refreshToken")]
