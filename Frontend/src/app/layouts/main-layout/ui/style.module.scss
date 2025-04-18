@@ -33,6 +33,8 @@
 
 @media only screen and (width <= 768px) {
     .content__layout {
-        height: calc(100% - var(--sidebar-item-wh) - var(--sidebar-padding) * 2);
+        height: calc(
+            100% - var(--sidebar-item-wh) - var(--sidebar-padding) * 2
+        );
     }
 }

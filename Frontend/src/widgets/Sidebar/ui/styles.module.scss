@@ -40,7 +40,7 @@
 }
 
 .sidebar__item:nth-child(5)::before {
-    content: "";
+    content: '';
     display: block;
     position: absolute;
     width: calc(var(--sidebar-item-wh) + var(--sidebar-padding) * 2);
