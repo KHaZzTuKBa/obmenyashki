@@ -1,5 +1,6 @@
 import { useState, FormEvent, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+
 import { Path } from '@/shared/config/routes';
 
 export const useSearchForm = () => {

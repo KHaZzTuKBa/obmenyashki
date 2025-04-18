@@ -1,5 +1,6 @@
-import { Navigate } from 'react-router-dom';
 import { ReactNode } from 'react';
+import { Navigate } from 'react-router-dom';
+
 import { getAccessToken } from '@/entities/user/model';
 
 export const NoAuthRoute = ({

@@ -1,5 +1,7 @@
 import { Product } from '@/entities/product';
+
 import { useSearchFeed } from '../hooks/useSearchFeed';
+
 import { ProductItem } from './feed-product-item/ProductItem';
 
 import style from './style.module.scss';

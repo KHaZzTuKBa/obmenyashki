@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
+
 import { Product } from '@/entities/product/model/types';
 import { ProductImage } from '@/entities/product/ui/product-image';
-import styles from './style.module.scss';
-import { Link } from 'react-router-dom';
 import { Path } from '@/shared/config/routes';
+
+import styles from './style.module.scss';
 
 export const ProfileProductCard = ({ product }: { product: Product }) => {
     return (

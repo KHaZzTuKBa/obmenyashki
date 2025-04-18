@@ -1,10 +1,12 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAxiosError } from 'axios';
-import { registerUser } from '@/features/auth/api/api';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
 import { setAccessToken, setCurentUser } from '@/entities/user/model';
-import { Input, Button } from '@/shared/ui/Form';
+import { registerUser } from '@/features/auth/api/api';
 import { Path } from '@/shared/config/routes';
+import { Input, Button } from '@/shared/ui/Form';
+
 import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 
 import styles from './style.module.scss';

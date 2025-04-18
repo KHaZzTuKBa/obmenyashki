@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+
 import { AuthResponse } from '@/entities/user/model/types';
 import { API_URL } from '@/shared/config/api';
 

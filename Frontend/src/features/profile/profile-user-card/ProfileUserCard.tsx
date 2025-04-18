@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom';
+
+import { getCurentUser } from '@/entities/user/model';
 import { UserAvatar } from '@/entities/user/ui/user-avatar';
 import { Path } from '@/shared/config/routes';
-import { Link } from 'react-router-dom';
-import { getCurentUser } from '@/entities/user/model';
 
 import style from './style.module.scss';
 

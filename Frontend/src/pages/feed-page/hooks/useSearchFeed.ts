@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { useSearchParams } from 'react-router-dom';
+
 import { fetchFeedData } from '../api/api';
 import { FeedApiResponse } from '../model/types';
 

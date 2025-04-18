@@ -1,5 +1,7 @@
-import { $api } from '@/entities/user/api';
 import { AxiosError } from 'axios';
+
+import { $api } from '@/entities/user/api';
+
 import { FeedApiResponse } from '../model/types';
 
 export const fetchFeedData = async (

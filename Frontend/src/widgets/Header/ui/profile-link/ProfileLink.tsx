@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+
 import { UserAvatar } from '@/entities/user/';
 import { Path } from '@/shared/config/routes';
 

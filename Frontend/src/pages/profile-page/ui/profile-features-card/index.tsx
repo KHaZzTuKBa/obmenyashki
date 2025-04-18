@@ -1,5 +1,6 @@
 // TODO: По приколу можно сделать так чтобы ссылки куда-то вели
 import { Link } from 'react-router-dom';
+
 import style from './style.module.scss';
 
 export const ProfileFeaturesCard = () => {

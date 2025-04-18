@@ -1,7 +1,10 @@
-import { $baseApi } from '@/shared/api';
-import { getAccessToken, setAccessToken, logoutSession } from '../model';
-import { refreshTokenApi } from './refresh';
 import axios from 'axios';
+
+import { $baseApi } from '@/shared/api';
+
+import { getAccessToken, setAccessToken, logoutSession } from '../model';
+
+import { refreshTokenApi } from './refresh';
 
 const $api = axios.create($baseApi.defaults);
 

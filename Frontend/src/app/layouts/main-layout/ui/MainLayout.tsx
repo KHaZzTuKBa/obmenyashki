@@ -1,6 +1,8 @@
+import { Outlet } from 'react-router-dom';
+
 import { Header } from '@/widgets/Header';
 import { Sidebar } from '@/widgets/Sidebar';
-import { Outlet } from 'react-router-dom';
+
 import style from './style.module.scss';
 
 export const MainLayout = () => {

@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { Virtual } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+
 import { Product } from '@/entities/product';
 import { getViewItemPath, Path } from '@/shared/config/routes';
-import { useUserProducts } from '../hooks/useUserProducts';
+
 import { ProfileProductCard } from '../../profile-product-card/ProfileProductCard';
+import { useUserProducts } from '../hooks/useUserProducts';
 
 import 'swiper/swiper-bundle.css';
+
 import style from './style.module.scss';
 
 export const ProfileProductSlider = () => {

@@ -1,6 +1,8 @@
-import { $api } from './instance';
-import { User } from '../model/types';
 import { AxiosResponse } from 'axios';
+
+import { User } from '../model/types';
+
+import { $api } from './instance';
 
 export const getUser = (user: User): Promise<AxiosResponse<User>> => {
     return $api.get<User>(`/getUser/${user.id}`);

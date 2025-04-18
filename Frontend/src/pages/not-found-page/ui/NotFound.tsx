@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import styles from './style.module.scss';
+
 import { Path } from '@/shared/config/routes';
+
+import styles from './style.module.scss';
 
 export const NotFoundPage = () => {
     const navigate = useNavigate();

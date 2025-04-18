@@ -1,5 +1,5 @@
-import { Icon } from '@/shared/ui/Icon';
 import { getCurentUser } from '@/entities/user/model';
+import { Icon } from '@/shared/ui/Icon';
 
 export const UserAvatar = ({ className = '' }: { className?: string }) => {
     const userAvatarURL = getCurentUser().avatarURL;

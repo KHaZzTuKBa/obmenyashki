@@ -3,15 +3,16 @@ import {
     Navigate,
     RouterProvider,
 } from 'react-router-dom';
-import { Path } from '@/shared/config/routes';
+
 import { MainLayout } from '@/app/layouts/main-layout';
-import { ProtectedRoute } from '@/features/auth/routes/protected-route';
 import { NoAuthRoute } from '@/features/auth/routes/no-auth-route';
+import { ProtectedRoute } from '@/features/auth/routes/protected-route';
+import { FeedPage } from '@/pages/feed-page';
 import { LoginPage } from '@/pages/login-page';
-import { RegisterPage } from '@/pages/register-page';
 import { NotFoundPage } from '@/pages/not-found-page';
 import { ProfilePage } from '@/pages/profile-page';
-import { FeedPage } from '@/pages/feed-page';
+import { RegisterPage } from '@/pages/register-page';
+import { Path } from '@/shared/config/routes';
 
 const routes = [
     {

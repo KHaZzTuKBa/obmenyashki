@@ -1,4 +1,5 @@
 import { LoginForm } from '@/features/auth';
+
 import styles from './style.module.scss';
 
 export const LoginPage = () => {

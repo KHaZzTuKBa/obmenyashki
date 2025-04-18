@@ -1,7 +1,10 @@
-import { Icon } from '@/shared/ui/Icon';
-import { NavLink, useLocation } from 'react-router-dom';
-import { sidebarItems } from '../config/sidebarItems';
 import { useEffect, useMemo, useState } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+
+import { Icon } from '@/shared/ui/Icon';
+
+import { sidebarItems } from '../config/sidebarItems';
+
 
 import styles from './styles.module.scss';
 

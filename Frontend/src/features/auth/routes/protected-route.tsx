@@ -1,7 +1,8 @@
-import { Navigate, useLocation } from 'react-router-dom';
 import { ReactNode } from 'react';
-import { Path } from '@/shared/config/routes';
+import { Navigate, useLocation } from 'react-router-dom';
+
 import { getAccessToken } from '@/entities/user/model';
+import { Path } from '@/shared/config/routes';
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     const location = useLocation();

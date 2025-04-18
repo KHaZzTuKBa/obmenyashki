@@ -1,5 +1,6 @@
-import { useSearchForm } from '../hooks/useSearchForm';
 import { Icon } from '@/shared/ui/Icon';
+
+import { useSearchForm } from '../hooks/useSearchForm';
 
 import styles from './style.module.scss';
 
