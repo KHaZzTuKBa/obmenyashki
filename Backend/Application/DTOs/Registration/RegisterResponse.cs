@@ -2,5 +2,5 @@
 
 namespace Application.DTOs.Registration
 {
-    public record RegisterResponse(User user, string accessToken, string refreshToken);
+    public record RegisterResponse(User? User, string? AccessToken, string Message);
 }

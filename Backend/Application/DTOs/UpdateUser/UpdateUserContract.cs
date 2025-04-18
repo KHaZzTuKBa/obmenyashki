@@ -2,5 +2,5 @@
 
 namespace Application.DTOs.UpdateUser
 {
-    public record UpdateUserResponse(User? User, string Message);
+    public record UpdateUserContract(User User);
 }

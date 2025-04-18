@@ -8,10 +8,10 @@ namespace Application.Contracts
 {
     public interface IUser
     {
-        Task<RegisterResponse?> RegisterUser(RegisterDTO regosterDTO);
-        Task<LoginResponse?> LoginUser(LoginDTO loginDTO);
-        Task<RefreshTokenResponse?> RefreshToken(string oldRefreshToken);
-        Task <GetUserResponse?> GetUser(GetUserDTO getUserDTO);
-        Task<UpdateUserResponse?> UpdateUser(UpdateUserDTO updateUserDTO);
+        Task<RegisterContract?> RegisterUser(RegisterDTO regosterDTO);
+        Task<LoginContract?> LoginUser(LoginDTO loginDTO);
+        Task<RefreshTokenContract?> RefreshToken(string oldRefreshToken);
+        Task<GetUserContract?> GetUser(GetUserDTO getUserDTO);
+        Task<UpdateUserContract?> UpdateUser(UpdateUserDTO updateUserDTO);
     }
 }

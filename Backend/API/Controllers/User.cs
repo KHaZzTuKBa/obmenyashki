@@ -1,7 +1,6 @@
 ﻿using Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Data;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Application.DTOs.GetUser;
@@ -9,10 +8,6 @@ using Application.DTOs.Login;
 using Application.DTOs.RefreshToken;
 using Application.DTOs.Registration;
 using Application.DTOs.UpdateUser;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace WebAPI.Controllers
 {
@@ -21,13 +16,11 @@ namespace WebAPI.Controllers
     public class User : ControllerBase
     {
         private readonly IUser user;
-        private readonly AppDbContext appDbContext;
         private readonly IConfiguration configuration;
 
         public User(IUser user, AppDbContext appDbContext, IConfiguration configuration) 
         {
             this.user = user;
-            this.appDbContext = appDbContext;
             this.configuration = configuration;
         }
 
@@ -36,18 +29,12 @@ namespace WebAPI.Controllers
         {
             var result = await user.LoginUser(loginDTO);
 
-            if (result.user == null)
-                return NotFound(result);
+            if (result == null)
+                return NotFound(new LoginResponse(null, null, "Неправильный логин или пароль"));
 
-            SetRefreshTokenCookie(result.message);
+            SetRefreshTokenCookie(result.RefreshToken);
 
-            var response = new
-            {
-                user = result.user,
-                accessToken = result.accessToken
-            };
-
-            return Ok(response);
+            return Ok(new LoginResponse(result.User, result.AccessToken, "Вход успешен!"));
         }
 
         [HttpPost("registration")]
@@ -56,17 +43,11 @@ namespace WebAPI.Controllers
             var result = await user.RegisterUser(registerDTO);
 
             if (result == null)
-                 return Unauthorized();           
+                 return Unauthorized(new RegisterResponse(null, null, "Такие почта или телефон уже используются"));           
 
-            SetRefreshTokenCookie(result.refreshToken);
+            SetRefreshTokenCookie(result.RefreshToken);
 
-            var response = new
-            {
-                user = result.user,
-                accessToken = result.accessToken
-            };
-
-            return Ok(response);
+            return Ok(new RegisterResponse(result.User, result.AccessToken, "Вход успешен!"));
         }
 
         [HttpGet("refreshToken")]
@@ -75,21 +56,21 @@ namespace WebAPI.Controllers
             var refreshToken = Request.Cookies["refreshToken"];
 
             if(refreshToken == null)
-                return Unauthorized();
+                return Unauthorized(new RefreshTokenResponse(null));
 
             var result = await user.RefreshToken(refreshToken);
 
             if (result == null)
-                return Unauthorized();
+                return Unauthorized(new RefreshTokenResponse(null));
 
-            SetRefreshTokenCookie(result.refreshToken);
+            SetRefreshTokenCookie(result.RefreshToken);
 
-            return Ok(result.accessToken);
+            return Ok(new RefreshTokenResponse(result.AccessToken));
         }
 
         [Authorize]
         [HttpGet("logout")]
-        public async Task<ActionResult> Logout()
+        public ActionResult Logout()
         {
             var refreshToken = Request.Cookies["refreshToken"];
 
@@ -103,14 +84,14 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [HttpGet("getUser")]
-        public async Task<ActionResult<GetUserResponse?>> GetUser([FromQuery] GetUserDTO getUserDTO)
+        public async Task<ActionResult<GetUserResponse>> GetUser([FromQuery] GetUserDTO getUserDTO)
         {
             var result = await user.GetUser(getUserDTO);
 
             if(result == null) 
-                return BadRequest("Пользователь не найден");
+                return BadRequest(new GetUserResponse(null, "Пользователь не найден"));
 
-            return Ok(result);
+            return Ok(new GetUserResponse(result.User, "Успешно"));
         }
 
         [Authorize]
@@ -120,9 +101,16 @@ namespace WebAPI.Controllers
             var result = await user.UpdateUser(updateUserDTO);
 
             if (result == null)
-                return BadRequest("Пользователь не найден");
+                return BadRequest(new UpdateUserResponse(null, "Пользователь не найден"));
 
-            return Ok(result);
+            return Ok(new UpdateUserResponse(result.User, "Успешно"));
+        }
+
+        [Authorize]
+        [HttpGet("isAuth")]
+        public ActionResult IsAuth ()
+        {
+            return Ok(); 
         }
 
         // Установка RefreshToken в HttpOnly
@@ -153,8 +141,5 @@ namespace WebAPI.Controllers
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
-
-        private async Task<Domain.Entities.User?> FindUserById(Guid Id) =>
-            await appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
     }
 }

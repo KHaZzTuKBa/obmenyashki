@@ -5,9 +5,9 @@ namespace Application.DTOs.Login
     public class LoginDTO
     {
         [Required]
-        public string Email { get; set; }
+        public string Email { get; set; } = default!;
 
         [Required]
-        public string Password { get; set; }
+        public string Password { get; set; } = default!;
     }
 }
