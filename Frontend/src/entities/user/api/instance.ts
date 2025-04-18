@@ -25,7 +25,7 @@ $api.interceptors.response.use(
             originalRequest._isRetry = true;
             try {
                 const response = await refreshTokenApi();
-                setAccessToken(response.data.token);
+                setAccessToken(response.data.accessToken);
                 $api.request(originalRequest);
             } catch (e) {
                 console.log(e);
