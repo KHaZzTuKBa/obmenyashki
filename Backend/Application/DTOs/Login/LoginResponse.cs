@@ -2,5 +2,5 @@
 
 namespace Application.DTOs.Login
 {
-    public record LoginResponse(User user, string token);
+    public record LoginResponse(User user, string accessToken, string message);
 }

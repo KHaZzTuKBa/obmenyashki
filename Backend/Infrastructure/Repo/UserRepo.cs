@@ -26,48 +26,26 @@ namespace Infrastructure.Repo
             this.configuration = configuration;
         }
 
-        public async Task<LoginResponse> LoginUser(LoginDTO loginDTO)
+        public async Task<LoginResponse?> LoginUser(LoginDTO loginDTO)
         {
             var getUser = await FindUserByEmail(loginDTO.Email);
 
             // Если пользователь не найден в БД
             if (getUser == null)
-                return new LoginResponse(null, "Неправильный логин или пароль");
+                return new LoginResponse(null, "Неправильный логин или пароль", "Неправильный логин или пароль");
 
             bool checkPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.Password);
             if (checkPassword)
             {
-                getUser.IsOnline = true;
+                getUser.IsOnline = true; 
 
-                var getUserToken = await FindUserTokenById(getUser.Id);
-
-                // Проверка и установка Access и Refresh Token'ов
-                if (getUserToken != null)
-                {
-                    getUserToken.RefreshToken = GenerateRefreshToken(getUser);
-                    getUserToken.ExpiresDate = DateTime.UtcNow.AddDays(14);
-                }
-                else
-                {
-                    var newUserToken = new UserToken()
-                    {
-                        UserId = getUser.Id.ToString(),
-                        RefreshToken = GenerateRefreshToken(getUser),
-                        ExpiresDate = DateTime.UtcNow.AddDays(14),
-                    };
-
-                    await appDbContext.Tokens.AddAsync(newUserToken);                   
-                }
-
-                await appDbContext.SaveChangesAsync();
-
-                return new LoginResponse(getUser, GenerateAccessToken(getUser));
+                return new LoginResponse(getUser, GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
             }
             else
-                return new LoginResponse(null, "Неправильный логин или пароль");
+                return new LoginResponse(null, "Неправильный логин или пароль", "Неправильный логин или пароль");
         }
 
-        public async Task<RegisterResponse> RegisterUser(RegisterDTO registerDTO)
+        public async Task<RegisterResponse?> RegisterUser(RegisterDTO registerDTO)
         {
             var getUserEmail = await FindUserByEmail(registerDTO.Email);
             var getUserPhone = await FindUserByPhone(registerDTO.Phone);
@@ -89,45 +67,29 @@ namespace Infrastructure.Repo
             await appDbContext.Users.AddAsync(newUser);
             await appDbContext.SaveChangesAsync();
 
-            var getUser = await FindUserByEmail(registerDTO.Email);
-
-            var newUserToken = new UserToken()
-            {
-                UserId = getUser.Id.ToString(),
-                RefreshToken = GenerateRefreshToken(newUser),
-                ExpiresDate = DateTime.UtcNow.AddDays(14),
-            };
-
-            await appDbContext.Tokens.AddAsync(newUserToken);
-
-            await appDbContext.SaveChangesAsync();
-
-            return new RegisterResponse(newUser, GenerateAccessToken(newUser));
+            return new RegisterResponse(newUser, GenerateAccessToken(newUser), GenerateRefreshToken(newUser));
         }
 
-        public async Task<RefreshTokenResponse> RefreshToken(string oldRefreshToken)
+        public async Task<RefreshTokenResponse?> RefreshToken(string oldRefreshToken)
         {
             if (oldRefreshToken == null)
                 return null;
 
-            var getUserToken = await FindUserTokenByToken(oldRefreshToken);
+            var getUserId = GetUserIdFromRefreshToken(oldRefreshToken);
 
-            // Если токен не обнаружен или истек срок действия
-            if (getUserToken == null || getUserToken.ExpiresDate < DateTime.UtcNow)
+            // Если токен не обнаружен
+            if (getUserId == null)
                 return null;
 
-            // Обновление токена в БД и в Cookie
-            var getUser = await FindUserById(Guid.Parse(getUserToken.UserId));
+            var getUser = await FindUserById(Guid.Parse(getUserId));
 
-            getUserToken.RefreshToken = GenerateRefreshToken(getUser);
-            getUserToken.ExpiresDate = DateTime.UtcNow.AddDays(14);
+            if (getUser == null)
+                return null;
 
-            await appDbContext.SaveChangesAsync();
-
-            return new RefreshTokenResponse(GenerateAccessToken(getUser), getUserToken.RefreshToken);
+            return new RefreshTokenResponse(GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
         }
 
-        public async Task<GetUserResponse> GetUser(GetUserDTO getUserDTO)
+        public async Task<GetUserResponse?> GetUser(GetUserDTO getUserDTO)
         {
             var getUser = await FindUserById(Guid.Parse(getUserDTO.Id));
 
@@ -137,7 +99,7 @@ namespace Infrastructure.Repo
             return new GetUserResponse(getUser);
         }
 
-        public async Task<UpdateUserResponse> UpdateUser(UpdateUserDTO updateUserDTO)
+        public async Task<UpdateUserResponse?> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             var getUser = await FindUserById(updateUserDTO.user.Id);
 
@@ -154,20 +116,14 @@ namespace Infrastructure.Repo
         }
 
         // Методы для поиска в БД по свойствам
-        private async Task<User> FindUserById(Guid Id) =>
+        private async Task<User?> FindUserById(Guid Id) =>
             await appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
 
-        private async Task<User> FindUserByEmail(string email) =>
+        private async Task<User?> FindUserByEmail(string email) =>
             await appDbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-        private async Task<User> FindUserByPhone(string phone) =>
+        private async Task<User?> FindUserByPhone(string phone) =>
             await appDbContext.Users.FirstOrDefaultAsync(u => u.Phone == phone);
-
-        private async Task<UserToken> FindUserTokenById(Guid Id) =>
-            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.UserId == Id.ToString());
-
-        private async Task<UserToken> FindUserTokenByToken(string token) =>
-            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.RefreshToken == token);
 
         // Генерация Access и Refresh Token'ов
         private string GenerateAccessToken(User user)
@@ -177,8 +133,6 @@ namespace Infrastructure.Repo
             var userClaims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name!),
-                new Claim(ClaimTypes.Email, user.Email!)
             };
             var token = new JwtSecurityToken(
                 issuer: configuration["Jwt:Issuer"],
@@ -197,8 +151,6 @@ namespace Infrastructure.Repo
             var userClaims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name!),
-                new Claim(ClaimTypes.Email, user.Email!)
             };
             var token = new JwtSecurityToken(
                 issuer: configuration["Jwt:Issuer"],
@@ -208,6 +160,36 @@ namespace Infrastructure.Repo
                 signingCredentials: credentails
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public string? GetUserIdFromRefreshToken(string refreshToken)
+        {           
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"])),
+
+                ValidateIssuer = true,
+                ValidIssuer = configuration["Jwt:Issuer"],
+
+                ValidateAudience = true,
+                ValidAudience = configuration["Jwt:Audience"],
+
+                ValidateLifetime = false,
+
+                ClockSkew = TimeSpan.Zero
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+               
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(refreshToken, tokenValidationParameters, out SecurityToken securityToken);
+
+            if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                return null;
+
+            Claim? userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+
+            return userIdClaim?.Value;    
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Application.Contracts;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Infrastructure.Data;
 using Domain.Entities;
@@ -9,8 +8,11 @@ using Application.DTOs.GetUser;
 using Application.DTOs.Login;
 using Application.DTOs.RefreshToken;
 using Application.DTOs.Registration;
-using Microsoft.AspNetCore.Identity;
 using Application.DTOs.UpdateUser;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace WebAPI.Controllers
 {
@@ -20,11 +22,13 @@ namespace WebAPI.Controllers
     {
         private readonly IUser user;
         private readonly AppDbContext appDbContext;
+        private readonly IConfiguration configuration;
 
-        public User(IUser user, AppDbContext appDbContext) 
+        public User(IUser user, AppDbContext appDbContext, IConfiguration configuration) 
         {
             this.user = user;
             this.appDbContext = appDbContext;
+            this.configuration = configuration;
         }
 
         [HttpPost("login")]
@@ -35,11 +39,11 @@ namespace WebAPI.Controllers
             if (result.user == null)
                 return NotFound(result);
 
-            var userToken = await FindUserTokenById(result.user.Id);
+            SetRefreshTokenCookie(result.message);
 
-            SetRefreshTokenCookie(userToken.RefreshToken);
+            var response = new Tuple<Domain.Entities.User, string>(result.user, result.accessToken);
 
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpPost("registration")]
@@ -50,17 +54,20 @@ namespace WebAPI.Controllers
             if (result == null)
                  return Unauthorized();           
 
-            var userToken = await FindUserTokenById(result.user.Id);
+            SetRefreshTokenCookie(result.refreshToken);
 
-            SetRefreshTokenCookie(userToken.RefreshToken);
+            var response = new Tuple<Domain.Entities.User, string>(result.user, result.accessToken);
 
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpGet("refreshToken")]
         public async Task<ActionResult<RefreshTokenResponse>> Refresh()
         {
             var refreshToken = Request.Cookies["refreshToken"];
+
+            if(refreshToken == null)
+                return Unauthorized();
 
             var result = await user.RefreshToken(refreshToken);
 
@@ -69,12 +76,7 @@ namespace WebAPI.Controllers
 
             SetRefreshTokenCookie(result.refreshToken);
 
-            var getUserToken = await FindUserTokenByToken(refreshToken);
-            var getUser = await FindUserById(Guid.Parse(getUserToken.UserId));
-
-            var response = new Tuple<string, Domain.Entities.User>(result.accessToken, getUser);
-
-            return Ok(response);
+            return Ok(result.accessToken);
         }
 
         [Authorize]
@@ -93,7 +95,7 @@ namespace WebAPI.Controllers
 
         [Authorize]
         [HttpGet("getUser")]
-        public async Task<ActionResult<GetUserResponse>> GetUser([FromQuery] GetUserDTO getUserDTO)
+        public async Task<ActionResult<GetUserResponse?>> GetUser([FromQuery] GetUserDTO getUserDTO)
         {
             var result = await user.GetUser(getUserDTO);
 
@@ -144,14 +146,7 @@ namespace WebAPI.Controllers
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
         }
 
-        // Методы для поиска в БД по свойствам
-        private async Task<UserToken> FindUserTokenById(Guid Id) =>
-            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.UserId == Id.ToString());
-
-        private async Task<UserToken> FindUserTokenByToken(string refreshToken) =>
-            await appDbContext.Tokens.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
-
-        private async Task<Domain.Entities.User> FindUserById(Guid Id) =>
+        private async Task<Domain.Entities.User?> FindUserById(Guid Id) =>
             await appDbContext.Users.FirstOrDefaultAsync(u => u.Id == Id);
     }
 }
