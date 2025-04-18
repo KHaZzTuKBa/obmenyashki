@@ -116,27 +116,6 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("UserProductMap");
                 });
-
-            modelBuilder.Entity("Domain.Entities.UserToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("ExpiresDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tokens");
-                });
 #pragma warning restore 612, 618
         }
     }
