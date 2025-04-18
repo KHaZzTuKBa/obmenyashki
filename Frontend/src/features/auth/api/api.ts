@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import { AuthResponse } from '@/entities/user/model/types';
 import { API_URL } from '@/shared/config/api';
@@ -10,21 +10,53 @@ export const registerUser = async (
     phone: string,
     email: string,
     password: string
-): Promise<AxiosResponse<AuthResponse>> => {
-    return axios.post<AuthResponse>(
-        `${BASE_URL}/registration`,
-        { name, phone, email, password },
-        { withCredentials: true }
-    );
+): Promise<AuthResponse> => {
+    try {
+        const response: AxiosResponse<AuthResponse> =
+            await axios.post<AuthResponse>(
+                `${BASE_URL}/registration`,
+                { name, phone, email, password },
+                { withCredentials: true }
+            );
+        if (
+            response.status !== 200 ||
+            response.data.user === null ||
+            response.data.accessToken === null
+        ) {
+            throw new AxiosError(response.data?.message);
+        }
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError<AuthResponse>;
+        console.error(axiosError);
+
+        console.error('API Error:', axiosError.response?.data?.message);
+        throw axiosError;
+    }
 };
 
 export const loginUser = async (
     email: string,
     password: string
-): Promise<AxiosResponse<AuthResponse>> => {
-    return axios.post<AuthResponse>(
-        `${BASE_URL}/login`,
-        { email, password },
-        { withCredentials: true }
-    );
+): Promise<AuthResponse> => {
+    try {
+        const response: AxiosResponse<AuthResponse> =
+            await axios.post<AuthResponse>(
+                `${BASE_URL}/login`,
+                { email, password },
+                { withCredentials: true }
+            );
+        if (
+            response.status !== 200 ||
+            response.data.user === null ||
+            response.data.accessToken === null
+        ) {
+            throw new AxiosError(response.data?.message);
+        }
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError<AuthResponse>;
+        console.error('API Error:', axiosError.response?.data?.message);
+        throw axiosError;
+    }
 };

@@ -1,8 +1,12 @@
-import { isAxiosError } from 'axios';
+import { AxiosError } from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { setAccessToken, setCurentUser } from '@/entities/user/model';
+import {
+    AuthResponse,
+    setAccessToken,
+    setCurentUser,
+} from '@/entities/user/model';
 import { loginUser } from '@/features/auth/api/api';
 import { Path } from '@/shared/config/routes';
 import { Button, Input } from '@/shared/ui/Form';
@@ -29,20 +33,17 @@ export const LoginForm = () => {
     const submit: SubmitHandler<LoginFormData> = async (data) => {
         try {
             const response = await loginUser(data.email, data.password);
-            if (response.status === 200 && response.data.user !== null) {
-                setAccessToken(response.data.accessToken);
-                setCurentUser(response.data.user);
-                navigate(fromPath, { replace: true });
-            }
-        } catch (e) {
-            console.log(e);
+            setAccessToken(response.accessToken);
+            setCurentUser(response.user);
+            navigate(fromPath, { replace: true });
+        } catch (error) {
+            const axiosError = error as AxiosError<AuthResponse>;
 
-            if (isAxiosError(e)) {
-                setError('root', {
-                    type: 'serverError',
-                    message: e.message,
-                });
-            }
+            setError('root', {
+                type: 'serverError',
+                message:
+                    axiosError.response?.data.message || 'Что-то пошло не так',
+            });
         }
     };
 

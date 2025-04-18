@@ -25,6 +25,9 @@
 
     & .error {
         font-size: min(12px, 0.75rem);
+        font-weight: 400;
+        margin-bottom: 0;
+        text-align: left;
     }
 }
 .input {
@@ -42,8 +45,10 @@
 }
 .error {
     color: red;
-    font-weight: 400;
+    font-weight: 600;
     font-size: min(16px, 1rem);
+    margin-bottom: 15px;
+    text-align: center;
 }
 
 .form__login {
