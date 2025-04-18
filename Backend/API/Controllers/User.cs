@@ -41,7 +41,11 @@ namespace WebAPI.Controllers
 
             SetRefreshTokenCookie(result.message);
 
-            var response = new Tuple<Domain.Entities.User, string>(result.user, result.accessToken);
+            var response = new
+            {
+                user = result.user,
+                accessToken = result.accessToken
+            };
 
             return Ok(response);
         }
@@ -56,7 +60,11 @@ namespace WebAPI.Controllers
 
             SetRefreshTokenCookie(result.refreshToken);
 
-            var response = new Tuple<Domain.Entities.User, string>(result.user, result.accessToken);
+            var response = new
+            {
+                user = result.user,
+                accessToken = result.accessToken
+            };
 
             return Ok(response);
         }
