@@ -10,6 +10,6 @@ namespace Application.DTOs.GetUser
     public class GetUserDTO
     {
         [Required]
-        public Guid Id { get; set; }
+        public string Id { get; set; }
     }
 }

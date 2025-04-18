@@ -131,7 +131,7 @@ namespace Infrastructure.Repo
 
         public async Task<GetUserResponse> GetUser(GetUserDTO getUserDTO)
         {
-            var getUser = await FindUserById(getUserDTO.Id);
+            var getUser = await FindUserById(Guid.Parse(getUserDTO.Id));
 
             if (getUser == null)
                 return null;

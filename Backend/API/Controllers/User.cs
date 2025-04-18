@@ -84,18 +84,8 @@ namespace WebAPI.Controllers
             if (refreshToken == null)
                 return Unauthorized("У пользователя отсутвует Refresh Token");
 
-            Response.Cookies.Append(
-                "refreshToken",
-                "",
-                    new CookieOptions
-                    {
-                        Expires = DateTimeOffset.UtcNow.AddDays(-1),
-                        HttpOnly = true,
-                        Secure = true,
-                        Path = "/api/User/refreshToken",
-                        SameSite = SameSiteMode.Lax
-                    }
-);
+            DeleteRefreshToken(refreshToken);
+
             return Ok("Refresh Token успешно удален");
         }
 
@@ -120,7 +110,21 @@ namespace WebAPI.Controllers
                 Secure = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddDays(14),
-                Path = "/api/User/refreshToken"
+                Path = "/api/User/refreshToken/"
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+        }
+
+        private void DeleteRefreshToken(string refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Lax,
+                Expires = DateTime.UtcNow.AddDays(-1),
+                Path = "/api/User/refreshToken/"
             };
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
