@@ -5,7 +5,6 @@ import { Icon } from '@/shared/ui/Icon';
 
 import { sidebarItems } from '../config/sidebarItems';
 
-
 import styles from './styles.module.scss';
 
 export const Sidebar = () => {

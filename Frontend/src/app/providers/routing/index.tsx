@@ -12,6 +12,7 @@ import { LoginPage } from '@/pages/login-page';
 import { NotFoundPage } from '@/pages/not-found-page';
 import { ProfilePage } from '@/pages/profile-page';
 import { RegisterPage } from '@/pages/register-page';
+import { SettingsPage } from '@/pages/settings-page';
 import { Path } from '@/shared/config/routes';
 
 const routes = [
@@ -55,6 +56,10 @@ const routes = [
             {
                 path: Path.CHAT,
                 element: <div>individualChatPage</div>,
+            },
+            {
+                path: Path.SETTINGS,
+                element: <SettingsPage />,
             },
         ],
     },

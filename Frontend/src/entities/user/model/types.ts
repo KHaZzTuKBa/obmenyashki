@@ -6,6 +6,7 @@ export interface User {
     phone: string;
     email: string;
     avatarURL?: string;
+    isOnline: boolean;
 }
 
 export interface AuthResponse {

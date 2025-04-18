@@ -7,6 +7,7 @@ export const Path = {
     VIEW_ITEM: '/feed/item/:id',
     CHATS: '/chats',
     CHAT: '/chats/:id',
+    SETTINGS: '/settings',
     EDIT_PROFILE: '/settings/edit-profile',
     LOGIN: '/login',
     REGISTRATION: '/registration',
