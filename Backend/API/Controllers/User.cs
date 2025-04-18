@@ -121,10 +121,10 @@ namespace WebAPI.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                //Secure = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddDays(14),
-                Path = "/api/User/refreshToken/"
+                Path = "/api/User/"
             };
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
@@ -135,10 +135,10 @@ namespace WebAPI.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
+                //Secure = true,
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddDays(-1),
-                Path = "/api/User/refreshToken/"
+                Path = "/api/User/"
             };
 
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
