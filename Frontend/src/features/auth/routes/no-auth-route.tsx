@@ -4,19 +4,17 @@ import { Navigate } from 'react-router-dom';
 
 import { isAuth } from '@/entities/user/api/api';
 
-
-
-export const NoAuthRoute =  ({
+export const NoAuthRoute = ({
     children,
     redirectTo = '/',
 }: {
     children: ReactNode;
     redirectTo: string;
 }) => {
-    const { data, isPending, isError } = useQuery({
+    const { data, isPending } = useQuery({
         queryKey: ['auth-check'],
         queryFn: isAuth,
-        staleTime: 5 * 60 * 1000, 
+        staleTime: 5 * 60 * 1000,
         retry: 1,
     });
 
@@ -24,7 +22,7 @@ export const NoAuthRoute =  ({
         return <div>Загрузка...</div>;
     }
 
-    if ( isError || !data) {
+    if (data) {
         return <Navigate to={redirectTo} replace />;
     }
 

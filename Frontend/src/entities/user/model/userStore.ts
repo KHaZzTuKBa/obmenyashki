@@ -22,7 +22,7 @@ const useCurentUserStore = create<UserStore>()(
             setUser: (user) => set({ user }),
             setAccessToken: (accessToken) => set({ accessToken }),
             logout: () => {
-                logoutUser();
+                if (getAccessToken()) logoutUser();
                 set({
                     user: {} as User,
                     accessToken: null,

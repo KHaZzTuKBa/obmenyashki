@@ -1,13 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import {
-    AuthResponse,
-    setAccessToken,
-    setCurentUser,
-} from '@/entities/user/model';
+import { setAccessToken, setCurentUser } from '@/entities/user/model';
 import { loginUser } from '@/features/auth/api/api';
+import { AuthResponse } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
 import { Button, Input } from '@/shared/ui/Form';
 
@@ -19,6 +17,7 @@ interface LoginFormData {
 }
 
 export const LoginForm = () => {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
     const fromPath = location.state?.from?.pathname || '/';
@@ -35,6 +34,7 @@ export const LoginForm = () => {
             const response = await loginUser(data.email, data.password);
             setAccessToken(response.accessToken);
             setCurentUser(response.user);
+            queryClient.invalidateQueries({ queryKey: ['auth-check'] });
             navigate(fromPath, { replace: true });
         } catch (error) {
             const axiosError = error as AxiosError<AuthResponse>;
