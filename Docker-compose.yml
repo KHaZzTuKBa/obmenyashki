@@ -3,7 +3,7 @@ version: "3.8"
 services:
     # PostgreSQL сервис
     postgres:
-        image: postgres:latest
+        image: postgres:17.4-alpine
         container_name: project_postgres
         env_file:
             - .env
@@ -25,7 +25,7 @@ services:
 
     # Redis сервис
     redis:
-        image: redis:latest
+        image: redis:7.4.2-alpine
         container_name: project_redis
         ports:
             - "6379:6379"
