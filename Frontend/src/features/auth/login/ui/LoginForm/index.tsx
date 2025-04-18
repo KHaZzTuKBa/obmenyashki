@@ -1,11 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
-import {
-    loginUser,
-    setAccessToken,
-    setCurentUser,
-} from '@/entities/user/model';
+import { loginUser } from '@/features/auth/api/api';
+import { setAccessToken, setCurentUser } from '@/entities/user/model';
 import { Button, Input } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
 

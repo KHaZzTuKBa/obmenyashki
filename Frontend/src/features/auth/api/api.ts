@@ -1,5 +1,5 @@
-import { AuthResponse } from '../model/types';
 import axios, { AxiosResponse } from 'axios';
+import { AuthResponse } from '@/entities/user/model/types';
 import { API_URL } from '@/shared/config/api';
 
 const BASE_URL = `${API_URL}/User`;

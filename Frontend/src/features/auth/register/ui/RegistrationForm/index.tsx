@@ -1,14 +1,11 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { isAxiosError } from 'axios';
-import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
-import {
-    registerUser,
-    setAccessToken,
-    setCurentUser,
-} from '@/entities/user/model';
+import { registerUser } from '@/features/auth/api/api';
+import { setAccessToken, setCurentUser } from '@/entities/user/model';
 import { Input, Button } from '@/shared/ui/Form';
 import { Path } from '@/shared/config/routes';
+import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 
 import styles from './style.module.scss';
 
