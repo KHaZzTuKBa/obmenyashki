@@ -26,26 +26,26 @@ namespace Infrastructure.Repo
             this.configuration = configuration;
         }
 
-        public async Task<LoginResponse?> LoginUser(LoginDTO loginDTO)
+        public async Task<LoginContract?> LoginUser(LoginDTO loginDTO)
         {
             var getUser = await FindUserByEmail(loginDTO.Email);
 
             // Если пользователь не найден в БД
             if (getUser == null)
-                return new LoginResponse(null, "Неправильный логин или пароль", "Неправильный логин или пароль");
+                return null;
 
             bool checkPassword = BCrypt.Net.BCrypt.Verify(loginDTO.Password, getUser.Password);
             if (checkPassword)
             {
                 getUser.IsOnline = true; 
 
-                return new LoginResponse(getUser, GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
+                return new LoginContract(getUser, GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
             }
             else
-                return new LoginResponse(null, "Неправильный логин или пароль", "Неправильный логин или пароль");
+                return null;
         }
 
-        public async Task<RegisterResponse?> RegisterUser(RegisterDTO registerDTO)
+        public async Task<RegisterContract?> RegisterUser(RegisterDTO registerDTO)
         {
             var getUserEmail = await FindUserByEmail(registerDTO.Email);
             var getUserPhone = await FindUserByPhone(registerDTO.Phone);
@@ -67,17 +67,16 @@ namespace Infrastructure.Repo
             await appDbContext.Users.AddAsync(newUser);
             await appDbContext.SaveChangesAsync();
 
-            return new RegisterResponse(newUser, GenerateAccessToken(newUser), GenerateRefreshToken(newUser));
+            return new RegisterContract(newUser, GenerateAccessToken(newUser), GenerateRefreshToken(newUser));
         }
 
-        public async Task<RefreshTokenResponse?> RefreshToken(string oldRefreshToken)
+        public async Task<RefreshTokenContract?> RefreshToken(string oldRefreshToken)
         {
             if (oldRefreshToken == null)
                 return null;
 
             var getUserId = GetUserIdFromRefreshToken(oldRefreshToken);
 
-            // Если токен не обнаружен
             if (getUserId == null)
                 return null;
 
@@ -86,33 +85,33 @@ namespace Infrastructure.Repo
             if (getUser == null)
                 return null;
 
-            return new RefreshTokenResponse(GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
+            return new RefreshTokenContract(GenerateAccessToken(getUser), GenerateRefreshToken(getUser));
         }
 
-        public async Task<GetUserResponse?> GetUser(GetUserDTO getUserDTO)
+        public async Task<GetUserContract?> GetUser(GetUserDTO getUserDTO)
         {
             var getUser = await FindUserById(Guid.Parse(getUserDTO.Id));
 
             if (getUser == null)
                 return null;
 
-            return new GetUserResponse(getUser);
+            return new GetUserContract(getUser);
         }
 
-        public async Task<UpdateUserResponse?> UpdateUser(UpdateUserDTO updateUserDTO)
+        public async Task<UpdateUserContract?> UpdateUser(UpdateUserDTO updateUserDTO)
         {
-            var getUser = await FindUserById(updateUserDTO.user.Id);
+            var getUser = await FindUserById(updateUserDTO.User.Id);
 
             if (getUser == null)
                 return null;
 
-            getUser.Email = updateUserDTO.user.Email;
-            getUser.Name = updateUserDTO.user.Name;
-            getUser.Phone = updateUserDTO.user.Phone;
+            getUser.Email = updateUserDTO.User.Email;
+            getUser.Name = updateUserDTO.User.Name;
+            getUser.Phone = updateUserDTO.User.Phone;
             
             await appDbContext.SaveChangesAsync();
 
-            return new UpdateUserResponse(getUser);
+            return new UpdateUserContract(getUser);
         }
 
         // Методы для поиска в БД по свойствам
