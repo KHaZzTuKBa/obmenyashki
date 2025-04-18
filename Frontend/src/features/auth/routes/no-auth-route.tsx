@@ -3,16 +3,19 @@ import { Navigate } from 'react-router-dom';
 
 import { isAuth } from '@/entities/user/api/api';
 
-const isAuthorized: boolean = await isAuth();
+const isAuthorized = async (): Promise<boolean> => {
+    const response = await isAuth();
+    return response;
+};
 
-export const NoAuthRoute = ({
+export const NoAuthRoute = async ({
     children,
     redirectTo = '/',
 }: {
     children: ReactNode;
     redirectTo: string;
 }) => {
-    if (isAuthorized) {
+    if (await isAuthorized()) {
         return <Navigate to={redirectTo} replace />;
     }
 
