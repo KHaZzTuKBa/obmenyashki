@@ -9,11 +9,11 @@ export const MainLayout = () => {
             <Header />
             <main className={style.main}>
                 <Sidebar />
-                <section className={style.content}>
+                <div className={style.content}>
                     <div className={style.content__layout}>
                         <Outlet />
                     </div>
-                </section>
+                </div>
             </main>
         </>
     );

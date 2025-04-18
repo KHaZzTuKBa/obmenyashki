@@ -1,1 +1,1 @@
-export { ProfileProductSlider } from './ui';
+export { ProfileProductSlider } from './ui/ProfileProductSlider';

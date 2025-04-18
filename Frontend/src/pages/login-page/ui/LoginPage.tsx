@@ -3,8 +3,8 @@ import styles from './style.module.scss';
 
 export const LoginPage = () => {
     return (
-        <div className={styles.container}>
+        <section className={styles.container}>
             <LoginForm />
-        </div>
+        </section>
     );
 };

@@ -6,9 +6,6 @@ import { AxiosError } from 'axios';
 export const useUserProducts = (): UseQueryResult<Product[], AxiosError> => {
     return useQuery<Product[], AxiosError>({
         queryKey: ['ownProducts'],
-        queryFn: async () => {
-            const res = await getOwnProductList();
-            return res.data;
-        },
+        queryFn: async () => getOwnProductList(),
     });
 };

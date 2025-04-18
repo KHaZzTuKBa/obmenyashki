@@ -1,10 +1,10 @@
 export interface Product {
     id: string;
-    name: string;
+    title: string;
     description: string;
-    author: string;
-    authorId: number;
-    publicDate: string;
-    productImgURL?: string;
+    owner: string;
+    ownerId: number;
+    publishDate: string;
+    productImgURL?: string | null;
     tradefor?: string;
 }

@@ -1,7 +1,18 @@
 import { Product } from '@/entities/product';
 import { $api } from '@/entities/user/api';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
-export const getOwnProductList = (): Promise<AxiosResponse<Product[]>> => {
-    return $api.get<Product[]>(`$Product/myList`);
+export const getOwnProductList = async (): Promise<Product[]> => {
+    try {
+        const response: AxiosResponse<Product[]> =
+            await $api.get<Product[]>(`Product/myList`);
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError;
+        console.error(
+            'API Error:',
+            axiosError.response?.data || axiosError.message
+        );
+        throw new Error(axiosError.message);
+    }
 };

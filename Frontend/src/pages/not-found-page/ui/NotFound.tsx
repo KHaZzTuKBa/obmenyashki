@@ -14,13 +14,13 @@ export const NotFoundPage = () => {
     };
 
     return (
-        <div className={styles.container}>
+        <section className={styles.container}>
             <h1 className={styles.title}>
                 🤔 Упс! Этой страницы не существует.
             </h1>
             <button className={styles.button} onClick={handleGoBack}>
                 Вернуться назад или на главную
             </button>
-        </div>
+        </section>
     );
 };

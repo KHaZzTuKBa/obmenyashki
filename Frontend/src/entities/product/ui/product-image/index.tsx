@@ -16,7 +16,7 @@ export const ProductImage = ({
                     className={className}
                 />
             ) : (
-                <Icon name='search' className={className} />
+                <Icon name='camera' className={className} />
             )}
         </>
     );
