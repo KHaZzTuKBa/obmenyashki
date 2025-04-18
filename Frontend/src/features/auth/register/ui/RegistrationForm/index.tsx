@@ -53,7 +53,8 @@ export const RegistrationForm = () => {
 
             setError('root', {
                 type: 'serverError',
-                message: axiosError.response?.data.message || 'Что-то пошло не так',
+                message:
+                    axiosError.response?.data.message || 'Что-то пошло не так',
             });
         }
     };

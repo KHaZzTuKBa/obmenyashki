@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Virtual } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
 
 import { Product } from '@/entities/product';
 import { getViewItemPath, Path } from '@/shared/config/routes';
 
 import { ProfileProductCard } from '../../profile-product-card/ProfileProductCard';
 import { useUserProducts } from '../hooks/useUserProducts';
-
-import 'swiper/swiper-bundle.css';
 
 import style from './style.module.scss';
 

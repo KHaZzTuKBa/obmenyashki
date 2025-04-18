@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 
 import { $baseApi } from '@/shared/api';
 
@@ -21,4 +21,19 @@ export const logoutUser = (): Promise<AxiosResponse<void>> => {
             Authorization: `Bearer ${getAccessToken()}`,
         },
     });
+};
+
+export const isAuth = async (): Promise<boolean> => {
+    try {
+        const response: AxiosResponse<void> =
+            await $api.get<void>(`User/isAuth`);
+        if (response.status === 200) return true;
+        throw new AxiosError(response.status.toString());
+    } catch (error) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.status === 401 || +axiosError.message === 401)
+            return false;
+        throw error;
+    }
 };

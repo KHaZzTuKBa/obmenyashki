@@ -4,7 +4,7 @@ import { $baseApi } from '@/shared/api';
 
 import { getAccessToken, setAccessToken, logoutSession } from '../model';
 
-import { refreshTokenApi } from './refresh';
+import { refreshToken } from './refresh';
 
 const $api = axios.create($baseApi.defaults);
 
@@ -24,7 +24,7 @@ $api.interceptors.response.use(
         if (error.response?.status === 401 && !error.config._isRetry) {
             originalRequest._isRetry = true;
             try {
-                const response = await refreshTokenApi();
+                const response = await refreshToken();
                 setAccessToken(response.data.accessToken);
                 $api.request(originalRequest);
             } catch (e) {

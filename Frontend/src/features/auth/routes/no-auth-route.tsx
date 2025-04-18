@@ -1,7 +1,9 @@
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { getAccessToken } from '@/entities/user/model';
+import { isAuth } from '@/entities/user/api/api';
+
+const isAuthorized: boolean = await isAuth();
 
 export const NoAuthRoute = ({
     children,
@@ -10,9 +12,7 @@ export const NoAuthRoute = ({
     children: ReactNode;
     redirectTo: string;
 }) => {
-    const token = getAccessToken();
-
-    if (token) {
+    if (isAuthorized) {
         return <Navigate to={redirectTo} replace />;
     }
 
