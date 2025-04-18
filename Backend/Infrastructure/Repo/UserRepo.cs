@@ -139,14 +139,14 @@ namespace Infrastructure.Repo
 
         public async Task<UpdateUserResponse> UpdateUser(UpdateUserDTO updateUserDTO)
         {
-            var getUser = await FindUserById(updateUserDTO.Id);
+            var getUser = await FindUserById(updateUserDTO.user.Id);
 
             if (getUser == null)
                 return null;
 
-            getUser.Email = updateUserDTO.Email;
-            getUser.Name = updateUserDTO.Name;
-            getUser.Phone = updateUserDTO.Phone;
+            getUser.Email = updateUserDTO.user.Email;
+            getUser.Name = updateUserDTO.user.Name;
+            getUser.Phone = updateUserDTO.user.Phone;
             
             await appDbContext.SaveChangesAsync();
 
