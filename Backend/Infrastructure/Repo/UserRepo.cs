@@ -98,8 +98,6 @@ namespace Infrastructure.Repo
                 ExpiresDate = DateTime.UtcNow.AddDays(14),
             };
 
-            Console.WriteLine();
-
             await appDbContext.Tokens.AddAsync(newUserToken);
 
             await appDbContext.SaveChangesAsync();
