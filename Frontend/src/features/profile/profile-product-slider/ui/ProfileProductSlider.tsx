@@ -28,7 +28,7 @@ export const ProfileProductSlider = () => {
             )}
 
             {isSuccess &&
-                (data.length > 0 ? (
+                (!!data.products && data.products.length > 0 ? (
                     <ul className={style.products__list}>
                         <Swiper
                             grabCursor
@@ -57,7 +57,7 @@ export const ProfileProductSlider = () => {
                                 },
                             }}
                         >
-                            {data.map((item: Product) => (
+                            {data.products.map((item: Product) => (
                                 <SwiperSlide>
                                     <Link
                                         to={getViewItemPath(item.id)}
@@ -74,7 +74,7 @@ export const ProfileProductSlider = () => {
                     </ul>
                 ) : (
                     <p>
-                        У вас нет товаров.{' '}
+                        {`${data.message} `}
                         <Link
                             className={style.products__addProductLink}
                             to={Path.MY_ITEM_ADD}
