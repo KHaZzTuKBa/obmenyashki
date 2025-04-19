@@ -3,8 +3,8 @@ export { $api, isAuth } from './api';
 export {
     getAccessToken,
     setAccessToken,
-    getCurentUser,
-    setCurentUser,
+    getCurrentUser,
+    setCurrentUser,
     logoutSession,
 } from './model';
 export type { User } from './model';

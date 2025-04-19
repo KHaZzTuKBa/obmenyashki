@@ -39,9 +39,9 @@ const useCurentUserStore = create<UserStore>()(
     )
 );
 
-export const setCurentUser = (user: User) =>
+export const setCurrentUser = (user: User) =>
     useCurentUserStore.getState().setUser(user);
-export const getCurentUser = () => useCurentUserStore.getState().user;
+export const getCurrentUser = () => useCurentUserStore.getState().user;
 
 export const getAccessToken = () => useCurentUserStore.getState().accessToken;
 export const setAccessToken = (token: string | null) =>

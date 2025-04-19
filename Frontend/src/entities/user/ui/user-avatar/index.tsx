@@ -1,8 +1,8 @@
-import { getCurentUser } from '@/entities/user';
+import { getCurrentUser } from '@/entities/user';
 import { Icon } from '@/shared/ui/Icon';
 
 export const UserAvatar = ({ className = '' }: { className?: string }) => {
-    const userAvatarURL = getCurentUser().avatarURL;
+    const userAvatarURL = getCurrentUser().avatarURL;
     return (
         <>
             {userAvatarURL ? (

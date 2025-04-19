@@ -1,8 +1,8 @@
 export {
     getAccessToken,
     setAccessToken,
-    setCurentUser,
-    getCurentUser,
+    setCurrentUser,
+    getCurrentUser,
     logoutSession,
 } from './userStore';
 export type { User } from './types';

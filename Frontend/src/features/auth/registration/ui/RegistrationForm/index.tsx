@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { setAccessToken, setCurentUser } from '@/entities/user';
+import { setAccessToken, setCurrentUser } from '@/entities/user';
 import { registerUser } from '@/features/auth/api/api';
 import { AuthResponse } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
@@ -43,7 +43,7 @@ export const RegistrationForm = () => {
                 data.password
             );
             setAccessToken(response.accessToken);
-            setCurentUser(response.user);
+            setCurrentUser(response.user);
             navigate(fromPath, { replace: true });
         } catch (error) {
             const axiosError = error as AxiosError<AuthResponse>;

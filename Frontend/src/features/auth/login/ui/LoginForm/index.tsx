@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { setAccessToken, setCurentUser } from '@/entities/user';
+import { setAccessToken, setCurrentUser } from '@/entities/user';
 import { loginUser } from '@/features/auth/api/api';
 import { AuthResponse } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
@@ -33,7 +33,7 @@ export const LoginForm = () => {
         try {
             const response = await loginUser(data.email, data.password);
             setAccessToken(response.accessToken);
-            setCurentUser(response.user);
+            setCurrentUser(response.user);
             queryClient.invalidateQueries({ queryKey: ['auth-check'] });
             navigate(fromPath, { replace: true });
         } catch (error) {
@@ -104,7 +104,9 @@ export const LoginForm = () => {
                 </Button>
                 <p className={styles.form__register}>
                     Еще нет аккаунта?{' '}
-                    <Link to={Path.REGISTRATION} state={location.state}>Зарегистрироваться</Link>
+                    <Link to={Path.REGISTRATION} state={location.state}>
+                        Зарегистрироваться
+                    </Link>
                 </p>
             </form>
         </>
