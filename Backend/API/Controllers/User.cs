@@ -94,7 +94,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("updateUser")]
+        [HttpPatch("updateUser")]
         public async Task<ActionResult<UpdateUserResponse>> UpdateUser(UpdateUserDTO updateUserDTO)
         {
             var result = await user.UpdateUser(updateUserDTO);
