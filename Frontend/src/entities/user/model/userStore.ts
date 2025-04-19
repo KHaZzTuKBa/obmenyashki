@@ -19,7 +19,10 @@ const useCurentUserStore = create<UserStore>()(
             user: {} as User,
             accessToken: null,
 
-            setUser: (user) => set({ user }),
+            setUser: (partialUser) =>
+                set((state) => ({
+                    user: { ...state.user, ...partialUser },
+                })),
             setAccessToken: (accessToken) => set({ accessToken }),
             logout: () => {
                 if (getAccessToken()) logoutUser();

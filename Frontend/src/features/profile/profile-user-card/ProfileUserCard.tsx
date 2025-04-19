@@ -1,14 +1,13 @@
 import { Link } from 'react-router-dom';
 
-import { getCurentUser } from '@/entities/user/model';
+import { getCurrentUser } from '@/entities/user';
 import { UserAvatar } from '@/entities/user/ui/user-avatar';
 import { Path } from '@/shared/config/routes';
 
 import style from './style.module.scss';
 
 export const ProfileUserCard = () => {
-    // TODO: мб с какой то переодичностью запрашивать свежие данные с сервера? С другой стороны они будут прилетать каждые 15 минут с refresh-а
-    const user = getCurentUser();
+    const user = getCurrentUser();
 
     return (
         <div className={style.profile__info}>
