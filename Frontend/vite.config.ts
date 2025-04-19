@@ -23,6 +23,12 @@ export default defineConfig({
                 //   Опционально: для поддержки проксирования WebSocket (например, для SignalR)
                 ws: true,
             },
+            '/swagger': {
+                target: 'http://backend:80', 
+                changeOrigin: true,
+                
+                ws: true, 
+            },
         },
     },
 });
