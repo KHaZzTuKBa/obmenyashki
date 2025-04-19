@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { isAuth } from '@/entities/user';
+import { getCurrentUser, isAuth } from '@/entities/user';
 
 export const NoAuthRoute = ({
     children,
@@ -13,14 +13,17 @@ export const NoAuthRoute = ({
 }) => {
     const location = useLocation();
 
-    const { data, isPending } = useQuery({
+    const isAuthCheck = Object.keys(getCurrentUser()).length !== 0;
+
+    const { data, isLoading } = useQuery({
         queryKey: ['auth-check'],
         queryFn: isAuth,
         staleTime: 0,
         retry: 1,
+        enabled: isAuthCheck,
     });
 
-    if (isPending) {
+    if (isLoading) {
         return <div>Загрузка...</div>;
     }
 

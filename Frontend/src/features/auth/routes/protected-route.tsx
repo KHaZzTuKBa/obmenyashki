@@ -2,11 +2,21 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
-import { isAuth } from '@/entities/user';
+import { isAuth, getCurrentUser } from '@/entities/user';
 import { Path } from '@/shared/config/routes';
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
+
+    if (Object.keys(getCurrentUser()).length === 0) {
+        return (
+            <Navigate
+                to={Path.LOGIN}
+                replace
+                state={{ path: location.pathname + location.search }}
+            />
+        );
+    }
 
     const { data, isPending, isError } = useQuery({
         queryKey: ['auth-check'],
