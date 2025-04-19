@@ -1,4 +1,3 @@
-export { $api, getUser, updateUser, logoutUser } from '../api';
 export {
     getAccessToken,
     setAccessToken,
@@ -6,4 +5,4 @@ export {
     getCurentUser,
     logoutSession,
 } from './userStore';
-export type { User, AuthResponse } from './types';
+export type { User } from './types';

@@ -2,12 +2,9 @@ import { AxiosError } from 'axios';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import {
-    AuthResponse,
-    setAccessToken,
-    setCurentUser,
-} from '@/entities/user/model';
+import { setAccessToken, setCurentUser } from '@/entities/user';
 import { registerUser } from '@/features/auth/api/api';
+import { AuthResponse } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
 import { Input, Button } from '@/shared/ui/Form';
 

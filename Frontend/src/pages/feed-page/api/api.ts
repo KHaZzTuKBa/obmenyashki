@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
 
-import { $api } from '@/entities/user/api';
+import { $api } from '@/entities/user';
 
 import { FeedApiResponse } from '../model/types';
 

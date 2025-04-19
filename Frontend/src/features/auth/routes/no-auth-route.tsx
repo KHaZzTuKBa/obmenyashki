@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { isAuth } from '@/entities/user/api/api';
+import { isAuth } from '@/entities/user';
 
 export const NoAuthRoute = ({
     children,

@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { setAccessToken, setCurentUser } from '@/entities/user/model';
+import { setAccessToken, setCurentUser } from '@/entities/user';
 import { loginUser } from '@/features/auth/api/api';
 import { AuthResponse } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';

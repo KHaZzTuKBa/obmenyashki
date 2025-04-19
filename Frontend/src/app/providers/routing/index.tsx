@@ -5,8 +5,7 @@ import {
 } from 'react-router-dom';
 
 import { MainLayout } from '@/app/layouts/main-layout';
-import { NoAuthRoute } from '@/features/auth/routes/no-auth-route';
-import { ProtectedRoute } from '@/features/auth/routes/protected-route';
+import { ProtectedRoute, NoAuthRoute } from '@/features/auth';
 import { FeedPage } from '@/pages/feed-page';
 import { LoginPage } from '@/pages/login-page';
 import { NotFoundPage } from '@/pages/not-found-page';
@@ -14,6 +13,8 @@ import { ProfilePage } from '@/pages/profile-page';
 import { RegisterPage } from '@/pages/register-page';
 import { SettingsPage } from '@/pages/settings-page';
 import { Path } from '@/shared/config/routes';
+
+
 
 const routes = [
     {

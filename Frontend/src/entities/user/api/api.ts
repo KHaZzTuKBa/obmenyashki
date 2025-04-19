@@ -2,8 +2,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import { $baseApi } from '@/shared/api';
 
-import { getAccessToken } from '../model';
-import { User } from '../model/types';
+import { getAccessToken, User } from '../model';
 
 import { $api } from './instance';
 

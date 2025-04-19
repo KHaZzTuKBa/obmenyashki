@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-import { AuthResponse } from '@/entities/user/model/types';
 import { API_URL } from '@/shared/config/api';
+
+import { AuthResponse } from '../model/types';
 
 const BASE_URL = `${API_URL}/User`;
 

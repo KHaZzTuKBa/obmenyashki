@@ -1,2 +1,3 @@
-export { getUser, updateUser, logoutUser } from './api';
+export { getUser, updateUser, logoutUser, isAuth } from './api';
 export { $api } from './instance';
+export { refreshToken } from './refresh';
