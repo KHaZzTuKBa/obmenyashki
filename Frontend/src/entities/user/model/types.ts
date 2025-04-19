@@ -9,6 +9,16 @@ export interface User {
     isOnline: boolean;
 }
 
+export interface GetUserResponce {
+    user: User;
+    message?: string;
+}
+
+export interface UpdateUserResponce {
+    user: User;
+    message?: string;
+}
+
 export interface RefreshResponse {
     accessToken: string | null;
 }
