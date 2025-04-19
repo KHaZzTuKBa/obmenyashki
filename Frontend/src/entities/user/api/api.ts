@@ -7,20 +7,22 @@ import { GetUserResponce, UpdateUserResponce } from '../model/types';
 
 import { $api } from './instance';
 
+const BASE_URL = 'User';
+
 export const getUser = (
     user: User
 ): Promise<AxiosResponse<GetUserResponce>> => {
-    return $api.get<GetUserResponce>(`User/getUser/?Id=${user.id}`);
+    return $api.get<GetUserResponce>(`${BASE_URL}/getUser/?Id=${user.id}`);
 };
 
 export const updateUser = (
     user: User
 ): Promise<AxiosResponse<UpdateUserResponce>> => {
-    return $api.patch<UpdateUserResponce>(`User/updateUser`, user);
+    return $api.patch<UpdateUserResponce>(`${BASE_URL}/updateUser`, user);
 };
 
 export const logoutUser = (): Promise<AxiosResponse<void>> => {
-    return $baseApi.get<void>('User/logout', {
+    return $baseApi.get<void>(`${BASE_URL}/logout`, {
         headers: {
             Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -29,8 +31,9 @@ export const logoutUser = (): Promise<AxiosResponse<void>> => {
 
 export const isAuth = async (): Promise<boolean> => {
     try {
-        const response: AxiosResponse<void> =
-            await $api.get<void>(`User/isAuth`);
+        const response: AxiosResponse<void> = await $api.get<void>(
+            `${BASE_URL}/isAuth`
+        );
         if (response.status === 200) return true;
         throw new AxiosError(response.status.toString());
     } catch (error) {
