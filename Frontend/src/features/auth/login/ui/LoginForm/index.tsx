@@ -20,7 +20,7 @@ export const LoginForm = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
     const location = useLocation();
-    const fromPath = location.state?.from?.pathname || '/';
+    const fromPath = location.state?.path || Path.HOME;
 
     const {
         register,
@@ -104,7 +104,7 @@ export const LoginForm = () => {
                 </Button>
                 <p className={styles.form__register}>
                     Еще нет аккаунта?{' '}
-                    <Link to={Path.REGISTRATION}>Зарегистрироваться</Link>
+                    <Link to={Path.REGISTRATION} state={location.state}>Зарегистрироваться</Link>
                 </p>
             </form>
         </>

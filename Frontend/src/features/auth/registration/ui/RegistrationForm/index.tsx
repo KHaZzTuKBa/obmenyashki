@@ -186,7 +186,10 @@ export const RegistrationForm = () => {
                 </Button>
 
                 <p className={styles.form__login}>
-                    Уже есть аккаунт? <Link to={Path.LOGIN}>Войти</Link>
+                    Уже есть аккаунт?{' '}
+                    <Link to={Path.LOGIN} state={location.state}>
+                        Войти
+                    </Link>
                 </p>
             </form>
         </>

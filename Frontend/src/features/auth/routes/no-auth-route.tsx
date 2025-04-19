@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { isAuth } from '@/entities/user';
 
@@ -11,10 +11,12 @@ export const NoAuthRoute = ({
     children: ReactNode;
     redirectTo: string;
 }) => {
+    const location = useLocation();
+
     const { data, isPending } = useQuery({
         queryKey: ['auth-check'],
         queryFn: isAuth,
-        staleTime: 5 * 60 * 1000,
+        staleTime: 0,
         retry: 1,
     });
 
@@ -23,7 +25,8 @@ export const NoAuthRoute = ({
     }
 
     if (data) {
-        return <Navigate to={redirectTo} replace />;
+        const from = (location.state as { path?: string })?.path || redirectTo;
+        return <Navigate to={from} replace />;
     }
 
     return <>{children}</>;

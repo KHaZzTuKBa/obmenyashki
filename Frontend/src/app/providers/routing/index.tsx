@@ -14,8 +14,6 @@ import { RegisterPage } from '@/pages/register-page';
 import { SettingsPage } from '@/pages/settings-page';
 import { Path } from '@/shared/config/routes';
 
-
-
 const routes = [
     {
         path: Path.HOME,

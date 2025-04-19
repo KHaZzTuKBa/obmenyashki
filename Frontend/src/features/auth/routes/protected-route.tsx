@@ -13,6 +13,7 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
         queryFn: isAuth,
         staleTime: 5 * 60 * 1000,
         retry: 1,
+        gcTime: 0,
     });
 
     if (isPending) {
@@ -20,7 +21,13 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     }
 
     if (isError || !data) {
-        return <Navigate to={Path.LOGIN} replace state={{ from: location }} />;
+        return (
+            <Navigate
+                to={Path.LOGIN}
+                replace
+                state={{ path: location.pathname + location.search }}
+            />
+        );
     }
 
     return <>{children}</>;
