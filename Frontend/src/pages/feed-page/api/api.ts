@@ -2,14 +2,27 @@ import { AxiosError } from 'axios';
 
 import { $api } from '@/entities/user';
 
-import { FeedApiResponse } from '../model/types';
+import { FeedApiResponse, SortBy } from '../model/types';
 
 export const fetchFeedData = async (
-    query: string | null
+    query: string | null,
+    bunchNumber: number,
+    bunchSize: number,
+    sortBy: SortBy
 ): Promise<FeedApiResponse> => {
-    const endpoint = '/feed';
+    const endpoint = 'Product/GetListOfProducts';
 
-    const params: { q?: string } = {};
+    const params: {
+        q?: string;
+        BunchNumber: number;
+        BunchSize: number;
+        SortBy: SortBy;
+    } = {
+        BunchNumber: bunchNumber || 1,
+        BunchSize: bunchSize || 20,
+        SortBy: sortBy || 'ASC',
+    };
+
     if (query) {
         params.q = query;
     }
@@ -18,11 +31,11 @@ export const fetchFeedData = async (
         const response = await $api.get<FeedApiResponse>(endpoint, { params });
         return response.data;
     } catch (error) {
-        const axiosError = error as AxiosError;
+        const axiosError = error as AxiosError<FeedApiResponse>;
         console.error(
             'API Error:',
-            axiosError.response?.data || axiosError.message
+            axiosError.response?.data.message || axiosError.message
         );
-        throw new Error(axiosError.message);
+        throw axiosError;
     }
 };
