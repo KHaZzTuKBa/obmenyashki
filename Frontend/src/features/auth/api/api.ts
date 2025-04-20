@@ -29,8 +29,6 @@ export const registerUser = async (
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<AuthResponse>;
-        console.error(axiosError);
-
         console.error('API Error:', axiosError.response?.data?.message);
         throw axiosError;
     }

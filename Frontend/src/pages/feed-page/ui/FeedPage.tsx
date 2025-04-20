@@ -41,8 +41,6 @@ export const FeedPage = () => {
         }
     };
 
-    console.log(bunchNumber);
-
     return (
         <section className={style.feed}>
             <h2 className={style.feed__header}>
