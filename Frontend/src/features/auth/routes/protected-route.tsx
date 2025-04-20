@@ -4,6 +4,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import { isAuth, getCurrentUser } from '@/entities/user';
 import { Path } from '@/shared/config/routes';
+import { Loader } from '@/shared/ui/Loader';
 
 export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     const location = useLocation();
@@ -27,7 +28,7 @@ export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
     });
 
     if (isPending) {
-        return <div>Загрузка...</div>;
+        return <Loader wrapperClassName='h100p' />;
     }
 
     if (isError || !data) {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Product } from '@/entities/product';
+import { Loader } from '@/shared/ui/Loader';
 
 import { useSearchFeed } from '../hooks/useSearchFeed';
 import { SortBy } from '../model/types';
@@ -49,9 +50,7 @@ export const FeedPage = () => {
                     : 'Лента товаров'}
             </h2>
 
-            {isPending && (
-                <div className={style.feed__loading}>Загрузка...</div>
-            )}
+            {isPending && <Loader />}
 
             {isError && (
                 <div className={style.feed__error}>

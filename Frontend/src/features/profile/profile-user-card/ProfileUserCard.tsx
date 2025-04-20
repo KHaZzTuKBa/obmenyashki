@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { UserAvatar } from '@/entities/user/ui/user-avatar';
 import { Path } from '@/shared/config/routes';
+import { Loader } from '@/shared/ui/Loader';
 
 import { useUserProfileData } from './hooks/useUserProfileData';
 
@@ -12,7 +13,7 @@ export const ProfileUserCard = () => {
 
     return (
         <>
-            {isPending && <p>Загрузка...</p>}
+            {isPending && <Loader wrapperClassName={style.profile__loader} />}
 
             {isError && (
                 <p>

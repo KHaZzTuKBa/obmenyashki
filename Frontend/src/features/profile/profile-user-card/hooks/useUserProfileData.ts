@@ -16,7 +16,7 @@ export const useUserProfileData = (): UserProfileData => {
         AxiosError<GetUserResponse>
     >({
         queryKey: ['user', user.id],
-        queryFn: () => getUser(user).then((res) => res.data.user),
+        queryFn: () => getUser(user),
 
         refetchInterval: 5 * 60 * 1000,
         refetchOnWindowFocus: false,

@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 import { getCurrentUser, isAuth } from '@/entities/user';
+import { Loader } from '@/shared/ui/Loader';
 
 export const NoAuthRoute = ({
     children,
@@ -24,7 +25,7 @@ export const NoAuthRoute = ({
     });
 
     if (isLoading) {
-        return <div>Загрузка...</div>;
+        return <Loader wrapperClassName='h100p' />;
     }
 
     if (data) {

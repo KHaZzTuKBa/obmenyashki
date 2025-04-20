@@ -5,6 +5,7 @@ import 'swiper/swiper-bundle.css';
 
 import { Product } from '@/entities/product';
 import { getViewItemPath, Path } from '@/shared/config/routes';
+import { Loader } from '@/shared/ui/Loader';
 
 import { ProfileProductCard } from '../../profile-product-card/ProfileProductCard';
 import { useUserProducts } from '../hooks/useUserProducts';
@@ -18,7 +19,7 @@ export const ProfileProductSlider = () => {
         <div className={`${style.profile__products} ${style.products}`}>
             <h2 className={style.products__header}>Активные лоты</h2>
 
-            {isPending && <p>Загрузка...</p>}
+            {isPending && <Loader wrapperClassName={style.products__loader} />}
 
             {isError && (
                 <p>

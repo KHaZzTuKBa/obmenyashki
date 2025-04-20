@@ -1,11 +1,15 @@
 .feed {
     padding: 30px 20px;
+    height: 100%;
 }
 
-.feed__loading {
-}
-
-.feed__erroor {
+.feed__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem;
+    font-weight: 600;
+    color: red;
 }
 
 .feed__body {
