@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css';
 
 import { Product } from '@/entities/product';
-import { getViewItemPath, Path } from '@/shared/config/routes';
+import { Path } from '@/shared/config/routes';
 import { Loader } from '@/shared/ui/Loader';
 
 import { ProfileProductCard } from '../../profile-product-card/ProfileProductCard';
@@ -34,6 +34,8 @@ export const ProfileProductSlider = () => {
                         <Swiper
                             grabCursor
                             centeredSlides
+                            loop
+                            loopAddBlankSlides
                             spaceBetween={50}
                             slidesPerView={1}
                             modules={[Virtual]}
@@ -60,15 +62,10 @@ export const ProfileProductSlider = () => {
                         >
                             {data.products.map((item: Product) => (
                                 <SwiperSlide>
-                                    <Link
-                                        to={getViewItemPath(item.id)}
+                                    <ProfileProductCard
                                         key={item.id}
-                                        className={style.products__link}
-                                    >
-                                        <ProfileProductCard
-                                            product={item}
-                                        />{' '}
-                                    </Link>
+                                        product={item}
+                                    />{' '}
                                 </SwiperSlide>
                             ))}
                         </Swiper>

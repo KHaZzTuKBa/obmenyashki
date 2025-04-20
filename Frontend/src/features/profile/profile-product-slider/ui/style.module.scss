@@ -34,16 +34,11 @@
 
 .products__list {
     padding: 0 55px;
-    overflow: hidden;
-    display: flex;
-    gap: 40px;
-    overflow-x: auto;
 }
 
 @media only screen and (width <= 1300px) {
     .products__list {
         padding: 0;
-        gap: 20px;
     }
 }
 
