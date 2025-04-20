@@ -13,9 +13,11 @@ export const ProductItem = ({ item }: { item: Product }) => {
             </div>
             <div className={style.card__right}>
                 <p className={style.card__seller}>{item.owner}</p>
-                <h3 className={style.card__title}>{item.title}</h3>
+                <h3 className={style.card__title}>{item.productTitle}</h3>
                 <p className={style.card__date}>{item.publishDate}</p>
-                <p className={style.card__description}>{item.description}</p>
+                <p className={style.card__description}>
+                    {item.productDescription}
+                </p>
                 <button className={style.card__button}>Обменяться</button>
             </div>
         </div>

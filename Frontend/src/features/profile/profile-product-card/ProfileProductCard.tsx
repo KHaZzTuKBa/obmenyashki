@@ -13,7 +13,7 @@ export const ProfileProductCard = ({ product }: { product: Product }) => {
                 <div className={styles.product__image}>
                     <ProductImage produtcImgURL={product.productImgURL} />
                 </div>
-                <p className={styles.product__name}>{product.title}</p>
+                <p className={styles.product__name}>{product.productTitle}</p>
             </li>
         </Link>
     );
