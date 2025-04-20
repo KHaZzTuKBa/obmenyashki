@@ -17,7 +17,6 @@ export const ProductItem = ({ item }: { item: Product }) => {
                 />
             </div>
             <div className={style.card__right}>
-                <p className={style.card__seller}>{item.owner}</p>
                 <h3 className={style.card__title}>{item.productTitle}</h3>
                 <p className={style.card__date}>{date}</p>
                 <p className={style.card__description}>
