@@ -22,8 +22,8 @@ export const ProfileProductSlider = () => {
 
             {isError && (
                 <p>
-                    Ошибка соединения с сервером. Код ошибки:
-                    {` ${error.message}`}
+                    {`${error.response?.data.message}` ||
+                        `Ошибка соединения с сервером. Код ошибки: ${error.status}`}
                 </p>
             )}
 

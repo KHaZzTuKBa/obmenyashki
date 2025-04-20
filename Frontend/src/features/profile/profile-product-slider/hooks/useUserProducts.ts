@@ -8,10 +8,13 @@ import { GetOwnProductListResponse } from '../model/types';
 
 export const useUserProducts = (): UseQueryResult<
     GetOwnProductListResponse,
-    AxiosError
+    AxiosError<GetOwnProductListResponse>
 > => {
     const user = getCurrentUser();
-    return useQuery<GetOwnProductListResponse, AxiosError>({
+    return useQuery<
+        GetOwnProductListResponse,
+        AxiosError<GetOwnProductListResponse>
+    >({
         queryKey: ['ownProducts', user.id],
         queryFn: () => getOwnProductList(user),
         refetchInterval: 5 * 60 * 1000,

@@ -14,11 +14,11 @@ export const getOwnProductList = async (
             );
         return response.data;
     } catch (error) {
-        const axiosError = error as AxiosError;
+        const axiosError = error as AxiosError<GetOwnProductListResponse>;
         console.error(
             'API Error:',
             axiosError.response?.data || axiosError.message
         );
-        throw new Error(axiosError.message);
+        throw axiosError;
     }
 };
