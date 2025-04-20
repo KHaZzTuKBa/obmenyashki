@@ -16,8 +16,8 @@ export const ProfileUserCard = () => {
 
             {isError && (
                 <p>
-                    Произошла ошибка при загрузке данных польхователя{' '}
-                    {error?.message}
+                    {`${error?.response?.data.message}` ||
+                        `Ошибка соединения с сервером. Код ошибки: ${error?.status}`}
                 </p>
             )}
 

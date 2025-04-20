@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { getCurrentUser, setCurrentUser, User } from '@/entities/user';
 import { getUser } from '@/entities/user/api';
+import { GetUserResponse } from '@/entities/user/model/types';
 
 import { UserProfileData } from '../model/types';
 
@@ -12,7 +13,7 @@ export const useUserProfileData = (): UserProfileData => {
 
     const { data, isPending, isError, error, isSuccess } = useQuery<
         User,
-        AxiosError
+        AxiosError<GetUserResponse>
     >({
         queryKey: ['user', user.id],
         queryFn: () => getUser(user).then((res) => res.data.user),
