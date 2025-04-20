@@ -9,12 +9,12 @@ export interface User {
     isOnline: boolean;
 }
 
-export interface GetUserResponce {
+export interface GetUserResponse {
     user: User;
     message?: string;
 }
 
-export interface UpdateUserResponce {
+export interface UpdateUserResponse {
     user: User;
     message?: string;
 }

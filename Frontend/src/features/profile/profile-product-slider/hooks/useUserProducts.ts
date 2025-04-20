@@ -12,7 +12,11 @@ export const useUserProducts = (): UseQueryResult<
 > => {
     const user = getCurrentUser();
     return useQuery<GetOwnProductListResponse, AxiosError>({
-        queryKey: ['ownProducts'],
+        queryKey: ['ownProducts', user.id],
         queryFn: () => getOwnProductList(user),
+        refetchInterval: 5 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
     });
 };
