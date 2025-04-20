@@ -9,24 +9,56 @@ import { $api } from './instance';
 
 const BASE_URL = 'User';
 
-export const getUser = (
-    user: User
-): Promise<AxiosResponse<GetUserResponse>> => {
-    return $api.get<GetUserResponse>(`${BASE_URL}/getUser/?Id=${user.id}`);
+export const getUser = async (user: User): Promise<User> => {
+    try {
+        const response: AxiosResponse<GetUserResponse> =
+            await $api.get<GetUserResponse>(
+                `${BASE_URL}/getUser/?Id=${user.id}`
+            );
+        return response.data.user;
+    } catch (error) {
+        const axiosError = error as AxiosError<GetUserResponse>;
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
+        throw axiosError;
+    }
 };
 
-export const updateUser = (
-    user: User
-): Promise<AxiosResponse<UpdateUserResponse>> => {
-    return $api.patch<UpdateUserResponse>(`${BASE_URL}/updateUser`, user);
+export const updateUser = async (user: User): Promise<User> => {
+    try {
+        const response: AxiosResponse<UpdateUserResponse> =
+            await $api.patch<UpdateUserResponse>(
+                `${BASE_URL}/updateUser`,
+                user
+            );
+        return response.data.user;
+    } catch (error) {
+        const axiosError = error as AxiosError<GetUserResponse>;
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
+        throw axiosError;
+    }
 };
 
-export const logoutUser = (): Promise<AxiosResponse<void>> => {
-    return $baseApi.get<void>(`${BASE_URL}/logout`, {
-        headers: {
-            Authorization: `Bearer ${getAccessToken()}`,
-        },
-    });
+export const logoutUser = async (): Promise<void> => {
+    try {
+        await $baseApi.get<void>(`${BASE_URL}/logout`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
+    } catch (error) {
+        const axiosError = error as AxiosError<GetUserResponse>;
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
+        throw axiosError;
+    }
 };
 
 export const isAuth = async (): Promise<boolean> => {
