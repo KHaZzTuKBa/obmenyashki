@@ -6,6 +6,7 @@ using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
+using Infrastructure.Migrations;
 
 
 namespace Infrastructure.Repo
@@ -28,7 +29,37 @@ namespace Infrastructure.Repo
             if (listOfProduct.Count == 0)
                 return null;
 
-            return new GetProductListContract(listOfProduct, await appDbContext.Products.CountAsync());
+            var productIds = listOfProduct.Select(p => p.Id).ToList();
+
+            var productImages = await GetProductImagesByProductIdsAsync(productIds);
+
+            var imagesGroupedByProductId = productImages
+                .GroupBy(img => img.ProductGuid)
+                .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+
+            var listOfResponseProduct = new List<ResponseProduct>();
+
+            foreach (var product in listOfProduct)
+            {
+                // Ищем картинки для текущего продукта в словаре, используя строковое представление Guid
+                imagesGroupedByProductId.TryGetValue(product.Id.ToString(), out var imageUrls);
+
+                var responseProduct = new ResponseProduct()
+                {
+                    Id = product.Id,
+                    ProductTitle = product.ProductTitle,
+                    ProductDescription = product.ProductDescription,
+                    PublishDate = product.PublishDate,
+                    TradeFor = product.TradeFor,
+                    IsActive = product.IsActive,
+                    // Используем найденные URL или пустой список, если вдруг что-то пошло не так
+                    // (хотя по условию картинки всегда есть)
+                    ImgURLs = imageUrls ?? new List<string>()
+                };
+                listOfResponseProduct.Add(responseProduct);
+            }
+
+            return new GetProductListContract(listOfResponseProduct, await appDbContext.Products.CountAsync());
         }
 
         public async Task<GetUserProductsContract?> GetUserProducts(GetUserProductsDTO getUserProductsDTO)
@@ -38,9 +69,41 @@ namespace Infrastructure.Repo
             if (getProductIds.Count == 0 || getProductIds == null)
                 return null;
 
-            var products = await GetProductsByIds(getProductIds);
+            List<Guid> productGuids = getProductIds
+                                    .Where(id => !string.IsNullOrEmpty(id))
+                                    .Select(id => Guid.Parse(id!))
+                                    .ToList();
 
-            return new GetUserProductsContract(products);
+            if (!productGuids.Any()) return null;
+
+            var listOfProduct = await GetProductsByIds(getProductIds);
+
+            var productImages = await GetProductImagesByProductIdsAsync(productGuids);
+
+            var imagesGroupedByProductId = productImages
+               .GroupBy(img => img.ProductGuid)
+               .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+
+            var listOfResponseProduct = new List<ResponseProduct>();
+
+            foreach (var product in listOfProduct)
+            {
+                imagesGroupedByProductId.TryGetValue(product.Id.ToString(), out var imageUrls);
+
+                var responseProduct = new ResponseProduct()
+                {
+                    Id = product.Id,
+                    ProductTitle = product.ProductTitle,
+                    ProductDescription = product.ProductDescription,
+                    PublishDate = product.PublishDate,
+                    TradeFor = product.TradeFor,
+                    IsActive = product.IsActive,
+                    ImgURLs = imageUrls ?? new List<string>()
+                };
+                listOfResponseProduct.Add(responseProduct);
+            }
+
+            return new GetUserProductsContract(listOfResponseProduct);
         }
 
         public async Task<SetProductContract?> SetProduct(SetProductDTO setProductDTO)
@@ -79,6 +142,18 @@ namespace Infrastructure.Repo
                 .OrderByDescending(p => p.PublishDate)
                 .Skip(itemsToSkip)
                 .Take(bunchSize)
+                .ToListAsync();
+        }
+
+        private async Task<List<ProductImage>> GetProductImagesByProductIdsAsync(List<Guid> productIds)
+        {
+            if (productIds == null || !productIds.Any())
+                return new List<ProductImage>();
+
+            var productIdsAsString = productIds.Select(id => id.ToString()).ToList();
+
+            return await appDbContext.ProductImages
+                .Where(img => productIdsAsString.Contains(img.ProductGuid))
                 .ToListAsync();
         }
 

@@ -2,5 +2,5 @@
 
 namespace Application.DTOs.GetProductList
 {
-    public record GetProductListResponse(List<Product>? Products, int? ProductsAmount, string Message);
+    public record GetProductListResponse(List<ResponseProduct>? Products, int? ProductsAmount, string Message);
 }
