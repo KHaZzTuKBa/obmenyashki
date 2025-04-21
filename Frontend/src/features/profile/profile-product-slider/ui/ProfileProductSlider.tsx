@@ -34,8 +34,6 @@ export const ProfileProductSlider = () => {
                         <Swiper
                             grabCursor
                             centeredSlides
-                            loop
-                            loopAddBlankSlides
                             spaceBetween={50}
                             slidesPerView={1}
                             modules={[Virtual]}
