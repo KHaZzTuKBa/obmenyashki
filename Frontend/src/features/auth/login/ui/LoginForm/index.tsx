@@ -5,16 +5,11 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { setAccessToken, setCurrentUser } from '@/entities/user';
 import { loginUser } from '@/features/auth/api/api';
-import { AuthResponse } from '@/features/auth/model/types';
+import { AuthResponse, LoginFormData } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
 import { Button, Input } from '@/shared/ui/Form';
 
 import styles from './style.module.scss';
-
-interface LoginFormData {
-    email: string;
-    password: string;
-}
 
 export const LoginForm = () => {
     const queryClient = useQueryClient();
@@ -29,9 +24,11 @@ export const LoginForm = () => {
         setError,
     } = useForm<LoginFormData>({ mode: 'all' });
 
-    const submit: SubmitHandler<LoginFormData> = async (data) => {
+    const submit: SubmitHandler<LoginFormData> = async (
+        data: LoginFormData
+    ) => {
         try {
-            const response = await loginUser(data.email, data.password);
+            const response = await loginUser({ ...data });
             setAccessToken(response.accessToken);
             setCurrentUser(response.user);
             queryClient.invalidateQueries({ queryKey: ['auth-check'] });

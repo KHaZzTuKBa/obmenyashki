@@ -2,21 +2,18 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import { API_URL } from '@/shared/config/api';
 
-import { AuthResponse } from '../model/types';
+import { AuthResponse, LoginFormData, RegisterFormData } from '../model/types';
 
 const BASE_URL = `${API_URL}/User`;
 
 export const registerUser = async (
-    name: string,
-    phone: string,
-    email: string,
-    password: string
+    data: RegisterFormData
 ): Promise<AuthResponse> => {
     try {
         const response: AxiosResponse<AuthResponse> =
             await axios.post<AuthResponse>(
                 `${BASE_URL}/registration`,
-                { name, phone, email, password },
+                { ...data },
                 { withCredentials: true }
             );
         if (
@@ -34,15 +31,12 @@ export const registerUser = async (
     }
 };
 
-export const loginUser = async (
-    email: string,
-    password: string
-): Promise<AuthResponse> => {
+export const loginUser = async (data: LoginFormData): Promise<AuthResponse> => {
     try {
         const response: AxiosResponse<AuthResponse> =
             await axios.post<AuthResponse>(
                 `${BASE_URL}/login`,
-                { email, password },
+                { ...data },
                 { withCredentials: true }
             );
         if (

@@ -4,20 +4,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { setAccessToken, setCurrentUser } from '@/entities/user';
 import { registerUser } from '@/features/auth/api/api';
-import { AuthResponse } from '@/features/auth/model/types';
+import { AuthResponse, RegisterFormData } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
 import { Input, Button } from '@/shared/ui/Form';
 
 import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 
 import styles from './style.module.scss';
-
-interface RegisterFormData {
-    name: string;
-    phone: string;
-    email: string;
-    password: string;
-}
 
 export const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -32,16 +25,13 @@ export const RegistrationForm = () => {
         control,
     } = useForm<RegisterFormData>({ mode: 'all' });
 
-    const submit: SubmitHandler<RegisterFormData> = async (data) => {
+    const submit: SubmitHandler<RegisterFormData> = async (
+        data: RegisterFormData
+    ) => {
         data.phone = `+7${data.phone.replace(/\D/g, '').slice(1, 11)}`;
 
         try {
-            const response = await registerUser(
-                data.name,
-                data.phone,
-                data.email,
-                data.password
-            );
+            const response = await registerUser({ ...data });
             setAccessToken(response.accessToken);
             setCurrentUser(response.user);
             navigate(fromPath, { replace: true });
