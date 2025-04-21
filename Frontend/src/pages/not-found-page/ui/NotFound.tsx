@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import { Path } from '@/shared/config/routes';
+import { Button } from '@/shared/ui/Form';
 
 import styles from './style.module.scss';
 
@@ -20,9 +21,13 @@ export const NotFoundPage = () => {
             <h1 className={styles.title}>
                 🤔 Упс! Этой страницы не существует.
             </h1>
-            <button className={styles.button} onClick={handleGoBack}>
+            <Button
+                className={styles.button}
+                onClick={handleGoBack}
+                color='green'
+            >
                 Вернуться назад или на главную
-            </button>
+            </Button>
         </section>
     );
 };

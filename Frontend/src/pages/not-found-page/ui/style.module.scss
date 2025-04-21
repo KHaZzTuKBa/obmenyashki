@@ -12,20 +12,12 @@
 .title {
     font-size: 2.5em;
     margin-bottom: 20px;
-    color: #555;
+    color: #eee;
 }
 
 .button {
-    padding: 10px 20px;
-    font-size: 1em;
     color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-        background-color: #0056b3;
-    }
+    text-wrap: nowrap;
+    padding: 10px 20px;
+    max-width: 100%;
 }
