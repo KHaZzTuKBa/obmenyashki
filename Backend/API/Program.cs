@@ -51,10 +51,8 @@ builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection("Minio
 
 builder.Services.AddSingleton<IMinioClient>(sp =>
 {
-    // --- Добавляем логирование ---
     var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
     var logger = loggerFactory.CreateLogger("MinioSetup");
-    // ---
 
     var config = builder.Configuration.GetSection("Minio");
     var endpoint = config["Endpoint"];
@@ -62,12 +60,10 @@ builder.Services.AddSingleton<IMinioClient>(sp =>
     var secretKey = config["SecretKey"];
     var useSsl = bool.Parse(config["UseSSL"] ?? "false");
 
-    // --- Логируем полученные значения ---
     logger.LogInformation("Attempting to configure Minio client:");
     logger.LogInformation("Endpoint from config: '{EndpointValue}'", endpoint);
     logger.LogInformation("AccessKey from config is set: {IsAccessKeySet}", !string.IsNullOrEmpty(accessKey));
     logger.LogInformation("UseSSL from config: {UseSslValue}", useSsl);
-    // ---
 
     // Проверка на null или пустую строку перед использованием
     if (string.IsNullOrEmpty(endpoint))
