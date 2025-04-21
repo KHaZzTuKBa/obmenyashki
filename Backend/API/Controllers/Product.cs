@@ -39,9 +39,9 @@ namespace WebAPI.Controllers
             var result = await product.GetProductList(getProductListDTO);
 
             if (result == null || result.Products?.Count == 0 || result.Products?.Count == null)
-                return NotFound(new GetProductListResponse(null, "Нет активных объявлений"));
+                return NotFound(new GetProductListResponse(null, null, "Нет активных объявлений"));
 
-            return Ok(new GetProductListResponse(result.Products, "Без ошибок!!!"));
+            return Ok(new GetProductListResponse(result.Products, result.ProductsAmount, "Без ошибок!!!"));
         }
 
         [Authorize]

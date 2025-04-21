@@ -26,11 +26,9 @@ namespace Infrastructure.Repo
             var listOfProduct = await GetProductsRangeAsync(getProductListDTO.BunchNumber, getProductListDTO.BunchSize);
 
             if (listOfProduct.Count == 0)
-            {
-                new GetProductListContract(null);
-            }
+                return null;
 
-            return new GetProductListContract(listOfProduct);
+            return new GetProductListContract(listOfProduct, await appDbContext.Products.CountAsync());
         }
 
         public async Task<GetUserProductsContract?> GetUserProducts(GetUserProductsDTO getUserProductsDTO)
@@ -38,7 +36,7 @@ namespace Infrastructure.Repo
             var getProductIds = await GetUserProductIds(getUserProductsDTO.UserId);
 
             if (getProductIds.Count == 0 || getProductIds == null)
-                return new GetUserProductsContract(null);
+                return null;
 
             var products = await GetProductsByIds(getProductIds);
 
