@@ -73,7 +73,7 @@ export const ProfileProductSlider = () => {
                         {`${data.message} `}
                         <Link
                             className={style.products__addProductLink}
-                            to={Path.MY_ITEM_ADD}
+                            to={Path.MY_PRODUCT_ADD}
                         >
                             Хотите создать?
                         </Link>

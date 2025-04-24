@@ -34,11 +34,11 @@ const routes = [
                 element: <ProfilePage />,
             },
             {
-                path: Path.MY_ITEM_ADD,
+                path: Path.MY_PRODUCT_ADD,
                 element: <AddProductPage />,
             },
             {
-                path: Path.MY_ITEM_EDIT,
+                path: Path.MY_PRODUCT_EDIT,
                 element: <div>editMyItemPage</div>,
             },
             {
@@ -46,7 +46,7 @@ const routes = [
                 element: <FeedPage />,
             },
             {
-                path: Path.VIEW_ITEM,
+                path: Path.VIEW_PRODUCT,
                 element: <div>viewItemPage</div>,
             },
             {
