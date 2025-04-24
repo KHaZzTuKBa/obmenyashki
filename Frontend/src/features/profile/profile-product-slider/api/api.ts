@@ -1,16 +1,16 @@
 import { AxiosError, AxiosResponse } from 'axios';
 
-import { User, $api } from '@/entities/user';
+import { $api } from '@/entities/user';
 
 import { GetOwnProductListResponse } from '../model/types';
 
 export const getOwnProductList = async (
-    user: User
+    userId: string
 ): Promise<GetOwnProductListResponse> => {
     try {
         const response: AxiosResponse<GetOwnProductListResponse> =
             await $api.get<GetOwnProductListResponse>(
-                `Product/GetUserProducts?UserId=${user.id}`
+                `Product/GetUserProducts?UserId=${userId}`
             );
         return response.data;
     } catch (error) {

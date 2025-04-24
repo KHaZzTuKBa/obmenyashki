@@ -46,6 +46,10 @@ export const setCurrentUser = (user: User) =>
     useCurentUserStore.getState().setUser(user);
 export const getCurrentUser = () => useCurentUserStore.getState().user;
 
+export const getCurrentUserId = () => useCurentUserStore.getState().user.id;
+export const getCurrentUserAvatar = () =>
+    useCurentUserStore.getState().user.avatarURL;
+
 export const getAccessToken = () => useCurentUserStore.getState().accessToken;
 export const setAccessToken = (token: string | null) =>
     useCurentUserStore.getState().setAccessToken(token);

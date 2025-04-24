@@ -5,6 +5,8 @@ export {
     setAccessToken,
     getCurrentUser,
     setCurrentUser,
+    getCurrentUserId,
+    getCurrentUserAvatar,
     logoutSession,
 } from './model';
 export type { User } from './model';

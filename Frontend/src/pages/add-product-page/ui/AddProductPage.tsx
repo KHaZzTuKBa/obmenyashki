@@ -2,7 +2,7 @@ import { AxiosError } from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
-import { getCurrentUser } from '@/entities/user';
+import { getCurrentUserId } from '@/entities/user';
 import { Button, Input } from '@/shared/ui/Form';
 import { Icon } from '@/shared/ui/Icon';
 import { ModalWindow } from '@/shared/ui/modal-window';
@@ -69,7 +69,7 @@ export const AddProductPage = () => {
         formData.append('productTitle', data.productTitle);
         formData.append('productDescription', data.productDescription || '');
         formData.append('tradeFor', data.tradeFor || '');
-        formData.append('ownerId', getCurrentUser().id);
+        formData.append('ownerId', getCurrentUserId());
 
         selectedFiles.forEach((file) => {
             formData.append('images', file);
