@@ -3,7 +3,7 @@ export interface Product {
     productTitle: string;
     productDescription: string;
     publishDate: string;
-    productImgURL: string | null;
+    productImgURLs: string[];
     tradeFor?: string;
     isActive: boolean;
 }
