@@ -6,6 +6,7 @@ import {
 
 import { MainLayout } from '@/app/layouts/main-layout';
 import { ProtectedRoute, NoAuthRoute } from '@/features/auth';
+import { AddProductPage } from '@/pages/add-product-page';
 import { FeedPage } from '@/pages/feed-page';
 import { LoginPage } from '@/pages/login-page';
 import { NotFoundPage } from '@/pages/not-found-page';
@@ -34,7 +35,7 @@ const routes = [
             },
             {
                 path: Path.MY_ITEM_ADD,
-                element: <div>addMyItemPage</div>,
+                element: <AddProductPage />,
             },
             {
                 path: Path.MY_ITEM_EDIT,
