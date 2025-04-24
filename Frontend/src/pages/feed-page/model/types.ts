@@ -2,6 +2,7 @@ import { Product } from '@/entities/product';
 
 export interface FeedApiResponse {
     products: Product[];
+    productsAmount: number;
     message?: string;
 }
 

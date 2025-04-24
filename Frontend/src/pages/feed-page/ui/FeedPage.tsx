@@ -73,12 +73,22 @@ export const FeedPage = () => {
                                 ))}
                             </ul>
                             <div>
-                                <button onClick={() => handleBunchNumber(-1)}>
+                                {bunchNumber > 1 && (
+                                    <button
+                                        onClick={() => handleBunchNumber(-1)}
+                                    >
                                     Предидущая страница
                                 </button>
-                                <button onClick={() => handleBunchNumber(1)}>
+                                )}
+
+                                {data.productsAmount - bunchSize * bunchNumber >
+                                    0 && (
+                                    <button
+                                        onClick={() => handleBunchNumber(1)}
+                                    >
                                     Следующая страница
                                 </button>
+                                )}
                             </div>
                             <button onClick={handeSortBy}>
                                 Сортировка:{' '}
