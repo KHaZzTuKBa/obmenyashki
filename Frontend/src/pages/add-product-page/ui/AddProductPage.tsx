@@ -357,7 +357,7 @@ export const AddProductPage = () => {
                 isOpen={isModalOpen}
                 message={modalMessage}
                 buttonText={'Хорошо'}
-                appearece={isSuccess ? 'green' : 'red'}
+                appearance={isSuccess ? 'green' : 'red'}
                 onClose={() => setIsModalOpen(false)}
             />
         </section>

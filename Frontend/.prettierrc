@@ -4,14 +4,5 @@
     "trailingComma": "es5",
     "singleQuote": true,
     "jsxSingleQuote": true,
-    "endOfLine": "lf",
-
-    "overrides": [
-        {
-            "files": "*.scss",
-            "options": {
-                "semi": false
-            }
-        }
-    ]
+    "endOfLine": "lf"
 }

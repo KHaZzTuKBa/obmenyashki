@@ -3,18 +3,18 @@ import { createPortal } from 'react-dom';
 
 import style from './style.module.scss';
 
-type ModalAppearece = undefined | 'green' | 'red';
+type ModalAppearance = undefined | 'green' | 'red';
 
 export const ModalWindow = ({
     message,
     buttonText,
-    appearece,
+    appearance,
     isOpen,
     onClose,
 }: {
     message: string;
     buttonText: string;
-    appearece: ModalAppearece;
+    appearance: ModalAppearance;
     isOpen: boolean;
     onClose: () => void;
 }) => {
@@ -42,7 +42,7 @@ export const ModalWindow = ({
     if (!isOpen) return null;
 
     return createPortal(
-        <div className={appearece}>
+        <div className={appearance}>
             <div
                 className={style.modal__window}
                 onClick={(e) => e.stopPropagation()}
