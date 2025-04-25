@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react';
-import { createPortal } from 'react-dom';
+import { useModal } from '@/shared/hooks/useModal';
 
 import style from './style.module.scss';
 
@@ -18,30 +17,7 @@ export const ModalWindow = ({
     isOpen: boolean;
     onClose: () => void;
 }) => {
-    const elRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        elRef.current = document.createElement('div');
-        let modalRoot = document.getElementById('modal');
-
-        if (!modalRoot) {
-            modalRoot = document.createElement('div');
-            modalRoot.id = 'modal';
-            document.body.appendChild(modalRoot);
-        }
-
-        modalRoot.appendChild(elRef.current!);
-
-        return () => {
-            if (elRef.current) {
-                modalRoot?.removeChild(elRef.current);
-            }
-        };
-    }, []);
-
-    if (!isOpen) return null;
-
-    return createPortal(
+    const modalWindow = useModal(
         <div className={appearance}>
             <div
                 className={style.modal__window}
@@ -54,6 +30,8 @@ export const ModalWindow = ({
             </div>
             <div className={style.modal__overlay} onClick={onClose}></div>
         </div>,
-        elRef.current!
+        isOpen
     );
+
+    return modalWindow;
 };
