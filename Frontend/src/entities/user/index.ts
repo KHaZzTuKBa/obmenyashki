@@ -1,5 +1,5 @@
 export { UserAvatar } from './ui';
-export { $api, isAuth } from './api';
+export { $api, isAuth, getUserById } from './api';
 export {
     getAccessToken,
     setAccessToken,

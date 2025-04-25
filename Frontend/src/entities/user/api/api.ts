@@ -9,7 +9,7 @@ import { $api } from './instance';
 
 const BASE_URL = 'User';
 
-export const getUser = async (userId: string): Promise<User> => {
+export const getUserById = async (userId: string): Promise<User> => {
     try {
         const response: AxiosResponse<GetUserResponse> =
             await $api.get<GetUserResponse>(
