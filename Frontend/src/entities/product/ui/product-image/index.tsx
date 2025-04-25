@@ -5,7 +5,7 @@ export const ProductImage = ({
     produtcImgURLs = [],
 }: {
     className?: string;
-    produtcImgURLs?: string[] ;
+    produtcImgURLs?: string[];
 }) => {
     return (
         <>
