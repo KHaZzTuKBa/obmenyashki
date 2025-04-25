@@ -1,4 +1,5 @@
 ﻿using Application.Contracts;
+using Application.DTOs.GetProduct;
 using Application.DTOs.GetProductList;
 using Application.DTOs.GetUserProducts;
 using Application.DTOs.SetProduct;
@@ -54,6 +55,18 @@ namespace WebAPI.Controllers
                 return new GetUserProductsResponse(null, "У вас нет активных объявлений!");
 
             return Ok(new GetUserProductsResponse(result.Products, $"У вас {result.Products.Count} активных объявлений"));
+        }
+
+        [Authorize]
+        [HttpGet("GetProductById")]
+        public async Task<ActionResult<GetProductResponse>> GetProductById([FromQuery]GetProductDTO getProductDTO)
+        {
+            var result = await product.GetProduct(getProductDTO);
+
+            if (result == null || result.Product == null || result.OwnerId == null)
+                return NotFound(new GetProductResponse(null, null, "Объявление не найдено))"));
+
+            return Ok(new GetProductResponse(result.Product, result.OwnerId, "Объявление успешно найдено!"));
         }
     }
 }

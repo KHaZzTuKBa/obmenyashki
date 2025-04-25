@@ -13,6 +13,7 @@ using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
 using Microsoft.Extensions.Options;
+using Application.DTOs.GetProduct;
 
 
 namespace Infrastructure.Repo
@@ -79,10 +80,13 @@ namespace Infrastructure.Repo
         {
             var productIdsFromMap = await GetUserProductIds(getUserProductsDTO.UserId);
 
-            if (productIdsFromMap == null || !productIdsFromMap.Any())
+            if (productIdsFromMap == null)
                 return null;
 
-            var listOfProduct = await GetProductsByIds(productIdsFromMap);
+            if(!productIdsFromMap.Any()) 
+                return null;
+
+            var listOfProduct = await GetProductsByIds(productIdsFromMap!);
 
             if (listOfProduct == null || !listOfProduct.Any())
                 return null;
@@ -147,9 +151,8 @@ namespace Infrastructure.Repo
             await appDbContext.UserProductMap.AddAsync(userProductRel);
             await appDbContext.SaveChangesAsync();
 
-            var uploadedImageUrls = new List<string>(); // Для возможного возврата URL в контракте, если понадобится
+            var uploadedImageUrls = new List<string>();
 
-            // Убедимся, что бакет существует (можно сделать опциональным, если уверены, что бакет есть)
             try
             {
                 var beArgs = new BucketExistsArgs().WithBucket(minioOptions.BucketName);
@@ -160,29 +163,24 @@ namespace Infrastructure.Repo
                     var mbArgs = new MakeBucketArgs().WithBucket(minioOptions.BucketName);
                     await minioClient.MakeBucketAsync(mbArgs);
                     logger.LogInformation("Bucket {BucketName} created.", minioOptions.BucketName);
-                    // Здесь можно добавить установку политики на чтение, если бакет новый
-                    // await SetPublicReadPolicy(_minioOptions.BucketName);
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error checking or creating bucket {BucketName} during SetProduct", minioOptions.BucketName);
-                // Решите, что делать в случае ошибки - прервать или продолжить без картинок?
-                // Пока просто логируем и продолжаем (но картинки не будут загружены)
-                // Можно вернуть ошибку: return null; или throw;
             }
 
             if (setProductDTO.Images != null && setProductDTO.Images.Any())
             {
                 foreach (var imageFile in setProductDTO.Images)
                 {
-                    if (imageFile.Length == 0) continue; // Пропускаем пустые файлы
+                    if (imageFile.Length == 0) continue;
 
                     // Генерируем уникальное имя для объекта в MinIO
                     var objectName = $"products/{productIdString}/{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
 
-                    try
-                    {
+                    //try
+                    //{
                         // Копируем файл в MemoryStream
                         using var memoryStream = new MemoryStream();
                         await imageFile.CopyToAsync(memoryStream);
@@ -199,43 +197,76 @@ namespace Infrastructure.Repo
                         // Загружаем в MinIO
                         await minioClient.PutObjectAsync(putObjectArgs);
                         logger.LogInformation("Uploaded image {ObjectName} to bucket {BucketName}", objectName, minioOptions.BucketName);
-
-                        // --- Формируем публичный URL ---
-                        // Важно: Это сработает, только если у вашего бакета есть политика, разрешающая публичное чтение (GetObject)
-                        // Пример политики: https://docs.min.io/docs/minio-policy-based-access-control-for-amazon-s3.html#readonly
+                       
                         var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://{minioOptions.Endpoint}/{minioOptions.BucketName}/{objectName}";
 
                         uploadedImageUrls.Add(imageUrl); // Сохраняем для возможного использования
 
-                        // Создаем запись в таблице ProductImages
                         var productImage = new ProductImage
                         {
                             ProductGuid = productIdString,
                             ImageURL = imageUrl
-                            // Id генерируется автоматически базой данных
                         };
                         await appDbContext.ProductImages.AddAsync(productImage);
 
-                    }
-                    catch (MinioException e)
+                    //}
+                    /*catch (MinioException e)
                     {
                         logger.LogError(e, "Minio Error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
-                        // Обработка ошибки: пропустить файл, прервать операцию?
-                        // Пока просто логируем и пропускаем этот файл
                     }
                     catch (Exception e)
                     {
                         logger.LogError(e, "Unexpected error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
-                        // Обработка ошибки
-                    }
-                } // end foreach
+                    }*/
+                }
 
-                // 4. Сохраняем все добавленные ProductImage и UserProductRel (если не сохранили раньше)
+                // Сохраняем все добавленные ProductImage и UserProductRel (если не сохранили раньше)
                 await appDbContext.SaveChangesAsync();
 
             }
 
             return new SetProductContract(userProductRel.ProductId);
+        }
+
+        public async Task<GetProductContract?> GetProduct(GetProductDTO getProductDTO)
+        {
+            if (!Guid.TryParse(getProductDTO.ProductId, out var productIdGuid))
+            {
+                logger.LogWarning("Invalid ProductId format provided: {ProductId}", getProductDTO.ProductId);
+                return null;
+            }
+
+            var product = await appDbContext.Products
+                                        .AsNoTracking()
+                                        .FirstOrDefaultAsync(p => p.Id == productIdGuid);
+
+            if (product == null)
+            {
+                logger.LogInformation("Product with ID {ProductId} not found.", productIdGuid);
+                return null;
+            }
+
+            string productIdString = getProductDTO.ProductId;
+            var imgUrls = await appDbContext.ProductImages
+                                         .Where(img => img.ProductGuid == productIdString)
+                                         .Select(img => img.ImageURL) // Выбираем только URL
+                                         .AsNoTracking()
+                                         .ToListAsync();
+
+            // 5. Создание и возврат контракта
+            var productContract = new ResponseProduct() {
+                Id = product.Id,
+                ProductTitle = product.ProductTitle,
+                ProductDescription = product.ProductDescription,
+                PublishDate = product.PublishDate,
+                TradeFor = product.TradeFor,
+                IsActive = product.IsActive,
+                ImgURLs = imgUrls ?? new List<string>()
+            };
+
+            var userProductRel = await appDbContext.UserProductMap.FirstOrDefaultAsync(pr =>  pr.ProductId == productIdString);
+
+            return new GetProductContract(productContract, userProductRel?.UserId);
         }
 
         public async Task<List<Product>> GetProductsRangeAsync(int bunchNumber, int bunchSize)
