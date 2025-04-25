@@ -7,6 +7,12 @@ using Infrastructure.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Infrastructure.Migrations;
+using Infrastructure.Models;
+using Microsoft.Extensions.Logging;
+using Minio;
+using Minio.DataModel.Args;
+using Minio.Exceptions;
+using Microsoft.Extensions.Options;
 
 
 namespace Infrastructure.Repo
@@ -14,35 +20,42 @@ namespace Infrastructure.Repo
     public class ProductRepo : IProduct
     {
         private readonly AppDbContext appDbContext;
-        private readonly IConfiguration configuration;
+        //private readonly IConfiguration configuration;
+        private readonly IMinioClient minioClient;
+        private readonly MinioOptions minioOptions;
+        private readonly ILogger<ProductRepo> logger;
 
-        public ProductRepo(AppDbContext appDbContext, IConfiguration configuration)
+        public ProductRepo(AppDbContext appDbContext, IMinioClient minioClient,IOptions<MinioOptions> minioOptions, ILogger<ProductRepo> logger)
         {
             this.appDbContext = appDbContext;
-            this.configuration = configuration;
+            this.minioClient = minioClient;
+            this.minioOptions = minioOptions.Value;
+            this.logger = logger;
         }
 
         public async Task<GetProductListContract?> GetProductList(GetProductListDTO getProductListDTO)
         {
             var listOfProduct = await GetProductsRangeAsync(getProductListDTO.BunchNumber, getProductListDTO.BunchSize);
 
-            if (listOfProduct.Count == 0)
+            if (listOfProduct == null || !listOfProduct.Any())
                 return null;
 
             var productIds = listOfProduct.Select(p => p.Id).ToList();
 
-            var productImages = await GetProductImagesByProductIdsAsync(productIds);
+            var productIdsAsString = listOfProduct.Select(p => p.Id.ToString()).ToList();
 
-            var imagesGroupedByProductId = productImages
-                .GroupBy(img => img.ProductGuid)
-                .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+            var allProductImages = await appDbContext.ProductImages.AsNoTracking().ToListAsync();
+            var productImages = allProductImages.Where(img => productIdsAsString.Contains(img.ProductGuid)).ToList();
+
+            var imagesByProductGuid = productImages
+                                        .GroupBy(img => img.ProductGuid)
+                                        .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
 
             var listOfResponseProduct = new List<ResponseProduct>();
 
             foreach (var product in listOfProduct)
             {
-                // Ищем картинки для текущего продукта в словаре, используя строковое представление Guid
-                imagesGroupedByProductId.TryGetValue(product.Id.ToString(), out var imageUrls);
+                imagesByProductGuid.TryGetValue(product.Id.ToString(), out var imgUrls);
 
                 var responseProduct = new ResponseProduct()
                 {
@@ -52,43 +65,46 @@ namespace Infrastructure.Repo
                     PublishDate = product.PublishDate,
                     TradeFor = product.TradeFor,
                     IsActive = product.IsActive,
-                    // Используем найденные URL или пустой список, если вдруг что-то пошло не так
-                    // (хотя по условию картинки всегда есть)
-                    ImgURLs = imageUrls ?? new List<string>()
+                    ImgURLs = imgUrls ?? new List<string>()
                 };
                 listOfResponseProduct.Add(responseProduct);
             }
 
-            return new GetProductListContract(listOfResponseProduct, await appDbContext.Products.CountAsync());
+            var totalCount = await appDbContext.Products.CountAsync();
+
+            return new GetProductListContract(listOfResponseProduct, totalCount);
         }
 
         public async Task<GetUserProductsContract?> GetUserProducts(GetUserProductsDTO getUserProductsDTO)
         {
-            var getProductIds = await GetUserProductIds(getUserProductsDTO.UserId);
+            var productIdsFromMap = await GetUserProductIds(getUserProductsDTO.UserId);
 
-            if (getProductIds.Count == 0 || getProductIds == null)
+            if (productIdsFromMap == null || !productIdsFromMap.Any())
                 return null;
 
-            List<Guid> productGuids = getProductIds
-                                    .Where(id => !string.IsNullOrEmpty(id))
-                                    .Select(id => Guid.Parse(id!))
-                                    .ToList();
+            var listOfProduct = await GetProductsByIds(productIdsFromMap);
 
-            if (!productGuids.Any()) return null;
+            if (listOfProduct == null || !listOfProduct.Any())
+                return null;
 
-            var listOfProduct = await GetProductsByIds(getProductIds);
+            var productIdsAsString = listOfProduct.Select(p => p.Id.ToString()).ToList();
 
-            var productImages = await GetProductImagesByProductIdsAsync(productGuids);
+            var productImages = await appDbContext.ProductImages
+                                     .Where(img => productIdsAsString.Contains(img.ProductGuid))
+                                     .AsNoTracking()
+                                     .ToListAsync();
 
-            var imagesGroupedByProductId = productImages
-               .GroupBy(img => img.ProductGuid)
-               .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+            var imagesByProductGuid = productImages
+                                        .GroupBy(img => img.ProductGuid)
+                                        .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+
+
 
             var listOfResponseProduct = new List<ResponseProduct>();
 
             foreach (var product in listOfProduct)
             {
-                imagesGroupedByProductId.TryGetValue(product.Id.ToString(), out var imageUrls);
+                imagesByProductGuid.TryGetValue(product.Id.ToString(), out var imgUrls);
 
                 var responseProduct = new ResponseProduct()
                 {
@@ -98,7 +114,7 @@ namespace Infrastructure.Repo
                     PublishDate = product.PublishDate,
                     TradeFor = product.TradeFor,
                     IsActive = product.IsActive,
-                    ImgURLs = imageUrls ?? new List<string>()
+                    ImgURLs = imgUrls ?? new List<string>()
                 };
                 listOfResponseProduct.Add(responseProduct);
             }
@@ -120,16 +136,104 @@ namespace Infrastructure.Repo
             await appDbContext.Products.AddAsync(product);
             await appDbContext.SaveChangesAsync();
 
+            string productIdString = product.Id.ToString();
+
             var userProductRel = new UserProductRel()
             {
                 UserId = setProductDTO.OwnerId,
-                ProductId = product.Id.ToString(),
+                ProductId = productIdString,
             };
 
             await appDbContext.UserProductMap.AddAsync(userProductRel);
-            await appDbContext.SaveChangesAsync();           
+            await appDbContext.SaveChangesAsync();
 
-            //добавить работу с сохранением ихображений в объектное хранилище
+            var uploadedImageUrls = new List<string>(); // Для возможного возврата URL в контракте, если понадобится
+
+            // Убедимся, что бакет существует (можно сделать опциональным, если уверены, что бакет есть)
+            try
+            {
+                var beArgs = new BucketExistsArgs().WithBucket(minioOptions.BucketName);
+                bool found = await minioClient.BucketExistsAsync(beArgs);
+                if (!found)
+                {
+                    logger.LogWarning("Bucket {BucketName} not found during SetProduct. Attempting to create.", minioOptions.BucketName);
+                    var mbArgs = new MakeBucketArgs().WithBucket(minioOptions.BucketName);
+                    await minioClient.MakeBucketAsync(mbArgs);
+                    logger.LogInformation("Bucket {BucketName} created.", minioOptions.BucketName);
+                    // Здесь можно добавить установку политики на чтение, если бакет новый
+                    // await SetPublicReadPolicy(_minioOptions.BucketName);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error checking or creating bucket {BucketName} during SetProduct", minioOptions.BucketName);
+                // Решите, что делать в случае ошибки - прервать или продолжить без картинок?
+                // Пока просто логируем и продолжаем (но картинки не будут загружены)
+                // Можно вернуть ошибку: return null; или throw;
+            }
+
+            if (setProductDTO.Images != null && setProductDTO.Images.Any())
+            {
+                foreach (var imageFile in setProductDTO.Images)
+                {
+                    if (imageFile.Length == 0) continue; // Пропускаем пустые файлы
+
+                    // Генерируем уникальное имя для объекта в MinIO
+                    var objectName = $"products/{productIdString}/{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
+
+                    try
+                    {
+                        // Копируем файл в MemoryStream
+                        using var memoryStream = new MemoryStream();
+                        await imageFile.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0; // Сбрасываем позицию
+
+                        // Готовим аргументы для загрузки
+                        var putObjectArgs = new PutObjectArgs()
+                            .WithBucket(minioOptions.BucketName)
+                            .WithObject(objectName)
+                            .WithStreamData(memoryStream)
+                            .WithObjectSize(memoryStream.Length)
+                            .WithContentType(imageFile.ContentType);
+
+                        // Загружаем в MinIO
+                        await minioClient.PutObjectAsync(putObjectArgs);
+                        logger.LogInformation("Uploaded image {ObjectName} to bucket {BucketName}", objectName, minioOptions.BucketName);
+
+                        // --- Формируем публичный URL ---
+                        // Важно: Это сработает, только если у вашего бакета есть политика, разрешающая публичное чтение (GetObject)
+                        // Пример политики: https://docs.min.io/docs/minio-policy-based-access-control-for-amazon-s3.html#readonly
+                        var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://{minioOptions.Endpoint}/{minioOptions.BucketName}/{objectName}";
+
+                        uploadedImageUrls.Add(imageUrl); // Сохраняем для возможного использования
+
+                        // Создаем запись в таблице ProductImages
+                        var productImage = new ProductImage
+                        {
+                            ProductGuid = productIdString,
+                            ImageURL = imageUrl
+                            // Id генерируется автоматически базой данных
+                        };
+                        await appDbContext.ProductImages.AddAsync(productImage);
+
+                    }
+                    catch (MinioException e)
+                    {
+                        logger.LogError(e, "Minio Error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
+                        // Обработка ошибки: пропустить файл, прервать операцию?
+                        // Пока просто логируем и пропускаем этот файл
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "Unexpected error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
+                        // Обработка ошибки
+                    }
+                } // end foreach
+
+                // 4. Сохраняем все добавленные ProductImage и UserProductRel (если не сохранили раньше)
+                await appDbContext.SaveChangesAsync();
+
+            }
 
             return new SetProductContract(userProductRel.ProductId);
         }
@@ -145,20 +249,9 @@ namespace Infrastructure.Repo
                 .ToListAsync();
         }
 
-        private async Task<List<ProductImage>> GetProductImagesByProductIdsAsync(List<Guid> productIds)
-        {
-            if (productIds == null || !productIds.Any())
-                return new List<ProductImage>();
-
-            var productIdsAsString = productIds.Select(id => id.ToString()).ToList();
-
-            return await appDbContext.ProductImages
-                .Where(img => productIdsAsString.Contains(img.ProductGuid))
-                .ToListAsync();
-        }
-
         public async Task<List<string?>> GetUserProductIds(string userId)
         {
+
             return await appDbContext.UserProductMap
                 .Where(up => up.UserId == userId)
                 .Select(up => up.ProductId)

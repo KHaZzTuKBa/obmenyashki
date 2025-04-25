@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Minio;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
+using Application.Contracts;
+using Infrastructure.Models;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,46 +50,40 @@ builder.Services.AddSwaggerGen(swagger =>
 
 builder.Services.InfrastructureServices(builder.Configuration);
 
-builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection("Minio"));
+builder.Services.Configure<MinioOptions>(builder.Configuration.GetSection(MinioOptions.Minio));
 
-builder.Services.AddSingleton<IMinioClient>(sp =>
+builder.Services.AddSingleton<IMinioClient>(sp => // Регистрируем интерфейс IMinioClient
 {
-    var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
-    var logger = loggerFactory.CreateLogger("MinioSetup");
+    // Получаем настроенные опции MinIO
+    var minioOptions = sp.GetRequiredService<IOptions<MinioOptions>>().Value;
+    var logger = sp.GetRequiredService<ILogger<Program>>(); // Получаем логгер для вывода информации
 
-    var config = builder.Configuration.GetSection("Minio");
-    var endpoint = config["Endpoint"];
-    var accessKey = config["AccessKey"];
-    var secretKey = config["SecretKey"];
-    var useSsl = bool.Parse(config["UseSSL"] ?? "false");
-
-    logger.LogInformation("Attempting to configure Minio client:");
-    logger.LogInformation("Endpoint from config: '{EndpointValue}'", endpoint);
-    logger.LogInformation("AccessKey from config is set: {IsAccessKeySet}", !string.IsNullOrEmpty(accessKey));
-    logger.LogInformation("UseSSL from config: {UseSslValue}", useSsl);
-
-    // Проверка на null или пустую строку перед использованием
-    if (string.IsNullOrEmpty(endpoint))
+    try
     {
-        throw new InvalidOperationException("Minio Endpoint is null or empty in configuration.");
+        logger.LogInformation("Initializing MinioClient with Endpoint: {Endpoint}, UseSSL: {UseSSL}",
+            minioOptions.Endpoint, minioOptions.UseSSL);
+
+        // Создаем экземпляр MinioClient, используя builder pattern
+        var minioClient = new MinioClient()
+                            .WithEndpoint(minioOptions.Endpoint) // Только хост и порт
+                            .WithCredentials(minioOptions.AccessKey, minioOptions.SecretKey);
+
+        // Применяем SSL, если указано в конфигурации
+        if (minioOptions.UseSSL)
+        {
+            minioClient.WithSSL();
+        }
+
+        // Строим и возвращаем клиент
+        return minioClient.Build();
     }
-    if (string.IsNullOrEmpty(accessKey))
+    catch (Exception ex)
     {
-        throw new InvalidOperationException("Minio AccessKey is null or empty in configuration.");
+        logger.LogError(ex, "Failed to initialize MinioClient. Endpoint: {Endpoint}, UseSSL: {UseSSL}",
+            minioOptions.Endpoint, minioOptions.UseSSL);
+        // Выбрасываем исключение, чтобы приложение не стартовало с нерабочим клиентом
+        throw new InvalidOperationException("Could not configure Minio client", ex);
     }
-    if (string.IsNullOrEmpty(secretKey))
-    {
-        throw new InvalidOperationException("Minio SecretKey is null or empty in configuration.");
-    }
-
-    var minioClient = new MinioClient()
-                        .WithEndpoint(endpoint)
-                        .WithCredentials(accessKey, secretKey);
-
-    if (useSsl)
-        minioClient.WithSSL();
-
-    return minioClient.Build();
 });
 
 var app = builder.Build();
@@ -107,11 +104,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    await EnsureMinioBucketExists(app.Services);
 }
 
 app.UseHttpsRedirection();
@@ -122,40 +121,49 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-using (var scope = app.Services.CreateScope())
+app.Run();
+
+async Task EnsureMinioBucketExists(IServiceProvider services)
 {
-    var minioClient = scope.ServiceProvider.GetRequiredService<IMinioClient>();
-    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-    var bucketName = builder.Configuration["Minio:BucketName"] ?? "default-bucket";
+    // Получаем клиент и опции из DI
+    // Можно не создавать scope, так как IMinioClient и IOptions зарегистрированы как Singleton
+    var minioClient = services.GetRequiredService<IMinioClient>();
+    var options = services.GetRequiredService<IOptions<MinioOptions>>().Value;
+    var logger = services.GetRequiredService<ILogger<Program>>(); // Логгер
+    var bucketName = options.BucketName;
 
     try
     {
-        var beArgs = new BucketExistsArgs().WithBucket(bucketName);
-        bool found = await minioClient.BucketExistsAsync(beArgs).ConfigureAwait(false);
+        logger.LogInformation("Checking if bucket '{BucketName}' exists...", bucketName);
+        // Аргументы для проверки существования бакета
+        var args = new BucketExistsArgs().WithBucket(bucketName);
+        bool found = await minioClient.BucketExistsAsync(args);
+
         if (!found)
         {
-            var mbArgs = new MakeBucketArgs().WithBucket(bucketName);
-            await minioClient.MakeBucketAsync(mbArgs).ConfigureAwait(false);
-            logger.LogInformation($"Bucket '{bucketName}' created successfully.");
+            logger.LogInformation("Bucket '{BucketName}' does not exist. Creating...", bucketName);
+            // Аргументы для создания бакета
+            var makeArgs = new MakeBucketArgs().WithBucket(bucketName);
+            await minioClient.MakeBucketAsync(makeArgs);
+            logger.LogInformation("Bucket '{BucketName}' created successfully.", bucketName);
+
+            // (Опционально) Настроить политики доступа или CORS, если нужно
+            // string policyJson = @"{ ... ваш json политики ... }";
+            // var policyArgs = new SetPolicyArgs().WithBucket(bucketName).WithPolicy(policyJson);
+            // await minioClient.SetPolicyAsync(policyArgs);
         }
         else
         {
-            logger.LogInformation($"Bucket '{bucketName}' already exists.");
+            logger.LogInformation("Bucket '{BucketName}' already exists.", bucketName);
         }
     }
+    // Обрабатываем специфичные для Minio исключения
     catch (MinioException e)
     {
-        logger.LogError(e, $"Error occurred with Minio bucket '{bucketName}'");
+        logger.LogError(e, "Minio Error checking or creating bucket '{BucketName}'", bucketName);
     }
-}
-
-app.Run();
-
-public class MinioOptions
-{
-    public string Endpoint { get; set; } = string.Empty;
-    public string AccessKey { get; set; } = string.Empty;
-    public string SecretKey { get; set; } = string.Empty;
-    public bool UseSSL { get; set; } = false;
-    public string BucketName { get; set; } = string.Empty;
+    catch (Exception e)
+    {
+        logger.LogError(e, "An unexpected error occurred while ensuring bucket '{BucketName}' exists", bucketName);
+    }
 }
