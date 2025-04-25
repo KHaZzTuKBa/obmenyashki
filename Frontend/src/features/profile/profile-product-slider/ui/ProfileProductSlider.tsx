@@ -33,10 +33,9 @@ export const ProfileProductSlider = () => {
                     <ul className={style.products__list}>
                         <Swiper
                             grabCursor
-                            centeredSlides
-                            spaceBetween={50}
-                            slidesPerView={1}
                             modules={[Virtual]}
+                            slidesPerView={1}
+                            spaceBetween={10}
                             breakpoints={{
                                 500: {
                                     slidesPerView: 2,
@@ -47,8 +46,13 @@ export const ProfileProductSlider = () => {
                                 769: {
                                     slidesPerView: 1,
                                 },
-                                1100: {
+                                900: {
                                     slidesPerView: 2,
+                                    spaceBetween: 30,
+                                },
+                                1300: {
+                                    slidesPerView: 3,
+                                    spaceBetween: 50,
                                 },
                                 1400: {
                                     slidesPerView: 3,
