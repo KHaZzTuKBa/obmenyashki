@@ -1,0 +1,145 @@
+.modal__contacts {
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: 60px;
+    border-top-left-radius: 60px;
+    border-top-right-radius: 60px;
+    background-color: #ffffff;
+
+    display: flex;
+    flex-direction: column;
+    row-gap: 40px;
+}
+
+@media only screen and (max-width: 768px) {
+    .modal__contacts {
+        row-gap: 20px;
+    }
+}
+
+.modal__contacts .modal__header {
+    display: flex;
+    align-items: baseline;
+    gap: 30px;
+    flex-wrap: wrap-reverse;
+    padding-right: 60px;
+
+    .modal__name {
+        font-weight: 600;
+        font-size: 48px;
+    }
+
+    .modal__status {
+        font-weight: 500;
+        font-size: 36px;
+
+        &_online {
+            color: #4dc5a5;
+        }
+
+        &_offline {
+            color: #ff7979;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .modal__contacts .modal__header {
+        flex-direction: column-reverse;
+        align-items: flex-end;
+        gap: 20px;
+        padding-right: 0;
+
+        .modal__name {
+            font-size: 36px;
+        }
+
+        .modal__status {
+            font-size: 32px;
+        }
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .modal__contacts .modal__header {
+        .modal__name {
+            font-size: 32px;
+        }
+
+        .modal__status {
+            font-size: 24px;
+        }
+    }
+}
+
+.modal__contacts .modal__info {
+    font-weight: 500;
+    font-size: 36px;
+
+    & a {
+        color: #000;
+        text-decoration: none;
+        text-wrap: nowrap;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .modal__contacts .modal__info {
+        font-size: 24px;
+    }
+}
+
+.modal__contacts .modal__button {
+    position: absolute;
+    top: 60px;
+    right: 60px;
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    cursor: pointer;
+
+    & span {
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+
+        transition: 0.2s;
+
+        height: 4px;
+        background-color: #999999;
+        border-radius: 50px;
+
+        &:nth-child(1) {
+            rotate: 45deg;
+        }
+        &:nth-child(2) {
+            rotate: -45deg;
+        }
+    }
+}
+
+.modal__contacts .modal__button:hover {
+    & span {
+        background-color: #000;
+    }
+}
+
+.modal__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    background-color: rgba(0, 0, 0, 0.6509803922);
+}

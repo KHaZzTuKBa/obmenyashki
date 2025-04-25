@@ -1,0 +1,251 @@
+.product {
+    padding: 30px;
+}
+
+.product__content {
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: minmax(300px, 640px) minmax(700px, 950px);
+    column-gap: 60px;
+    row-gap: 30px;
+
+    max-width: 1710px;
+    margin: 0 auto;
+}
+
+@media only screen and (max-width: 1440px) {
+    .product__content {
+        grid-template-columns: minmax(250px, 450px) minmax(450px, 700px);
+    }
+}
+
+@media only screen and (max-width: 1280px) {
+    .product__content {
+        column-gap: 30px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .product__content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.product__mainImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(#4dc5a5, #8da1d0);
+    border-radius: 30px;
+    overflow: hidden;
+    aspect-ratio: 1;
+
+    grid-area: 1 / 1 / 2 / 2;
+
+    & img {
+        width: 100%;
+        object-fit: scale-down;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .product__mainImage {
+        grid-area: auto;
+        aspect-ratio: 4/3;
+        width: 75%;
+        justify-self: center;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .product__mainImage {
+        width: 100%;
+    }
+}
+
+.product__thumbnailImages {
+    grid-area: 2 / 1 / 2 / 2;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+@media only screen and (max-width: 992px) {
+    .product__thumbnailImages {
+        grid-area: auto;
+        justify-content: space-around;
+    }
+}
+
+.product__thumbnailImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    aspect-ratio: 1;
+    border-radius: 20px;
+    overflow: hidden;
+
+    flex: 1 0 auto;
+    max-width: 120px;
+
+    background-color: #d9d9d9;
+
+    & img {
+        width: 100%;
+    }
+}
+@media only screen and (max-width: 1440px) {
+    .product__thumbnailImage {
+        max-width: 100px;
+    }
+}
+
+.product__info {
+    grid-area: 1 / 2 / 2 / 2;
+    display: flex;
+    flex-direction: column;
+}
+
+@media only screen and (max-width: 992px) {
+    .product__info {
+        grid-area: auto;
+    }
+}
+
+.product__name {
+    font-size: 48px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+@media only screen and (max-width: 1440px) {
+    .product__name {
+        font-size: 32px;
+    }
+}
+
+.product__description {
+    flex: 1 0 auto;
+    color: #444444;
+
+    font-size: 24px;
+}
+
+@media only screen and (max-width: 1440px) {
+    .product__description {
+        font-size: 20px;
+    }
+}
+
+.product__label {
+    font-weight: 600;
+}
+
+.product__text {
+    font-weight: 500;
+    margin-bottom: 25px;
+}
+
+.product__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+@media only screen and (max-width: 992px) {
+    .product__buttons {
+        grid-area: auto;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+.product__button {
+    padding: 20px 60px;
+    max-width: 380px;
+    text-wrap: nowrap;
+}
+
+@media only screen and (max-width: 1440px) {
+    .product__button {
+        padding: 20px 40px;
+        font-size: 24px;
+    }
+}
+
+@media only screen and (max-width: 1280px) {
+    .product__button {
+        padding: 20px 30px;
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .product__button {
+        padding: 20px 40px;
+        font-size: 32px;
+        max-width: 100%;
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .product__button {
+        padding: 20px 20px;
+        font-size: 32px;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .product__button {
+        padding: 20px 20px;
+        font-size: 24px;
+    }
+}
+
+.product__loaderWrapper {
+    padding: 30px;
+    height: 100%;
+}
+
+.product__loader {
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 30px;
+
+    max-width: 1710px;
+    margin: 0 auto;
+
+    height: 100%;
+}
+
+.product__errorWrapper {
+    padding: 30px;
+    height: 100%;
+}
+
+.product__error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 3rem;
+    font-weight: 600;
+    color: red;
+
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 30px;
+
+    max-width: 1710px;
+    margin: 0 auto;
+
+    height: 100%;
+}

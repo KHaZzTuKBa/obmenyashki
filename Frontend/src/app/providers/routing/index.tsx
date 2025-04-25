@@ -13,6 +13,7 @@ import { NotFoundPage } from '@/pages/not-found-page';
 import { ProfilePage } from '@/pages/profile-page';
 import { RegisterPage } from '@/pages/register-page';
 import { SettingsPage } from '@/pages/settings-page';
+import { ViewProductPage } from '@/pages/view-product-page';
 import { Path } from '@/shared/config/routes';
 
 const routes = [
@@ -47,7 +48,7 @@ const routes = [
             },
             {
                 path: Path.VIEW_PRODUCT,
-                element: <div>viewItemPage</div>,
+                element: <ViewProductPage />,
             },
             {
                 path: Path.CHATS,
