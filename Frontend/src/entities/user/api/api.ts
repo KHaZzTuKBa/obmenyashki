@@ -9,11 +9,11 @@ import { $api } from './instance';
 
 const BASE_URL = 'User';
 
-export const getUser = async (user: User): Promise<User> => {
+export const getUser = async (userId: string): Promise<User> => {
     try {
         const response: AxiosResponse<GetUserResponse> =
             await $api.get<GetUserResponse>(
-                `${BASE_URL}/getUser/?Id=${user.id}`
+                `${BASE_URL}/getUser/?Id=${userId}`
             );
         return response.data.user;
     } catch (error) {

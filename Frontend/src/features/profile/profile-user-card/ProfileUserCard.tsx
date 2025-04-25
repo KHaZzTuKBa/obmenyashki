@@ -11,16 +11,21 @@ import style from './style.module.scss';
 export const ProfileUserCard = () => {
     const { user, isPending, isError, error, isSuccess } = useUserProfileData();
 
+    if (isError) {
+        return (
+            <div className={style.profile__errorWrapper}>
+                <p className={style.profile__error}>
+                    {error?.response?.data.message || error.status
+                        ? `Ошибка соединения с сервером. Код ошибки: ${error.status}`
+                        : 'Неизвестная ошибка'}
+                </p>
+            </div>
+        );
+    }
+
     return (
         <>
             {isPending && <Loader wrapperClassName={style.profile__loader} />}
-
-            {isError && (
-                <p>
-                    {`${error?.response?.data.message}` ||
-                        `Ошибка соединения с сервером. Код ошибки: ${error?.status}`}
-                </p>
-            )}
 
             {isSuccess && (
                 <div className={style.profile__info}>

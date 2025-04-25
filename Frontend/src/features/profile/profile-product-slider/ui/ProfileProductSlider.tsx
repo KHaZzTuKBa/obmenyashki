@@ -22,9 +22,10 @@ export const ProfileProductSlider = () => {
             {isPending && <Loader wrapperClassName={style.products__loader} />}
 
             {isError && (
-                <p>
-                    {`${error.response?.data.message}` ||
-                        `Ошибка соединения с сервером. Код ошибки: ${error.status}`}
+                <p className={style.profile__error}>
+                    {error.response?.data.message || error.status
+                        ? `Ошибка соединения с сервером. Код ошибки: ${error.status}`
+                        : 'Неизместная ошибка'}
                 </p>
             )}
 
