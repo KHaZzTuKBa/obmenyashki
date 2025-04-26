@@ -6,13 +6,13 @@ import { Path } from '@/shared/config/routes';
 export const useSearchForm = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    const initialQueryFromUrl = searchParams.get('q') || '';
+    const initialQueryFromUrl = searchParams.get('ProductName') || '';
     const [query, setQuery] = useState(initialQueryFromUrl);
 
     const wasSearchActive = useRef(!!initialQueryFromUrl);
 
     useEffect(() => {
-        const currentUrlQuery = searchParams.get('q') ?? '';
+        const currentUrlQuery = searchParams.get('ProductName') ?? '';
 
         if (currentUrlQuery !== query) {
             setQuery(currentUrlQuery);
@@ -27,7 +27,7 @@ export const useSearchForm = () => {
         const newValue = event.target.value;
         setQuery(newValue);
 
-        const currentUrlQuery = searchParams.get('q');
+        const currentUrlQuery = searchParams.get('ProductName');
         if (newValue.trim() === '' && currentUrlQuery) {
             navigate(Path.FEED, { replace: true });
             wasSearchActive.current = false;
@@ -41,18 +41,20 @@ export const useSearchForm = () => {
         const trimmedQuery = query.trim();
 
         if (!trimmedQuery) {
-            if (searchParams.has('q')) {
+            if (searchParams.has('ProductName')) {
                 navigate(Path.FEED, { replace: true });
             }
             wasSearchActive.current = false;
             return;
         }
 
-        if (searchParams.get('q') === trimmedQuery) {
+        if (searchParams.get('ProductName') === trimmedQuery) {
             return;
         }
 
-        navigate(`${Path.FEED}?q=${encodeURIComponent(trimmedQuery)}`);
+        navigate(
+            `${Path.FEED}?ProductName=${encodeURIComponent(trimmedQuery)}`
+        );
         wasSearchActive.current = true;
     };
 

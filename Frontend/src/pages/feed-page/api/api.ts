@@ -10,10 +10,10 @@ export const fetchFeedData = async (
     bunchSize: number,
     sortBy: SortBy
 ): Promise<FeedApiResponse> => {
-    const endpoint = 'Product/GetListOfProducts';
+    let endpoint = 'Product/GetListOfProducts';
 
     const params: {
-        q?: string;
+        ProductName?: string;
         BunchNumber: number;
         BunchSize: number;
         SortBy: SortBy;
@@ -24,7 +24,8 @@ export const fetchFeedData = async (
     };
 
     if (query) {
-        params.q = query;
+        params.ProductName = query;
+        endpoint = 'Product/SearchProductsByName';
     }
 
     try {
