@@ -205,7 +205,8 @@ namespace Infrastructure.Repo
                         logger.LogInformation(minioOptions.UseSSL.ToString());
                         logger.LogInformation("Uploaded image {ObjectName} to bucket {BucketName}", objectName, minioOptions.BucketName);
 
-                        var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://{minioOptions.Endpoint}/{minioOptions.BucketName}/{objectName}";
+                        //var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://{minioOptions.Endpoint}/{minioOptions.BucketName}/{objectName}";
+                        var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://localhost:9000/{minioOptions.BucketName}/{objectName}";
 
                         uploadedImageUrls.Add(imageUrl);
 
