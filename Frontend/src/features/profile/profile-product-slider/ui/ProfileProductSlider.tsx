@@ -30,7 +30,7 @@ export const ProfileProductSlider = () => {
             )}
 
             {isSuccess &&
-                (!!data.products && data.products.length > 0 ? (
+                (data.products.length > 0 ? (
                     <ul className={style.products__list}>
                         <Swiper
                             grabCursor
@@ -75,7 +75,7 @@ export const ProfileProductSlider = () => {
                     </ul>
                 ) : (
                     <p>
-                        {`${data.message} `}
+                        {data.message}{' '}
                         <Link
                             className={style.products__addProductLink}
                             to={Path.MY_PRODUCT_ADD}

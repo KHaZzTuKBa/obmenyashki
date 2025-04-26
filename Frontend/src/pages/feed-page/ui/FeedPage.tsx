@@ -72,24 +72,20 @@ export const FeedPage = () => {
                                     </li>
                                 ))}
                             </ul>
-                            <div>
+
                                 {bunchNumber > 1 && (
-                                    <button
-                                        onClick={() => handleBunchNumber(-1)}
-                                    >
-                                    Предидущая страница
+                                <button onClick={() => handleBunchNumber(-1)}>
+                                    Предыдущая страница
                                 </button>
                                 )}
 
                                 {data.productsAmount - bunchSize * bunchNumber >
                                     0 && (
-                                    <button
-                                        onClick={() => handleBunchNumber(1)}
-                                    >
+                                <button onClick={() => handleBunchNumber(1)}>
                                     Следующая страница
                                 </button>
                                 )}
-                            </div>
+
                             <button onClick={handeSortBy}>
                                 Сортировка:{' '}
                                 {sortBy === 'ASC'
@@ -101,7 +97,7 @@ export const FeedPage = () => {
                         <p>
                             {query
                                 ? `По запросу "${query}" ничего не найдено.`
-                                : 'Товары отсутствуют.'}
+                                : 'Объявления отсутствуют.'}
                         </p>
                     )}
                 </>

@@ -84,7 +84,6 @@ export const AddProductPage = () => {
             setSelectedFiles([]);
             resetForm();
             setModalMessage(response.message);
-            setIsModalOpen(true);
             setIsSuccess(true);
             queryClient.invalidateQueries({
                 queryKey: ['ownProducts', getCurrentUserId()],
@@ -92,17 +91,12 @@ export const AddProductPage = () => {
             queryClient.invalidateQueries({ queryKey: ['feed'] });
         } catch (error) {
             const axiosError = error as AxiosError<AddProductResponse>;
-            console.error(
-                'API error: ',
-                axiosError.response?.data.message || axiosError.message
-            );
 
             setModalMessage(
                 axiosError.response?.data.message ||
                     axiosError.message ||
                     'Произошла ошибка'
             );
-            setIsModalOpen(true);
         } finally {
             setIsModalOpen(true);
         }
@@ -156,7 +150,6 @@ export const AddProductPage = () => {
     const handleRemoveFile = (indexToRemove: number) => {
         const urlToRemove = previewUrls[indexToRemove];
         if (urlToRemove) {
-            console.log('Revoking URL for removed file:', urlToRemove);
             URL.revokeObjectURL(urlToRemove);
         }
 
@@ -202,7 +195,7 @@ export const AddProductPage = () => {
                             />
                             {errors.productTitle?.message && (
                                 <p className={style.error}>
-                                    {errors.productTitle?.message}
+                                    {errors.productTitle.message}
                                 </p>
                             )}
                         </label>

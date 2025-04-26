@@ -66,7 +66,7 @@ export const LoginForm = () => {
                         placeholder='example@example.com'
                     />
                     {errors.email?.message && (
-                        <p className={styles.error}>{errors.email?.message}</p>
+                        <p className={styles.error}>{errors.email.message}</p>
                     )}
                 </label>
 
@@ -84,14 +84,16 @@ export const LoginForm = () => {
                     />
                     {errors.password?.message && (
                         <p className={styles.error}>
-                            {errors.password?.message}
+                            {errors.password.message}
                         </p>
                     )}
                 </label>
 
-                {errors.root && errors.root.type === 'serverError' ? (
-                    <p className={styles.error}>{errors.root?.message}</p>
-                ) : null}
+                {errors.root &&
+                    errors.root.type === 'serverError' &&
+                    errors.root.message && (
+                        <p className={styles.error}>{errors.root.message}</p>
+                    )}
                 <Button
                     color='dark-green'
                     type='submit'

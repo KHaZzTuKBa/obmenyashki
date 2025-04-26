@@ -12,6 +12,7 @@ import style from './style.module.scss';
 
 export const ViewProductPage = () => {
     const { data, isError, error, isPending, isSuccess } = useSingleProduct();
+
     const currentUserId = getCurrentUserId();
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -20,15 +21,15 @@ export const ViewProductPage = () => {
         setIsModalOpen(false);
     };
 
-    if (isPending)
         return (
+        <>
+            {isPending && (
             <div className={style.product__loaderWrapper}>
                 <Loader wrapperClassName={style.product__loader} />
             </div>
-        );
+            )}
 
-    if (isError) {
-        return (
+            {isError && (
             <div className={style.product__errorWrapper}>
                 <div className={style.product__error}>
                     {error.response?.data.message ||
@@ -36,32 +37,25 @@ export const ViewProductPage = () => {
                         'Неизвестная ошибка'}
                 </div>
             </div>
-        );
-    }
+            )}
 
-    return (
+            {isSuccess && data.product && data.ownerId && (
         <section className={style.product}>
             <div className={style.product__content}>
-                {isSuccess && (
-                    <>
                         <div className={style.product__mainImage}>
                             <ProductImage
-                                produtcImgURLs={data?.product.imgURLs}
+                                produtcImgURLs={data.product.imgURLs}
                             />
                         </div>
-                        {data?.product.imgURLs?.length > 1 && (
+                        {data.product.imgURLs.length > 1 && (
                             <div className={style.product__thumbnailImages}>
-                                {data?.product.imgURLs?.map((_, index) => (
+                                {data.product.imgURLs.map((el) => (
                                     <div
                                         className={
                                             style.product__thumbnailImage
                                         }
                                     >
-                                        <ProductImage
-                                            produtcImgURLs={[
-                                                data?.product.imgURLs[index],
-                                            ]}
-                                        />
+                                        <ProductImage produtcImgURLs={[el]} />
                                     </div>
                                 ))}
                             </div>
@@ -69,27 +63,27 @@ export const ViewProductPage = () => {
 
                         <div className={style.product__info}>
                             <h2 className={style.product__name}>
-                                {data?.product.productTitle}
+                                {data.product.productTitle}
                             </h2>
                             <div className={style.product__description}>
-                                {data?.product.productDescription && (
+                                {data.product.productDescription && (
                                     <>
                                         <p className={style.product__label}>
                                             Описание:
                                         </p>
                                         <p className={style.product__text}>
-                                            {data?.product.productDescription}
+                                            {data.product.productDescription}
                                         </p>
                                     </>
                                 )}
 
-                                {data?.product.tradeFor && (
+                                {data.product.tradeFor && (
                                     <>
                                         <p className={style.product__label}>
                                             На что готов(а) обменять:
                                         </p>
                                         <p className={style.product__text}>
-                                            {data?.product.tradeFor}
+                                            {data.product.tradeFor}
                                         </p>
                                     </>
                                 )}
@@ -133,8 +127,6 @@ export const ViewProductPage = () => {
                                 </>
                             )}
                         </div>
-                    </>
-                )}
             </div>
             <ContactsModal
                 userId={data.ownerId}
@@ -142,5 +134,7 @@ export const ViewProductPage = () => {
                 onClose={handleModalClose}
             />
         </section>
+            )}
+        </>
     );
 };

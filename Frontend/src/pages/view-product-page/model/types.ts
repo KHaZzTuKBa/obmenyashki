@@ -1,7 +1,7 @@
 import { Product } from '@/entities/product';
 
 export interface GetProductByIdResponse {
-    product: Product;
-    ownerId: string;
-    message?: string;
+    product: Product | null;
+    ownerId: string | null;
+    message: string;
 }

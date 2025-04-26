@@ -79,7 +79,7 @@ export const RegistrationForm = () => {
                         placeholder='Иван Иванович'
                     />
                     {errors.name?.message && (
-                        <p className={styles.error}>{errors.name?.message}</p>
+                        <p className={styles.error}>{errors.name.message}</p>
                     )}
                 </label>
                 <label className={styles.label}>
@@ -99,7 +99,7 @@ export const RegistrationForm = () => {
                         placeholder='test@example.com'
                     />
                     {errors.email?.message && (
-                        <p className={styles.error}>{errors.email?.message}</p>
+                        <p className={styles.error}>{errors.email.message}</p>
                     )}
                 </label>
 
@@ -132,7 +132,7 @@ export const RegistrationForm = () => {
                         }}
                     />
                     {errors.phone?.message && (
-                        <p className={styles.error}>{errors.phone?.message}</p>
+                        <p className={styles.error}>{errors.phone.message}</p>
                     )}
                 </label>
 
@@ -159,14 +159,16 @@ export const RegistrationForm = () => {
                     />
                     {errors.password?.message && (
                         <p className={styles.error}>
-                            {errors.password?.message}
+                            {errors.password.message}
                         </p>
                     )}
                 </label>
 
-                {errors.root && errors.root.type === 'serverError' ? (
-                    <p className={styles.error}>{errors.root?.message}</p>
-                ) : null}
+                {errors.root &&
+                    errors.root.type === 'serverError' &&
+                    errors.root.message && (
+                        <p className={styles.error}>{errors.root.message}</p>
+                    )}
                 <Button
                     color='dark-green'
                     type='submit'

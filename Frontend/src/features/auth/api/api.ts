@@ -21,12 +21,15 @@ export const registerUser = async (
             response.data.user === null ||
             response.data.accessToken === null
         ) {
-            throw new AxiosError(response.data?.message);
+            throw new AxiosError(response.data.message);
         }
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<AuthResponse>;
-        console.error('API Error:', axiosError.response?.data?.message);
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
         throw axiosError;
     }
 };
@@ -44,12 +47,15 @@ export const loginUser = async (data: LoginFormData): Promise<AuthResponse> => {
             response.data.user === null ||
             response.data.accessToken === null
         ) {
-            throw new AxiosError(response.data?.message);
+            throw new AxiosError(response.data.message);
         }
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<AuthResponse>;
-        console.error('API Error:', axiosError.response?.data?.message);
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
         throw axiosError;
     }
 };

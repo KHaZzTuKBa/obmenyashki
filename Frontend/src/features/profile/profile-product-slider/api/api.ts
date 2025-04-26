@@ -16,7 +16,7 @@ export const getOwnProductList = async (
     } catch (error) {
         const axiosError = error as AxiosError<GetOwnProductListResponse>;
         console.error(
-            'API Error:',
+            'API Error: ',
             axiosError.response?.data.message || axiosError.message
         );
         throw axiosError;

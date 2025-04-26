@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { $baseApi } from '@/shared/api';
 
@@ -27,8 +27,12 @@ $api.interceptors.response.use(
                 const response = await refreshToken();
                 setAccessToken(response.data.accessToken);
                 $api.request(originalRequest);
-            } catch (e) {
-                console.log(e);
+            } catch (error) {
+                const axiosError = error as AxiosError;
+                console.error(
+                    'API Error: ',
+                    axiosError.message || axiosError.response?.statusText
+                );
                 logoutSession();
             }
         }

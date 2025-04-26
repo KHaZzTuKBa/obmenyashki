@@ -17,7 +17,10 @@ export const AddProduct = async (
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<AddProductResponse>;
-        console.error('API Error:', axiosError.response?.data?.message);
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
         throw axiosError;
     }
 };

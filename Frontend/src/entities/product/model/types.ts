@@ -4,6 +4,6 @@ export interface Product {
     productDescription: string;
     publishDate: string;
     imgURLs: string[];
-    tradeFor?: string;
+    tradeFor: string;
     isActive: boolean;
 }

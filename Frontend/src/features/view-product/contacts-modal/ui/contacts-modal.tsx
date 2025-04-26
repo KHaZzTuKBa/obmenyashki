@@ -23,16 +23,24 @@ export const ContactsModal = ({
     >({
         queryKey: ['user', userId],
         queryFn: () => getUserById(userId),
+        staleTime: 5 * 60 * 1000,
         enabled: isOpen,
     });
 
     const contactsModal = useModal(
         <>
-            {isPending && <Loader />}
+            {isPending && (
+                <>
+                    <Loader wrapperClassName={style.modal__contacts} />
+                    <div
+                        className={style.modal__overlay}
+                        onClick={onClose}
+                    ></div>
+                </>
+            )}
 
             {isError && (
                 <p>
-                    {' '}
                     {error.response?.data.message ||
                         error.message ||
                         'Неизвестная ошибка'}
@@ -69,7 +77,7 @@ export const ContactsModal = ({
                     <div
                         className={style.modal__overlay}
                         onClick={onClose}
-                    ></div>{' '}
+                    ></div>
                 </>
             )}
         </>,

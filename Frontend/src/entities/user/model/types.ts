@@ -11,11 +11,10 @@ export interface User {
 
 export interface GetUserResponse {
     user: User;
-    message?: string;
+    message: string;
 }
 
 export interface UpdateUserResponse {
     user: User;
-    message?: string;
+    message: string;
 }
-

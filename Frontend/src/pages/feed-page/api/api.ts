@@ -33,7 +33,7 @@ export const fetchFeedData = async (
     } catch (error) {
         const axiosError = error as AxiosError<FeedApiResponse>;
         console.error(
-            'API Error:',
+            'API Error: ',
             axiosError.response?.data.message || axiosError.message
         );
         throw axiosError;
