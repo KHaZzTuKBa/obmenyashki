@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.GetProduct;
 using Application.DTOs.GetProductList;
 using Application.DTOs.GetUserProducts;
+using Application.DTOs.SearchProductsByName;
 using Application.DTOs.SetProduct;
 
 namespace Application.Contracts
@@ -11,5 +12,6 @@ namespace Application.Contracts
         Task<SetProductContract?> SetProduct(SetProductDTO setProductDTO);
         Task<GetUserProductsContract?> GetUserProducts(GetUserProductsDTO getUserProductsDTO);
         Task<GetProductContract?> GetProduct(GetProductDTO getProductDTO);
+        Task<SearchProductsByNameContract?> SearchProductsByName(SearchProductsByNameDTO searchProductsByNameDTO);
     }
 }

@@ -18,6 +18,8 @@ mc mb local/${MINIO_DEFAULT_BUCKET} --ignore-existing
 # Это разрешит анонимные GET запросы к объектам в этом бакете
 mc policy set download local/${MINIO_DEFAULT_BUCKET}
 
+mc cors set local/project-images cors.json
+
 echo "MinIO initialized: Bucket '${MINIO_DEFAULT_BUCKET}' created (if not existed) and set to public read."
 
 exit 0

@@ -2,11 +2,12 @@
 using Application.DTOs.GetProduct;
 using Application.DTOs.GetProductList;
 using Application.DTOs.GetUserProducts;
+using Application.DTOs.SearchProductsByName;
 using Application.DTOs.SetProduct;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+using Domain.Entities;
 
 namespace WebAPI.Controllers
 {
@@ -30,6 +31,9 @@ namespace WebAPI.Controllers
         {
             var result = await product.SetProduct(setProductDTO);
 
+            if (result == null)
+                return BadRequest(new SetProductResponse("Возникла ошибка при добавлении объявления"));
+
             return Ok(new SetProductResponse("Объявление успешно опубликовано!"));
         }
 
@@ -40,9 +44,9 @@ namespace WebAPI.Controllers
             var result = await product.GetProductList(getProductListDTO);
 
             if (result == null || result.Products?.Count == 0 || result.Products?.Count == null)
-                return NotFound(new GetProductListResponse(null, null, "Нет активных объявлений"));
+                return NotFound(new GetProductListResponse(new List<ResponseProduct>(), 0, "Нет активных объявлений!"));
 
-            return Ok(new GetProductListResponse(result.Products, result.ProductsAmount, "Без ошибок!!!"));
+            return Ok(new GetProductListResponse(result.Products, result.ProductsAmount, "Лента объявлений загружена!"));
         }
 
         [Authorize]
@@ -52,9 +56,9 @@ namespace WebAPI.Controllers
             var result = await product.GetUserProducts(getUserProductsDTO);
 
             if (result == null || result.Products?.Count == 0 || result.Products?.Count == null)
-                return new GetUserProductsResponse(null, "У вас нет активных объявлений!");
+                return new GetUserProductsResponse(new List<ResponseProduct>(), "У вас нет активных объявлений!");
 
-            return Ok(new GetUserProductsResponse(result.Products, $"У вас {result.Products.Count} активных объявлений"));
+            return Ok(new GetUserProductsResponse(result.Products, $"Активных объявлений - {result.Products.Count}"));
         }
 
         [Authorize]
@@ -64,9 +68,21 @@ namespace WebAPI.Controllers
             var result = await product.GetProduct(getProductDTO);
 
             if (result == null || result.Product == null || result.OwnerId == null)
-                return NotFound(new GetProductResponse(null, null, "Объявление не найдено))"));
+                return NotFound(new GetProductResponse(null, null, "Объявление не найдено!"));
 
             return Ok(new GetProductResponse(result.Product, result.OwnerId, "Объявление успешно найдено!"));
+        }
+
+        [Authorize]
+        [HttpGet("SearchProductsByName")]
+        public async Task<ActionResult<SearchProductsByNameResponse>> SearchProductsByName([FromQuery] SearchProductsByNameDTO searchProductsByNameDTO)
+        {
+            var result = await product.SearchProductsByName(searchProductsByNameDTO);
+
+            if (result == null || result.Products == null || !result.Products.Any())
+                return NotFound(new SearchProductsByNameResponse(new List<ResponseProduct>(), 0, "Объявления по указанному запросу не найдены!"));
+
+            return Ok(new SearchProductsByNameResponse(result.Products, result.Products.Count, $"Найдено {result.Products.Count} объявлений по вашему запросу"));
         }
     }
 }
