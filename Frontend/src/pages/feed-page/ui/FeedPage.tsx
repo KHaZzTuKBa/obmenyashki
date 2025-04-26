@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Product } from '@/entities/product';
+import { Button } from '@/shared/ui/Form';
 import { Loader } from '@/shared/ui/Loader';
 
 import { useSearchFeed } from '../hooks/useSearchFeed';
@@ -44,11 +45,21 @@ export const FeedPage = () => {
 
     return (
         <section className={style.feed}>
-            <h2 className={style.feed__header}>
+            <div className={style.feed__header}>
+                <h2>
                 {query
                     ? `Результаты поиска по запросу: "${query}"`
                     : 'Лента товаров'}
             </h2>
+
+                <Button
+                    className={style.feed__button}
+                    color='dark-green'
+                    onClick={handeSortBy}
+                >
+                    {sortBy === 'ASC' ? 'Сначала старые' : 'Сначала новые'}
+                </Button>
+            </div>
 
             {isPending && <Loader />}
 
@@ -73,25 +84,28 @@ export const FeedPage = () => {
                                 ))}
                             </ul>
 
+                            <div className={style.button_group}>
                                 {bunchNumber > 1 && (
-                                <button onClick={() => handleBunchNumber(-1)}>
+                                    <Button
+                                        className={style.feed__button}
+                                        color='dark-green'
+                                        onClick={() => handleBunchNumber(-1)}
+                                    >
                                     Предыдущая страница
-                                </button>
+                                    </Button>
                                 )}
 
                                 {data.productsAmount - bunchSize * bunchNumber >
                                     0 && (
-                                <button onClick={() => handleBunchNumber(1)}>
+                                    <Button
+                                        className={style.feed__button}
+                                        color='dark-green'
+                                        onClick={() => handleBunchNumber(1)}
+                                    >
                                     Следующая страница
-                                </button>
+                                    </Button>
                                 )}
-
-                            <button onClick={handeSortBy}>
-                                Сортировка:{' '}
-                                {sortBy === 'ASC'
-                                    ? 'сначала старые'
-                                    : 'сначала новые'}
-                            </button>
+                            </div>
                         </>
                     ) : (
                         <p>
