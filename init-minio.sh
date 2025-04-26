@@ -2,7 +2,7 @@
 
 # Дожидаемся, пока MinIO сервер станет доступен внутри контейнера
 # Это простой вариант, можно использовать более надежные проверки
-sleep 5
+sleep 50
 
 # Устанавливаем alias для локального MinIO сервера
 # Используем localhost, т.к. скрипт выполняется ВНУТРИ контейнера minio
@@ -17,6 +17,8 @@ mc mb local/${MINIO_DEFAULT_BUCKET} --ignore-existing
 # Устанавливаем политику 'download' (публичное чтение) для бакета
 # Это разрешит анонимные GET запросы к объектам в этом бакете
 mc policy set download local/${MINIO_DEFAULT_BUCKET}
+
+mc cors set local/project-images cors.json
 
 echo "MinIO initialized: Bucket '${MINIO_DEFAULT_BUCKET}' created (if not existed) and set to public read."
 

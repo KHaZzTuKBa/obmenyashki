@@ -14,6 +14,8 @@ using Minio.DataModel.Args;
 using Minio.Exceptions;
 using Microsoft.Extensions.Options;
 using Application.DTOs.GetProduct;
+using Application.DTOs.SearchProductsByName;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 
 namespace Infrastructure.Repo
@@ -21,7 +23,6 @@ namespace Infrastructure.Repo
     public class ProductRepo : IProduct
     {
         private readonly AppDbContext appDbContext;
-        //private readonly IConfiguration configuration;
         private readonly IMinioClient minioClient;
         private readonly MinioOptions minioOptions;
         private readonly ILogger<ProductRepo> logger;
@@ -156,7 +157,9 @@ namespace Infrastructure.Repo
             try
             {
                 var beArgs = new BucketExistsArgs().WithBucket(minioOptions.BucketName);
+                logger.LogInformation("Checking if bucket {BucketName} exists...", minioOptions.BucketName);
                 bool found = await minioClient.BucketExistsAsync(beArgs);
+                logger.LogInformation("Bucket {BucketName} exists: {Found}", minioOptions.BucketName, found);
                 if (!found)
                 {
                     logger.LogWarning("Bucket {BucketName} not found during SetProduct. Attempting to create.", minioOptions.BucketName);
@@ -168,6 +171,7 @@ namespace Infrastructure.Repo
             catch (Exception ex)
             {
                 logger.LogError(ex, "Error checking or creating bucket {BucketName} during SetProduct", minioOptions.BucketName);
+                return null;
             }
 
             if (setProductDTO.Images != null && setProductDTO.Images.Any())
@@ -179,8 +183,8 @@ namespace Infrastructure.Repo
                     // Генерируем уникальное имя для объекта в MinIO
                     var objectName = $"products/{productIdString}/{Guid.NewGuid()}{Path.GetExtension(imageFile.FileName)}";
 
-                    //try
-                    //{
+                    try
+                    {
                         // Копируем файл в MemoryStream
                         using var memoryStream = new MemoryStream();
                         await imageFile.CopyToAsync(memoryStream);
@@ -193,34 +197,40 @@ namespace Infrastructure.Repo
                             .WithStreamData(memoryStream)
                             .WithObjectSize(memoryStream.Length)
                             .WithContentType(imageFile.ContentType);
+                        logger.LogInformation(putObjectArgs.ToString());
 
                         // Загружаем в MinIO
                         await minioClient.PutObjectAsync(putObjectArgs);
+                        logger.LogInformation(minioOptions.BucketName);
+                        logger.LogInformation(minioOptions.UseSSL.ToString());
                         logger.LogInformation("Uploaded image {ObjectName} to bucket {BucketName}", objectName, minioOptions.BucketName);
-                       
+
                         var imageUrl = $"{(minioOptions.UseSSL ? "https" : "http")}://{minioOptions.Endpoint}/{minioOptions.BucketName}/{objectName}";
 
-                        uploadedImageUrls.Add(imageUrl); // Сохраняем для возможного использования
+                        uploadedImageUrls.Add(imageUrl);
 
                         var productImage = new ProductImage
                         {
                             ProductGuid = productIdString,
                             ImageURL = imageUrl
                         };
-                        await appDbContext.ProductImages.AddAsync(productImage);
 
-                    //}
-                    /*catch (MinioException e)
+                        await appDbContext.ProductImages.AddAsync(productImage);
+                    }
+
+
+                    catch (MinioException e)
                     {
                         logger.LogError(e, "Minio Error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
+                        return null;
                     }
                     catch (Exception e)
                     {
                         logger.LogError(e, "Unexpected error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
-                    }*/
+                        return null;
+                    }
                 }
 
-                // Сохраняем все добавленные ProductImage и UserProductRel (если не сохранили раньше)
                 await appDbContext.SaveChangesAsync();
 
             }
@@ -249,11 +259,10 @@ namespace Infrastructure.Repo
             string productIdString = getProductDTO.ProductId;
             var imgUrls = await appDbContext.ProductImages
                                          .Where(img => img.ProductGuid == productIdString)
-                                         .Select(img => img.ImageURL) // Выбираем только URL
+                                         .Select(img => img.ImageURL)
                                          .AsNoTracking()
                                          .ToListAsync();
 
-            // 5. Создание и возврат контракта
             var productContract = new ResponseProduct() {
                 Id = product.Id,
                 ProductTitle = product.ProductTitle,
@@ -267,6 +276,65 @@ namespace Infrastructure.Repo
             var userProductRel = await appDbContext.UserProductMap.FirstOrDefaultAsync(pr =>  pr.ProductId == productIdString);
 
             return new GetProductContract(productContract, userProductRel?.UserId);
+        }
+
+        public async Task<SearchProductsByNameContract?> SearchProductsByName(SearchProductsByNameDTO searchDto)
+        {
+            int itemsToSkip = (searchDto.BunchNumber - 1) * searchDto.BunchSize;
+            string searchTerm = searchDto.ProductName.Trim();
+
+            try
+            {
+                var foundProducts = await appDbContext.Products
+                    .Where(p => p.ProductTitle.Contains(searchTerm))
+                    .OrderByDescending(p => p.PublishDate)
+                    .Skip(itemsToSkip)
+                    .Take(searchDto.BunchSize)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                if (foundProducts == null || !foundProducts.Any())
+                {
+                    logger.LogInformation("No products found matching search term: {SearchTerm}", searchTerm);
+                    return null;
+                }
+
+                var productIdsAsString = foundProducts.Select(p => p.Id.ToString()).ToList();
+
+                var productImages = await appDbContext.ProductImages
+                                         .Where(img => productIdsAsString.Contains(img.ProductGuid))
+                                         .AsNoTracking()
+                                         .ToListAsync();
+
+                var imagesByProductGuid = productImages
+                                            .GroupBy(img => img.ProductGuid)
+                                            .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
+
+                var listOfResponseProduct = new List<ResponseProduct>();
+                foreach (var product in foundProducts)
+                {
+                    imagesByProductGuid.TryGetValue(product.Id.ToString(), out var imgUrls);
+
+                    var responseProduct = new ResponseProduct()
+                    {
+                        Id = product.Id,
+                        ProductTitle = product.ProductTitle,
+                        ProductDescription = product.ProductDescription,
+                        PublishDate = product.PublishDate,
+                        TradeFor = product.TradeFor,
+                        IsActive = product.IsActive,
+                        ImgURLs = imgUrls ?? new List<string>()
+                    };
+                    listOfResponseProduct.Add(responseProduct);
+                }
+
+                return new SearchProductsByNameContract(listOfResponseProduct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Error occurred during SearchProductsByName for term: {SearchTerm}", searchTerm);
+                return null;
+            }
         }
 
         public async Task<List<Product>> GetProductsRangeAsync(int bunchNumber, int bunchSize)
