@@ -68,7 +68,7 @@ export const ProfileProductSlider = () => {
                                     <ProfileProductCard
                                         key={item.id}
                                         product={item}
-                                    />{' '}
+                                    />
                                 </SwiperSlide>
                             ))}
                         </Swiper>

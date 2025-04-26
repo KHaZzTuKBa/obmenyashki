@@ -1,5 +1,5 @@
 export { UserAvatar } from './ui';
-export { $api, isAuth, getUserById } from './api';
+export { $api, isAuth, getUserById, updateUser } from './api';
 export {
     getAccessToken,
     setAccessToken,
@@ -9,4 +9,4 @@ export {
     getCurrentUserAvatar,
     logoutSession,
 } from './model';
-export type { User } from './model';
+export type { User, GetUserResponse } from './model';

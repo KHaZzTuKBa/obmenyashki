@@ -6,10 +6,10 @@ import {
     getCurrentUser,
     getCurrentUserId,
     setCurrentUser,
+    getUserById,
     User,
+    GetUserResponse,
 } from '@/entities/user';
-import { getUserById } from '@/entities/user';
-import { GetUserResponse } from '@/entities/user/model/types';
 
 export const useUserProfileData = () => {
     const userId = getCurrentUserId();

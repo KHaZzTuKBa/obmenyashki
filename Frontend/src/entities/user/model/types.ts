@@ -19,6 +19,3 @@ export interface UpdateUserResponse {
     message?: string;
 }
 
-export interface RefreshResponse {
-    accessToken: string | null;
-}

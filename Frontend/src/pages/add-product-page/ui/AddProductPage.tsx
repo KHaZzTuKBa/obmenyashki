@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,7 +16,10 @@ import style from './style.module.scss';
 export const AddProductPage = () => {
     const [modalMessage, setModalMessage] = useState<string>('');
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+    const queryClient = useQueryClient();
 
     // Управляем файлами в состоянии React
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -80,8 +84,12 @@ export const AddProductPage = () => {
             setSelectedFiles([]);
             resetForm();
             setModalMessage(response.message);
-            setIsSuccess(true);
             setIsModalOpen(true);
+            setIsSuccess(true);
+            queryClient.invalidateQueries({
+                queryKey: ['ownProducts', getCurrentUserId()],
+            });
+            queryClient.invalidateQueries({ queryKey: ['feed'] });
         } catch (error) {
             const axiosError = error as AxiosError<AddProductResponse>;
             console.error(

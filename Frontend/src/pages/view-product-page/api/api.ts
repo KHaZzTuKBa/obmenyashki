@@ -5,19 +5,19 @@ import { $api } from '@/entities/user';
 import { GetProductByIdResponse } from '../model/types';
 
 export const getProductById = async (
-    productID: string
+    productId: string
 ): Promise<GetProductByIdResponse> => {
     const endpoint = 'Product/GetProductById';
 
     try {
         const response = await $api.get<GetProductByIdResponse>(
-            `${endpoint}?ProductId=${productID}`
+            `${endpoint}?ProductId=${productId}`
         );
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<GetProductByIdResponse>;
         console.error(
-            'API Error:',
+            'API Error: ',
             axiosError.response?.data.message || axiosError.message
         );
         throw axiosError;

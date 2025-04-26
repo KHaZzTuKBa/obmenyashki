@@ -11,7 +11,8 @@ export const useSearchFeed = (
     sortBy: SortBy
 ) => {
     const [searchParams] = useSearchParams();
-    const query = searchParams.get('q');
+    const query = searchParams.get('q') || '';
+
     const queryResult = useQuery<FeedApiResponse, AxiosError<FeedApiResponse>>({
         queryKey: ['feed', query, bunchNumber, bunchSize, sortBy],
         queryFn: () => fetchFeedData(query, bunchNumber, bunchSize, sortBy),

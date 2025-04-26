@@ -5,7 +5,7 @@ import { $api } from '@/entities/user';
 import { FeedApiResponse, SortBy } from '../model/types';
 
 export const fetchFeedData = async (
-    query: string | null,
+    query: string,
     bunchNumber: number,
     bunchSize: number,
     sortBy: SortBy
@@ -18,7 +18,7 @@ export const fetchFeedData = async (
         BunchSize: number;
         SortBy: SortBy;
     } = {
-        BunchNumber: bunchNumber || 1,
+        BunchNumber: bunchNumber > 0 ? bunchNumber : 1,
         BunchSize: bunchSize || 20,
         SortBy: sortBy || 'ASC',
     };

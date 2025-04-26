@@ -7,4 +7,4 @@ export {
     getCurrentUserAvatar,
     logoutSession,
 } from './userStore';
-export type { User } from './types';
+export type { User, GetUserResponse } from './types';

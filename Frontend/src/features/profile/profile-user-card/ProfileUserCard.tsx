@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { UserAvatar } from '@/entities/user/ui/user-avatar';
+import { UserAvatar } from '@/entities/user';
 import { Path } from '@/shared/config/routes';
 import { Loader } from '@/shared/ui/Loader';
 
@@ -23,28 +23,25 @@ export const ProfileUserCard = () => {
         );
     }
 
-    return (
-        <>
-            {isPending && <Loader wrapperClassName={style.profile__loader} />}
+    if (isPending) return <Loader wrapperClassName={style.profile__loader} />;
 
-            {isSuccess && (
-                <div className={style.profile__info}>
-                    <div className={style.profile__image}>
-                        <UserAvatar className={style.profile__image} />
-                    </div>
-
-                    <div className={style.profile__data}>
-                        <h2>{user.name}</h2>
-                        {user.birthday ? <p>{user.birthday}</p> : null}
-                        {user.town ? <p>{user.town}</p> : null}
-                        <p>{user.phone}</p>
-                        <p>{user.email}</p>
-                        <Link to={Path.EDIT_PROFILE}>
-                            Редактировать профиль
-                        </Link>
-                    </div>
+    if (isSuccess)
+        return (
+            <div className={style.profile__info}>
+                <div className={style.profile__image}>
+                    <UserAvatar className={style.profile__image} />
                 </div>
-            )}
-        </>
-    );
+
+                <div className={style.profile__data}>
+                    <h2>{user.name}</h2>
+                    {user.birthday ? <p>{user.birthday}</p> : null}
+                    {user.town ? <p>{user.town}</p> : null}
+                    <p>{user.phone}</p>
+                    <p>{user.email}</p>
+                    <Link to={Path.EDIT_PROFILE}>Редактировать профиль</Link>
+                </div>
+            </div>
+        );
+        
+    return null;
 };

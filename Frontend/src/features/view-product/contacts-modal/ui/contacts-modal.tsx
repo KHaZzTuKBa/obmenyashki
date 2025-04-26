@@ -30,7 +30,14 @@ export const ContactsModal = ({
         <>
             {isPending && <Loader />}
 
-            {isError && <p> {error.code || 'неизвестная ошибка'}</p>}
+            {isError && (
+                <p>
+                    {' '}
+                    {error.response?.data.message ||
+                        error.message ||
+                        'Неизвестная ошибка'}
+                </p>
+            )}
 
             {isSuccess && (
                 <>

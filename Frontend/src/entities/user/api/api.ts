@@ -73,6 +73,6 @@ export const isAuth = async (): Promise<boolean> => {
 
         if (axiosError.status === 401 || +axiosError.message === 401)
             return false;
-        throw error;
+        throw axiosError;
     }
 };
