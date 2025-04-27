@@ -9,7 +9,7 @@ import { AuthResponse, LoginFormData } from '@/features/auth/model/types';
 import { Path } from '@/shared/config/routes';
 import { Button, Input } from '@/shared/ui/Form';
 
-import styles from './style.module.scss';
+import style from './style.module.scss';
 
 export const LoginForm = () => {
     const queryClient = useQueryClient();
@@ -45,11 +45,11 @@ export const LoginForm = () => {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit(submit)} className={styles.form}>
-                <h2 className={styles.header}>Вход</h2>
+        <div className={style.form__container}>
+            <form onSubmit={handleSubmit(submit)} className={style.form}>
+                <h2 className={style.header}>Вход</h2>
 
-                <label className={styles.label}>
+                <label className={style.label}>
                     Введите вашу почту:
                     <Input
                         {...register('email', {
@@ -61,16 +61,16 @@ export const LoginForm = () => {
                             setValueAs: (val) => val.trim(),
                         })}
                         type='email'
-                        className={styles.input}
+                        className={style.input}
                         color='green'
                         placeholder='example@example.com'
                     />
                     {errors.email?.message && (
-                        <p className={styles.error}>{errors.email.message}</p>
+                        <p className={style.error}>{errors.email.message}</p>
                     )}
                 </label>
 
-                <label className={styles.label}>
+                <label className={style.label}>
                     Введите пароль:
                     <Input
                         {...register('password', {
@@ -78,36 +78,34 @@ export const LoginForm = () => {
                             setValueAs: (val) => val.trim(),
                         })}
                         type='password'
-                        className={styles.input}
+                        className={style.input}
                         color='green'
                         placeholder='Пароль'
                     />
                     {errors.password?.message && (
-                        <p className={styles.error}>
-                            {errors.password.message}
-                        </p>
+                        <p className={style.error}>{errors.password.message}</p>
                     )}
                 </label>
 
                 {errors.root &&
                     errors.root.type === 'serverError' &&
                     errors.root.message && (
-                        <p className={styles.error}>{errors.root.message}</p>
+                        <p className={style.error}>{errors.root.message}</p>
                     )}
                 <Button
                     color='dark-green'
                     type='submit'
-                    className={styles.button}
+                    className={style.button}
                 >
                     Войти
                 </Button>
-                <p className={styles.form__register}>
+                <p className={style.form__register}>
                     Еще нет аккаунта?{' '}
                     <Link to={Path.REGISTRATION} state={location.state}>
                         Зарегистрироваться
                     </Link>
                 </p>
             </form>
-        </>
+        </div>
     );
 };

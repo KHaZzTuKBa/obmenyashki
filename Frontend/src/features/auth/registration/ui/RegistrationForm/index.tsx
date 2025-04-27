@@ -10,7 +10,7 @@ import { Input, Button } from '@/shared/ui/Form';
 
 import { formatPhoneNumber } from '../../lib/formatPhoneNumber';
 
-import styles from './style.module.scss';
+import style from './style.module.scss';
 
 export const RegistrationForm = () => {
     const navigate = useNavigate();
@@ -47,11 +47,11 @@ export const RegistrationForm = () => {
     };
 
     return (
-        <>
-            <form onSubmit={handleSubmit(submit)} className={styles.form}>
-                <h2 className={styles.header}>Регистрация</h2>
+        <div className={style.form__container}>
+            <form onSubmit={handleSubmit(submit)} className={style.form}>
+                <h2 className={style.header}>Регистрация</h2>
 
-                <label className={styles.label}>
+                <label className={style.label}>
                     Имя:
                     <Input
                         {...register('name', {
@@ -74,15 +74,15 @@ export const RegistrationForm = () => {
                             setValueAs: (val) => val.trim(),
                         })}
                         type='text'
-                        className={styles.input}
+                        className={style.input}
                         color='green'
                         placeholder='Иван Иванович'
                     />
                     {errors.name?.message && (
-                        <p className={styles.error}>{errors.name.message}</p>
+                        <p className={style.error}>{errors.name.message}</p>
                     )}
                 </label>
-                <label className={styles.label}>
+                <label className={style.label}>
                     Email:
                     <Input
                         {...register('email', {
@@ -94,16 +94,16 @@ export const RegistrationForm = () => {
                             setValueAs: (val) => val.trim(),
                         })}
                         type='email'
-                        className={styles.input}
+                        className={style.input}
                         color='green'
                         placeholder='test@example.com'
                     />
                     {errors.email?.message && (
-                        <p className={styles.error}>{errors.email.message}</p>
+                        <p className={style.error}>{errors.email.message}</p>
                     )}
                 </label>
 
-                <label className={styles.label}>
+                <label className={style.label}>
                     Телефон:
                     <Controller
                         name='phone'
@@ -113,7 +113,7 @@ export const RegistrationForm = () => {
                             <Input
                                 {...field}
                                 type='tel'
-                                className={styles.input}
+                                className={style.input}
                                 color='green'
                                 placeholder='+7 (XXX)-XX-XX'
                                 onChange={(e) => {
@@ -132,11 +132,11 @@ export const RegistrationForm = () => {
                         }}
                     />
                     {errors.phone?.message && (
-                        <p className={styles.error}>{errors.phone.message}</p>
+                        <p className={style.error}>{errors.phone.message}</p>
                     )}
                 </label>
 
-                <label className={styles.label}>
+                <label className={style.label}>
                     Пароль:
                     <Input
                         {...register('password', {
@@ -153,37 +153,46 @@ export const RegistrationForm = () => {
                             setValueAs: (val) => val.trim(),
                         })}
                         type='password'
-                        className={styles.input}
+                        className={style.input}
                         color='green'
                         placeholder='Пароль'
                     />
                     {errors.password?.message && (
-                        <p className={styles.error}>
-                            {errors.password.message}
-                        </p>
+                        <p className={style.error}>{errors.password.message}</p>
                     )}
                 </label>
 
                 {errors.root &&
                     errors.root.type === 'serverError' &&
                     errors.root.message && (
-                        <p className={styles.error}>{errors.root.message}</p>
+                        <p className={style.error}>{errors.root.message}</p>
                     )}
                 <Button
                     color='dark-green'
                     type='submit'
-                    className={styles.button}
+                    className={style.button}
                 >
                     Зарегистрироваться
                 </Button>
 
-                <p className={styles.form__login}>
+                <p className={style.form__login}>
                     Уже есть аккаунт?{' '}
                     <Link to={Path.LOGIN} state={location.state}>
                         Войти
                     </Link>
                 </p>
+
+                <div className={style.agreement}>
+                    Регистрируясь на сайт “ОбмеНЯШКИ” Вы соглашаетесь с&nbsp;
+                    <a className={style.agreement__link}>
+                        правилами пользования
+                    </a>
+                    &nbsp;и&nbsp;
+                    <a className={style.agreement__link}>
+                        политикой конфиденциальности
+                    </a>
+                </div>
             </form>
-        </>
+        </div>
     );
 };

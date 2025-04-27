@@ -5,11 +5,12 @@
 #root {
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
     height: 100%;
 }
 
 body {
-    background: linear-gradient(#6076a8, #4dc5a5);
+    background: linear-gradient(#6076a8, #4dc5a5) no-repeat fixed;
     font-family: 'Montserrat';
     position: relative;
 }

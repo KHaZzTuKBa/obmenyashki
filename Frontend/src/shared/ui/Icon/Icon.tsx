@@ -3,6 +3,7 @@ import ChatIconSvg from './assets/chat.svg?react';
 import GearIconSvg from './assets/gear.svg?react';
 import GoodsIconSvg from './assets/goods.svg?react';
 import HomeIconSvg from './assets/home.svg?react';
+import PlantIconSvg from './assets/plant.svg?react';
 import SearchIconSvg from './assets/search.svg?react';
 import UserIconSvg from './assets/user.svg?react';
 
@@ -15,7 +16,8 @@ export type IconName =
     | 'goods'
     | 'chat'
     | 'settings'
-    | 'camera';
+    | 'camera'
+    | 'plant';
 
 const iconsMap: Record<IconName, React.FC<React.SVGProps<SVGSVGElement>>> = {
     search: SearchIconSvg,
@@ -25,6 +27,7 @@ const iconsMap: Record<IconName, React.FC<React.SVGProps<SVGSVGElement>>> = {
     chat: ChatIconSvg,
     settings: GearIconSvg,
     camera: CameraIconSvg,
+    plant: PlantIconSvg,
 };
 
 interface IconProps extends React.SVGProps<SVGSVGElement> {
