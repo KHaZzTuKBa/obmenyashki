@@ -17,7 +17,7 @@ export const ProfileProductSlider = () => {
 
     return (
         <div className={`${style.profile__products} ${style.products}`}>
-            <h2 className={style.products__header}>Активные лоты</h2>
+            <h2 className={style.products__header}>Ваши объявления</h2>
 
             {isPending && <Loader wrapperClassName={style.products__loader} />}
 

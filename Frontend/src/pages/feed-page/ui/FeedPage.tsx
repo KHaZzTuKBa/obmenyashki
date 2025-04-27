@@ -15,11 +15,8 @@ export const FeedPage = () => {
     const [bunchNumber, setBunchNumber] = useState<number>(1);
     const [bunchSize] = useState<number>(20);
     const [sortBy, setSortBy] = useState<SortBy>('ASC');
-    const { query, data, isError, error, isPending, isSuccess } = useSearchFeed(
-        bunchNumber,
-        bunchSize,
-        sortBy
-    );
+    const { query, data, isError, error, isFetching, isSuccess } =
+        useSearchFeed(bunchNumber, bunchSize, sortBy);
 
     const handleBunchNumber = (val: number) => {
         switch (val) {
@@ -51,7 +48,7 @@ export const FeedPage = () => {
                     ? `Результаты поиска по запросу: "${query}"`
                     : 'Лента товаров'}
             </h2>
-
+                {isSuccess && (
                 <Button
                     className={style.feed__button}
                     color='dark-green'
@@ -59,17 +56,18 @@ export const FeedPage = () => {
                 >
                     {sortBy === 'ASC' ? 'Сначала старые' : 'Сначала новые'}
                 </Button>
+                )}
             </div>
 
-            {isPending && <Loader />}
+            {isFetching && <Loader />}
 
-            {isError && (
+            {isError && !isFetching && (
                 <div className={style.feed__error}>
                     {error.response?.data.message || 'Неизвестная ошибка'}
                 </div>
             )}
 
-            {isSuccess && (
+            {isSuccess && !isFetching && (
                 <>
                     {data.products.length > 0 ? (
                         <>
