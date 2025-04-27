@@ -2,7 +2,10 @@ import { AxiosError } from 'axios';
 
 import { $api } from '@/entities/user';
 
-import { GetProductByIdResponse } from '../model/types';
+import {
+    GetProductByIdResponse,
+    SentProductToArchiveResponse,
+} from '../model/types';
 
 export const getProductById = async (
     productId: string
@@ -16,6 +19,28 @@ export const getProductById = async (
         return response.data;
     } catch (error) {
         const axiosError = error as AxiosError<GetProductByIdResponse>;
+        console.error(
+            'API Error: ',
+            axiosError.response?.data.message || axiosError.message
+        );
+        throw axiosError;
+    }
+};
+
+export const sentProductToArchive = async (
+    productId: string,
+    isActive: boolean
+): Promise<SentProductToArchiveResponse> => {
+    const endpoint = 'Product/ChangeProductStatus';
+
+    try {
+        const response = await $api.patch<SentProductToArchiveResponse>(
+            endpoint,
+            { productId, isActive }
+        );
+        return response.data;
+    } catch (error) {
+        const axiosError = error as AxiosError<SentProductToArchiveResponse>;
         console.error(
             'API Error: ',
             axiosError.response?.data.message || axiosError.message

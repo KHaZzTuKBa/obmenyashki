@@ -11,7 +11,14 @@ import { useSingleProduct } from '../hooks/useSingleProduct';
 import style from './style.module.scss';
 
 export const ViewProductPage = () => {
-    const { data, isError, error, isPending, isSuccess } = useSingleProduct();
+    const {
+        data,
+        isError,
+        error,
+        isPending,
+        isSuccess,
+        handleSentProductToArchive,
+    } = useSingleProduct();
 
     const [mainImage, setMainImage] = useState<string | undefined>(
         data?.product?.imgURLs[0]
@@ -37,6 +44,8 @@ export const ViewProductPage = () => {
         setIsModalOpen(false);
     };
 
+    const currentUserId = getCurrentUserId();
+
         return (
         <>
             {isPending && (
@@ -59,19 +68,18 @@ export const ViewProductPage = () => {
         <section className={style.product}>
             <div className={style.product__content}>
                         <div className={style.product__mainImage}>
-                            <ProductImage
-                                produtcImgURLs={data.product.imgURLs}
-                            />
+                            <ProductImage produtcImgURL={mainImage} />
                         </div>
                         {data.product.imgURLs.length > 1 && (
                             <div className={style.product__thumbnailImages}>
-                                {data.product.imgURLs.map((el) => (
+                                {data.product.imgURLs.map((el, index) => (
                                     <div
                                         className={
                                             style.product__thumbnailImage
                                         }
+                                        onClick={() => handleMainImage(index)}
                                     >
-                                        <ProductImage produtcImgURLs={[el]} />
+                                        <ProductImage produtcImgURL={el} />
                                     </div>
                                 ))}
                             </div>
@@ -103,13 +111,11 @@ export const ViewProductPage = () => {
                                         </p>
                                     </>
                                 )}
-
-                                {/* <p className="product__label">Автор:</p>
-                                <p className="product__text">Иванов Иван Иванович</p>  */}
                             </div>
                         </div>
                         <div className={style.product__buttons}>
-                            {data.ownerId !== currentUserId && (
+                            {data.ownerId !== currentUserId &&
+                                data.product.isActive && (
                                 <>
                                     <Button
                                         color='blue'
@@ -126,7 +132,7 @@ export const ViewProductPage = () => {
                                     </Button>
                                 </>
                             )}
-                            {data.ownerId === currentUserId && (
+                            {data.ownerId === currentUserId && data.product && (
                                 <>
                                     <Button
                                         color='blue'
@@ -135,10 +141,17 @@ export const ViewProductPage = () => {
                                         Редактировать
                                     </Button>
                                     <Button
-                                        color='red'
+                                        color={
+                                            data.product?.isActive
+                                                ? 'red'
+                                                : 'grey'
+                                        }
                                         className={style.product__button}
+                                        onClick={handleSentProductToArchive}
                                     >
-                                        Удалить товар
+                                        {data.product?.isActive
+                                            ? 'Поместить в архив'
+                                            : 'Вернуть из архива'}
                                     </Button>
                                 </>
                             )}

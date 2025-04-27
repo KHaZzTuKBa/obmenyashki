@@ -1,11 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Path } from '@/shared/config/routes';
 
-import { getProductById } from '../api/api';
+import { getProductById, sentProductToArchive } from '../api/api';
 import { GetProductByIdResponse } from '../model/types';
 
 export const useSingleProduct = () => {
@@ -40,5 +40,21 @@ export const useSingleProduct = () => {
         gcTime: 10 * 60 * 1000,
     });
 
-    return { ...queryResult };
+    const data = queryResult.data;
+
+    const queryClient = useQueryClient();
+
+    const handleSentProductToArchive = async () => {
+        if (data && data.product) {
+            await sentProductToArchive(data.product.id, !data.product.isActive);
+            queryClient.refetchQueries({
+                queryKey: ['singleProduct', productId],
+            });
+            queryClient.invalidateQueries({ queryKey: ['feed'] });
+        }
+    };
+
+    useEffect(() => {}, [data?.product?.isActive]);
+
+    return { ...queryResult, handleSentProductToArchive };
 };

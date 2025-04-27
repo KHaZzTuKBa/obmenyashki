@@ -5,3 +5,7 @@ export interface GetProductByIdResponse {
     ownerId: string | null;
     message: string;
 }
+
+export interface SentProductToArchiveResponse {
+    message: string;
+}
