@@ -110,7 +110,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    await EnsureMinioBucketExists(app.Services);
+    //await EnsureMinioBucketExists(app.Services);
 }
 
 app.UseHttpsRedirection();
@@ -126,44 +126,38 @@ app.Run();
 async Task EnsureMinioBucketExists(IServiceProvider services)
 {
     // Получаем клиент и опции из DI
-    // Можно не создавать scope, так как IMinioClient и IOptions зарегистрированы как Singleton
     var minioClient = services.GetRequiredService<IMinioClient>();
     var options = services.GetRequiredService<IOptions<MinioOptions>>().Value;
-    var logger = services.GetRequiredService<ILogger<Program>>(); // Логгер
+    var logger = services.GetRequiredService<ILogger<Program>>();
     var bucketName = options.BucketName;
 
     try
     {
-        logger.LogInformation("Checking if bucket '{BucketName}' exists...", bucketName);
-        // Аргументы для проверки существования бакета
+        logger.LogInformation("Checking if bucket '{BucketName}' exists (optional check)...", bucketName);
         var args = new BucketExistsArgs().WithBucket(bucketName);
         bool found = await minioClient.BucketExistsAsync(args);
 
         if (!found)
         {
-            logger.LogInformation("Bucket '{BucketName}' does not exist. Creating...", bucketName);
-            // Аргументы для создания бакета
-            var makeArgs = new MakeBucketArgs().WithBucket(bucketName);
-            await minioClient.MakeBucketAsync(makeArgs);
-            logger.LogInformation("Bucket '{BucketName}' created successfully.", bucketName);
-
-            // (Опционально) Настроить политики доступа или CORS, если нужно
-            // string policyJson = @"{ ... ваш json политики ... }";
-            // var policyArgs = new SetPolicyArgs().WithBucket(bucketName).WithPolicy(policyJson);
-            // await minioClient.SetPolicyAsync(policyArgs);
+            // Просто логируем, но НЕ создаем и НЕ настраиваем из кода
+            logger.LogWarning("Bucket '{BucketName}' was not found. It should have been created by the initialization script.", bucketName);
+            // Можно здесь выбросить исключение, если отсутствие бакета критично для старта
+            // throw new InvalidOperationException($"Minio bucket '{bucketName}' not found. Ensure it was created during infrastructure setup.");
         }
         else
         {
-            logger.LogInformation("Bucket '{BucketName}' already exists.", bucketName);
+            logger.LogInformation("Bucket '{BucketName}' found.", bucketName);
+            // Можно добавить проверку политики, если нужно, но не установку
+            // var policyArgs = new GetPolicyArgs().WithBucket(bucketName);
+            // string policy = await minioClient.GetPolicyAsync(policyArgs);
+            // logger.LogInformation("Current policy for bucket '{BucketName}': {Policy}", bucketName, policy);
         }
-    }
-    // Обрабатываем специфичные для Minio исключения
-    catch (MinioException e)
-    {
-        logger.LogError(e, "Minio Error checking or creating bucket '{BucketName}'", bucketName);
     }
     catch (Exception e)
     {
-        logger.LogError(e, "An unexpected error occurred while ensuring bucket '{BucketName}' exists", bucketName);
+        // Логируем ошибку проверки
+        logger.LogError(e, "Error checking for bucket '{BucketName}'", bucketName);
+        // Возможно, стоит выбросить исключение, т.к. состояние Minio неизвестно
+        // throw;
     }
 }

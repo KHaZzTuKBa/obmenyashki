@@ -103,7 +103,9 @@ services:
         volumes:
             # Связываем том для хранения данных MinIO
             - minio_data:/data
-            - ./init-minio.sh:/docker-entrypoint-init.d/init-minio.sh
+            - ./setup-minio.sh:/setup-minio.sh
+            - ./entrypoint.sh:/entrypoint.sh
+        entrypoint: /entrypoint.sh
         networks:
             - app-network
         healthcheck:
