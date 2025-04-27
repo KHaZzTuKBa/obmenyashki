@@ -250,7 +250,7 @@ namespace Infrastructure.Repo
 
             var product = await appDbContext.Products
                                         .AsNoTracking()
-                                        .FirstOrDefaultAsync(p => p.Id == productIdGuid && p.IsActive == true);
+                                        .FirstOrDefaultAsync(p => p.Id == productIdGuid);
 
             if (product == null)
             {
