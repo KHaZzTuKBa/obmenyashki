@@ -11,7 +11,7 @@ export const ProfileProductCard = ({ product }: { product: Product }) => {
         <Link to={getViewItemPath(product.id)}>
             <li className={styles.product__item}>
                 <div className={styles.product__image}>
-                    <ProductImage produtcImgURLs={product.imgURLs} />
+                    <ProductImage produtcImgURL={product.imgURLs[0]} />
                 </div>
                 <p className={styles.product__name}>{product.productTitle}</p>
             </li>

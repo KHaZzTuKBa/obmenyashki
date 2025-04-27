@@ -2,16 +2,16 @@ import { Icon } from '@/shared/ui/Icon';
 
 export const ProductImage = ({
     className = '',
-    produtcImgURLs = [],
+    produtcImgURL,
 }: {
     className?: string;
-    produtcImgURLs?: string[];
+    produtcImgURL?: string;
 }) => {
     return (
         <>
-            {produtcImgURLs.length > 0 ? (
+            {produtcImgURL ? (
                 <img
-                    src={produtcImgURLs[0]}
+                    src={produtcImgURL}
                     alt='Фото товара'
                     className={className}
                 />

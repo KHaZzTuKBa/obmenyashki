@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ProductImage } from '@/entities/product';
 import { getCurrentUserId } from '@/entities/user';
@@ -13,7 +13,23 @@ import style from './style.module.scss';
 export const ViewProductPage = () => {
     const { data, isError, error, isPending, isSuccess } = useSingleProduct();
 
-    const currentUserId = getCurrentUserId();
+    const [mainImage, setMainImage] = useState<string | undefined>(
+        data?.product?.imgURLs[0]
+    );
+
+    useEffect(() => {
+        if (mainImage === undefined && data?.product !== undefined) {
+            setMainImage(data.product?.imgURLs[0]);
+        }
+    }, [data]);
+
+    const handleMainImage = (index: number) => {
+        if (data?.product?.imgURLs[index]) {
+            setMainImage(data.product.imgURLs[index]);
+            return;
+        }
+        setMainImage(undefined);
+    };
 
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 

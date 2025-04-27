@@ -13,7 +13,7 @@ export const ProductItem = ({ item }: { item: Product }) => {
             <div className={style.card__left}>
                 <ProductImage
                     className={style.card__leftImage}
-                    produtcImgURLs={item.imgURLs}
+                    produtcImgURL={item.imgURLs[0]}
                 />
             </div>
             <div className={style.card__right}>
