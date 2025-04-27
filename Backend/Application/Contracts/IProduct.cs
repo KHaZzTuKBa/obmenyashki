@@ -1,4 +1,5 @@
-﻿using Application.DTOs.GetProduct;
+﻿using Application.DTOs.ChangeProductStatus;
+using Application.DTOs.GetProduct;
 using Application.DTOs.GetProductList;
 using Application.DTOs.GetUserProducts;
 using Application.DTOs.SearchProductsByName;
@@ -13,5 +14,6 @@ namespace Application.Contracts
         Task<GetUserProductsContract?> GetUserProducts(GetUserProductsDTO getUserProductsDTO);
         Task<GetProductContract?> GetProduct(GetProductDTO getProductDTO);
         Task<SearchProductsByNameContract?> SearchProductsByName(SearchProductsByNameDTO searchProductsByNameDTO);
+        Task<ChangeProductStatusContract?> ChangeProductStatus(ChangeProductStatusDTO changeProductStatusDTO);
     }
 }

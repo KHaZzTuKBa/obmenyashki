@@ -8,6 +8,7 @@ using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
+using Application.DTOs.ChangeProductStatus;
 
 namespace WebAPI.Controllers
 {
@@ -83,6 +84,18 @@ namespace WebAPI.Controllers
                 return NotFound(new SearchProductsByNameResponse(new List<ResponseProduct>(), 0, "Объявления по указанному запросу не найдены!"));
 
             return Ok(new SearchProductsByNameResponse(result.Products, result.Products.Count, $"Найдено {result.Products.Count} объявлений по вашему запросу"));
+        }
+
+        [Authorize]
+        [HttpPatch("ChangeProductStatus")]
+        public async Task<ActionResult<ChangeProductStatusResponse>> ChangeProductStatus(ChangeProductStatusDTO changeProductStatusDTO)
+        {
+            var result = await product.ChangeProductStatus(changeProductStatusDTO);
+
+            if(result == null)
+                return BadRequest(new ChangeProductStatusResponse("Произошла ошибка при выполнении операции!"));
+
+            return Ok(new ChangeProductStatusResponse(result.Message));
         }
     }
 }

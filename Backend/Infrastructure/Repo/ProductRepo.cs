@@ -16,6 +16,7 @@ using Microsoft.Extensions.Options;
 using Application.DTOs.GetProduct;
 using Application.DTOs.SearchProductsByName;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Application.DTOs.ChangeProductStatus;
 
 
 namespace Infrastructure.Repo
@@ -27,7 +28,7 @@ namespace Infrastructure.Repo
         private readonly MinioOptions minioOptions;
         private readonly ILogger<ProductRepo> logger;
 
-        public ProductRepo(AppDbContext appDbContext, IMinioClient minioClient,IOptions<MinioOptions> minioOptions, ILogger<ProductRepo> logger)
+        public ProductRepo(AppDbContext appDbContext, IMinioClient minioClient, IOptions<MinioOptions> minioOptions, ILogger<ProductRepo> logger)
         {
             this.appDbContext = appDbContext;
             this.minioClient = minioClient;
@@ -84,7 +85,7 @@ namespace Infrastructure.Repo
             if (productIdsFromMap == null)
                 return null;
 
-            if(!productIdsFromMap.Any()) 
+            if (!productIdsFromMap.Any())
                 return null;
 
             var listOfProduct = await GetProductsByIds(productIdsFromMap!);
@@ -249,7 +250,7 @@ namespace Infrastructure.Repo
 
             var product = await appDbContext.Products
                                         .AsNoTracking()
-                                        .FirstOrDefaultAsync(p => p.Id == productIdGuid);
+                                        .FirstOrDefaultAsync(p => p.Id == productIdGuid && p.IsActive == true);
 
             if (product == null)
             {
@@ -274,7 +275,7 @@ namespace Infrastructure.Repo
                 ImgURLs = imgUrls ?? new List<string>()
             };
 
-            var userProductRel = await appDbContext.UserProductMap.FirstOrDefaultAsync(pr =>  pr.ProductId == productIdString);
+            var userProductRel = await appDbContext.UserProductMap.FirstOrDefaultAsync(pr => pr.ProductId == productIdString);
 
             return new GetProductContract(productContract, userProductRel?.UserId);
         }
@@ -282,12 +283,12 @@ namespace Infrastructure.Repo
         public async Task<SearchProductsByNameContract?> SearchProductsByName(SearchProductsByNameDTO searchDto)
         {
             int itemsToSkip = (searchDto.BunchNumber - 1) * searchDto.BunchSize;
-            string searchTerm = searchDto.ProductName.Trim();
+            string searchTerm = searchDto.ProductName!.Trim();
 
             try
             {
                 var foundProducts = await appDbContext.Products
-                    .Where(p => p.ProductTitle.Contains(searchTerm))
+                    .Where(p => p.ProductTitle!.ToLower().Contains(searchTerm.ToLower()) && p.IsActive == true)
                     .OrderByDescending(p => p.PublishDate)
                     .Skip(itemsToSkip)
                     .Take(searchDto.BunchSize)
@@ -338,11 +339,26 @@ namespace Infrastructure.Repo
             }
         }
 
+        public async Task<ChangeProductStatusContract?> ChangeProductStatus(ChangeProductStatusDTO changeProductStatusDTO)
+        {
+            var product = await appDbContext.Products.FirstOrDefaultAsync(p => p.Id == Guid.Parse(changeProductStatusDTO.ProductId!));
+
+            if(product == null)
+                return null;
+
+            product.IsActive = changeProductStatusDTO.IsActive;
+
+            await appDbContext.SaveChangesAsync();
+
+            return new ChangeProductStatusContract("Статус товара успешно изменён");
+        }
+
         public async Task<List<Product>> GetProductsRangeAsync(int bunchNumber, int bunchSize)
         {
             int itemsToSkip = (bunchNumber - 1) * bunchSize;
 
             return await appDbContext.Products
+                .Where(p => p.IsActive == true)
                 .OrderByDescending(p => p.PublishDate)
                 .Skip(itemsToSkip)
                 .Take(bunchSize)
