@@ -20,7 +20,7 @@ namespace WebAPI.Controllers
         private readonly IProduct product;
         private readonly IConfiguration configuration;
 
-        public Product(IProduct product, AppDbContext appDbContext, IConfiguration configuration)
+        public Product(IProduct product, IConfiguration configuration)
         {
             this.product = product;
             this.configuration = configuration;

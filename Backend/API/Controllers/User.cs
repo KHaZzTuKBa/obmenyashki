@@ -1,6 +1,5 @@
 ﻿using Application.Contracts;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Application.DTOs.GetUser;
 using Application.DTOs.Login;
@@ -17,7 +16,7 @@ namespace WebAPI.Controllers
         private readonly IUser user;
         private readonly IConfiguration configuration;
 
-        public User(IUser user, AppDbContext appDbContext, IConfiguration configuration) 
+        public User(IUser user, IConfiguration configuration) 
         {
             this.user = user;
             this.configuration = configuration;

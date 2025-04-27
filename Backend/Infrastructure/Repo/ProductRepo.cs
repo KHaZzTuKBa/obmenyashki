@@ -4,9 +4,7 @@ using Application.DTOs.SetProduct;
 using Application.DTOs.GetUserProducts;
 using Domain.Entities;
 using Infrastructure.Data;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Migrations;
 using Infrastructure.Models;
 using Microsoft.Extensions.Logging;
 using Minio;
@@ -103,8 +101,6 @@ namespace Infrastructure.Repo
             var imagesByProductGuid = productImages
                                         .GroupBy(img => img.ProductGuid)
                                         .ToDictionary(g => g.Key, g => g.Select(img => img.ImageURL).ToList());
-
-
 
             var listOfResponseProduct = new List<ResponseProduct>();
 
@@ -219,8 +215,6 @@ namespace Infrastructure.Repo
 
                         await appDbContext.ProductImages.AddAsync(productImage);
                     }
-
-
                     catch (MinioException e)
                     {
                         logger.LogError(e, "Minio Error uploading file {FileName} as {ObjectName}", imageFile.FileName, objectName);
@@ -234,7 +228,6 @@ namespace Infrastructure.Repo
                 }
 
                 await appDbContext.SaveChangesAsync();
-
             }
 
             return new SetProductContract(userProductRel.ProductId);
