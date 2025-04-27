@@ -1,7 +1,6 @@
 version: "3.8"
 
 services:
-    # PostgreSQL сервис
     postgres:
         image: postgres:17.4-alpine
         container_name: project_postgres
@@ -23,7 +22,6 @@ services:
         networks:
             - app-network
 
-    # Redis сервис
     redis:
         image: redis:7.4.2-alpine
         container_name: project_redis
@@ -36,27 +34,25 @@ services:
         networks:
             - app-network
 
-    # ASP.NET бэкенд сервис
     backend:
         build:
             context: ./Backend
             dockerfile: Dockerfile
         container_name: project_backend
-        env_file: # Добавляем чтение .env файла и сюда
+        env_file:
             - .env
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
+
             - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=${DB_NAME};Username=${DB_USER};Password=${DB_PASSWORD}
+
             - Redis__ConnectionString=redis
+
             - Minio__Endpoint=minio:9000
-            # Имя пользователя MinIO (из .env)
             - Minio__AccessKey=${MINIO_USER}
-            # Пароль MinIO (из .env)
             - Minio__SecretKey=${MINIO_PASSWORD}
-            # Указываем, что не используем SSL для внутренней коммуникации
             - Minio__UseSSL=false
-            # Имя бакета по умолчанию (можно тоже вынести в .env)
             - Minio__BucketName=${MINIO_DEFAULT_BUCKET}
         networks:
             - app-network
@@ -65,10 +61,9 @@ services:
                 condition: service_healthy
             redis:
                 condition: service_healthy
-            minio: # Добавляем зависимость от MinIO (НОВОЕ)
+            minio:
                 condition: service_healthy
 
-    # React фронтенд сервис
     frontend:
         build:
             context: ./Frontend
@@ -84,24 +79,19 @@ services:
             - backend
 
     minio:
-        image: minio/minio:latest # Используем официальный образ MinIO
+        image: minio/minio:latest
         container_name: project_minio
-        # Запускаем сервер MinIO, указываем путь к данным и адрес консоли
         command: server /data --console-address ":9001"
         env_file:
-            - .env # Читаем переменные из .env
+            - .env
         environment:
-            # Учетные данные для доступа к MinIO (из .env файла)
-            MINIO_ROOT_USER: ${MINIO_USER} # Задает пользователя по умолчанию, если в .env нет
-            MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD} # Задает пароль по умолчанию, если в .env нет
+            MINIO_ROOT_USER: ${MINIO_USER}
+            MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
             MINIO_DEFAULT_BUCKET: ${MINIO_DEFAULT_BUCKET}
         ports:
-            # Порт для API MinIO (S3-совместимый)
             - "9000:9000"
-            # Порт для веб-консоли MinIO
             - "9001:9001"
         volumes:
-            # Связываем том для хранения данных MinIO
             - minio_data:/data
             - ./setup-minio.sh:/setup-minio.sh
             - ./entrypoint.sh:/entrypoint.sh
@@ -109,7 +99,6 @@ services:
         networks:
             - app-network
         healthcheck:
-            # Проверка доступности MinIO API
             test:
                 ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
             interval: 10s
@@ -120,7 +109,6 @@ networks:
     app-network:
         driver: bridge
 
-# Объявляем тома и сети
 volumes:
     postgres_data:
     redis_data:
