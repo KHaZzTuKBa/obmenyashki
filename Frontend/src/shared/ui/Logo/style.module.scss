@@ -6,12 +6,16 @@
 
     width: min(100px, 6.25em);
 
+    user-select: none;
+
     & img,
     & svg {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center;
+
+        pointer-events: none;
     }
 }
 

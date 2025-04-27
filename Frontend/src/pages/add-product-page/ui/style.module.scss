@@ -138,7 +138,7 @@
 
 .form__image {
     max-height: 260px;
-    pointer-events: none;
+    user-select: none;
 
     & svg,
     & img {
@@ -148,6 +148,8 @@
         object-position: center;
 
         aspect-ratio: 2.131782945;
+
+        pointer-events: none;
     }
 }
 .form__inputFile {
